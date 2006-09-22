@@ -25,11 +25,19 @@ if test "$build" != "$host" -a "${PKG_CONFIG_LIBDIR}" = ""; then
   export PKG_CONFIG_LIBDIR=/dev/null
 fi
 
+AC_CHECK_HEADERS(getopt.h)
+AC_CHECK_FUNCS(getopt_long,
+ [AC_DEFINE(HAVE_GETOPT_LONG, 1, Define to 1 if you have the `getopt_long' function.)],
+ [AC_CHECK_LIB(gnugetopt, getopt_long,
+   [AC_DEFINE(HAVE_GETOPT_LONG, 1, Define to 1 if you have the `getopt_long' function.)
+    GETOPT_LIBS="${GETOPT_LIBS} -lgnugetopt"])])
+AC_SUBST(GETOPT_LIBS)
+
 CUCUL="no"
-PKG_CHECK_MODULES(cucul, cucul,
+PKG_CHECK_MODULES(cucul, cucul >= 0.99.beta5,
  [CUCUL="yes"],
  [AC_MSG_RESULT(no)
-  AC_MSG_ERROR([you need libcucul version 0.99 or later])])
+  AC_MSG_ERROR([you need libcucul version 0.99.beta5 or later])])
 
 # Optimizations
 CFLAGS="${CFLAGS} -g -O2 -fno-strength-reduce -fomit-frame-pointer"
