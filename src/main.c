@@ -32,6 +32,7 @@ static cucul_canvas_t *cuculize_tiny(uint32_t const *, unsigned int);
 
 /* Canvas special effects */
 static void filter_autocrop(cucul_canvas_t *);
+static void filter_metal(cucul_canvas_t *);
 static void filter_gay(cucul_canvas_t *);
 
 int main(int argc, char *argv[])
@@ -46,6 +47,7 @@ int main(int argc, char *argv[])
 
     char const *export = "utf8";
     unsigned flag_gay = 0;
+    unsigned flag_metal = 0;
 
 #if defined(HAVE_GETOPT_H)
     for(;;)
@@ -56,6 +58,7 @@ int main(int argc, char *argv[])
         static struct option long_options[] =
         {
             /* Long option, needs arg, flag, short option */
+            { "metal", 0, NULL, 'm' },
             { "gay", 0, NULL, 'g' },
             { "irc", 0, NULL, 'i' },
             { "help", 0, NULL, 'h' },
@@ -63,10 +66,10 @@ int main(int argc, char *argv[])
             { NULL, 0, NULL, 0 }
         };
 
-        int c = getopt_long(argc, argv, "gihv", long_options, &option_index);
+        int c = getopt_long(argc, argv, "gmihv", long_options, &option_index);
 #   else
 #       define MOREINFO "Try `%s -h' for more information.\n"
-        int c = getopt(argc, argv, "gihv");
+        int c = getopt(argc, argv, "gmihv");
 #   endif
         if(c == -1)
             break;
@@ -74,19 +77,24 @@ int main(int argc, char *argv[])
         switch(c)
         {
         case 'h': /* --help */
-            printf("Usage: %s [ -gihv ] [ message ]\n", argv[0]);
+            printf("Usage: %s [ -gmihv ] [ message ]\n", argv[0]);
 #   ifdef HAVE_GETOPT_LONG
             printf("  -g, --gay        add a rainbow effect to the text\n");
+            printf("  -m, --metal      add a metal effect to the text\n");
             printf("  -i, --irc        output IRC colour codes\n");
             printf("  -h, --help       display this help and exit\n");
             printf("  -v, --version    output version information and exit\n");
 #   else
             printf("  -g    add a rainbow effect to the text\n");
+            printf("  -m    add a metal effect to the text\n");
             printf("  -i    output IRC colour codes\n");
             printf("  -h    display this help and exit\n");
             printf("  -v    output version information and exit\n");
 #   endif
             return 0;
+        case 'm': /* --metal */
+            flag_metal = 1;
+            break;
         case 'g': /* --gay */
             flag_gay = 1;
             break;
@@ -147,6 +155,8 @@ int main(int argc, char *argv[])
     /* Do gay stuff with our string (léopard) */
     cv = cuculize_big(string, length);
     filter_autocrop(cv);
+    if(flag_metal)
+        filter_metal(cv);
     if(flag_gay)
         filter_gay(cv);
 
@@ -257,6 +267,46 @@ static void filter_autocrop(cucul_canvas_t *cv)
 
     cucul_set_canvas_boundaries(cv, xmin, ymin,
                                 xmax - xmin + 1, ymax - ymin + 1);
+}
+
+static void filter_metal(cucul_canvas_t *cv)
+{
+    static struct
+    {
+        char ch[6];
+        unsigned char fg, bg;
+    }
+    const palette[] =
+    {
+        { " ", CUCUL_COLOR_LIGHTBLUE, CUCUL_COLOR_LIGHTBLUE },
+        { "░", CUCUL_COLOR_BLUE, CUCUL_COLOR_LIGHTBLUE },
+        { "▒", CUCUL_COLOR_BLUE, CUCUL_COLOR_LIGHTBLUE },
+        { "░", CUCUL_COLOR_LIGHTBLUE, CUCUL_COLOR_BLUE },
+        { " ", CUCUL_COLOR_BLUE, CUCUL_COLOR_BLUE },
+        { " ", CUCUL_COLOR_LIGHTGRAY, CUCUL_COLOR_LIGHTGRAY },
+        { "░", CUCUL_COLOR_DARKGRAY, CUCUL_COLOR_LIGHTGRAY },
+        { "▒", CUCUL_COLOR_DARKGRAY, CUCUL_COLOR_LIGHTGRAY },
+        { "░", CUCUL_COLOR_LIGHTGRAY, CUCUL_COLOR_DARKGRAY },
+        { " ", CUCUL_COLOR_DARKGRAY, CUCUL_COLOR_DARKGRAY },
+    };
+
+    unsigned int x, y, w, h;
+
+    w = cucul_get_canvas_width(cv);
+    h = cucul_get_canvas_height(cv);
+
+    for(y = 0; y < h; y++)
+        for(x = 0; x < w; x++)
+    {
+        int i;
+
+        if(cucul_getchar(cv, x, y) == (unsigned char)' ')
+            continue;
+
+        i = y * 10 / h;
+        cucul_set_color(cv, palette[i].fg, palette[i].bg);
+        cucul_putstr(cv, x, y, palette[i].ch);
+    }
 }
 
 static void filter_gay(cucul_canvas_t *cv)
