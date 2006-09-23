@@ -25,6 +25,7 @@
 #include <cucul.h>
 
 #include "render.h"
+#include "figlet.h"
 #include "filters.h"
 
 int main(int argc, char *argv[])
@@ -38,6 +39,7 @@ int main(int argc, char *argv[])
     int i;
 
     char const *export = "utf8";
+    char const *font = "mono9";
     unsigned flag_gay = 0;
     unsigned flag_metal = 0;
 
@@ -50,18 +52,19 @@ int main(int argc, char *argv[])
         static struct option long_options[] =
         {
             /* Long option, needs arg, flag, short option */
-            { "metal", 0, NULL, 'm' },
+            { "font", 1, NULL, 'f' },
             { "gay", 0, NULL, 'g' },
+            { "metal", 0, NULL, 'm' },
             { "irc", 0, NULL, 'i' },
             { "help", 0, NULL, 'h' },
             { "version", 0, NULL, 'v' },
             { NULL, 0, NULL, 0 }
         };
 
-        int c = getopt_long(argc, argv, "gmihv", long_options, &option_index);
+        int c = getopt_long(argc, argv, "f:gmihv", long_options, &option_index);
 #   else
 #       define MOREINFO "Try `%s -h' for more information.\n"
-        int c = getopt(argc, argv, "gmihv");
+        int c = getopt(argc, argv, "f:gmihv");
 #   endif
         if(c == -1)
             break;
@@ -69,14 +72,18 @@ int main(int argc, char *argv[])
         switch(c)
         {
         case 'h': /* --help */
-            printf("Usage: %s [ -gmihv ] [ message ]\n", argv[0]);
+            printf("Usage: %s [ -f:gmihv ] [ message ]\n", argv[0]);
 #   ifdef HAVE_GETOPT_LONG
+            printf("  -f, --font <fontfile>\n");
+            printf("                   select the font\n");
             printf("  -g, --gay        add a rainbow effect to the text\n");
             printf("  -m, --metal      add a metal effect to the text\n");
             printf("  -i, --irc        output IRC colour codes\n");
             printf("  -h, --help       display this help and exit\n");
             printf("  -v, --version    output version information and exit\n");
 #   else
+            printf("  -f <fontfile>\n");
+            printf("        select the font\n");
             printf("  -g    add a rainbow effect to the text\n");
             printf("  -m    add a metal effect to the text\n");
             printf("  -i    output IRC colour codes\n");
@@ -84,20 +91,23 @@ int main(int argc, char *argv[])
             printf("  -v    output version information and exit\n");
 #   endif
             return 0;
-        case 'm': /* --metal */
-            flag_metal = 1;
-            break;
-        case 'g': /* --gay */
-            flag_gay = 1;
-            break;
-        case 'i': /* --irc */
-            export = "irc";
-            break;
         case 'v': /* --version */
             printf("TOIlet Copyright 2006 Sam Hocevar %s\n", VERSION);
             printf("Internet: <sam@zoy.org> Version: 0, date: 21 Sep 2006\n");
             printf("\n");
             return 0;
+        case 'f': /* --font */
+            font = optarg;
+            break;
+        case 'g': /* --gay */
+            flag_gay = 1;
+            break;
+        case 'm': /* --metal */
+            flag_metal = 1;
+            break;
+        case 'i': /* --irc */
+            export = "irc";
+            break;
         case '?':
             printf(MOREINFO, argv[0]);
             return 1;
@@ -144,9 +154,18 @@ int main(int argc, char *argv[])
         length += real_len;
     }
 
-    /* Do gay stuff with our string (léopard) */
-    cv = render_big(string, length);
+    /* Render string to canvas */
+    if(!strcasecmp(font, "mono9"))
+        cv = render_big(string, length);
+    else if(!strcasecmp(font, "term"))
+        cv = render_tiny(string, length);
+    else
+        cv = render_figlet(string, length, font);
+
+    /* Crop output */
     filter_autocrop(cv);
+
+    /* Do gay stuff with our string (léopard) */
     if(flag_metal)
         filter_metal(cv);
     if(flag_gay)
