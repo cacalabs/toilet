@@ -11,6 +11,10 @@
  *  http://sam.zoy.org/wtfpl/COPYING for more details.
  */
 
+/*
+ * This is the main program entry point.
+ */
+
 #include "config.h"
 
 #if defined(HAVE_INTTYPES_H)

@@ -11,6 +11,9 @@
  *  http://sam.zoy.org/wtfpl/COPYING for more details.
  */
 
+/*
+ * This header defines functions for handling FIGlet fonts.
+ */
 extern cucul_canvas_t *render_figlet(uint32_t const *, unsigned int,
                                      char const *);
 

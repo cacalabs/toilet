@@ -11,6 +11,10 @@
  *  http://sam.zoy.org/wtfpl/COPYING for more details.
  */
 
+/*
+ * This header defines post-processing filter functions.
+ */
+
 extern void filter_autocrop(cucul_canvas_t *);
 extern void filter_metal(cucul_canvas_t *);
 extern void filter_gay(cucul_canvas_t *);

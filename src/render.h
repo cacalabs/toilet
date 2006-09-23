@@ -11,6 +11,10 @@
  *  http://sam.zoy.org/wtfpl/COPYING for more details.
  */
 
+/*
+ * This header defines text to canvas rendering functions.
+ */
+
 extern cucul_canvas_t *render_big(uint32_t const *, unsigned int);
 extern cucul_canvas_t *render_tiny(uint32_t const *, unsigned int);
 

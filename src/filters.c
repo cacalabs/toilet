@@ -11,6 +11,10 @@
  *  http://sam.zoy.org/wtfpl/COPYING for more details.
  */
 
+/*
+ * This file contains post-processing filter functions.
+ */
+
 #include "config.h"
 
 #if defined(HAVE_INTTYPES_H)

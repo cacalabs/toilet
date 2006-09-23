@@ -11,6 +11,10 @@
  *  http://sam.zoy.org/wtfpl/COPYING for more details.
  */
 
+/*
+ * This file contains functions for handling FIGlet fonts.
+ */
+
 #include "config.h"
 
 #if defined(HAVE_INTTYPES_H)
