@@ -22,18 +22,10 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <cucul.h>
 
-#include "cucul.h"
-#include "caca.h"
-
-/* String to canvas transformations */
-static cucul_canvas_t *cuculize_big(uint32_t const *, unsigned int);
-static cucul_canvas_t *cuculize_tiny(uint32_t const *, unsigned int);
-
-/* Canvas special effects */
-static void filter_autocrop(cucul_canvas_t *);
-static void filter_metal(cucul_canvas_t *);
-static void filter_gay(cucul_canvas_t *);
+#include "render.h"
+#include "filters.h"
 
 int main(int argc, char *argv[])
 {
@@ -153,7 +145,7 @@ int main(int argc, char *argv[])
     }
 
     /* Do gay stuff with our string (léopard) */
-    cv = cuculize_big(string, length);
+    cv = render_big(string, length);
     filter_autocrop(cv);
     if(flag_metal)
         filter_metal(cv);
@@ -169,172 +161,5 @@ int main(int argc, char *argv[])
     cucul_free_canvas(cv);
 
     return 0;
-}
-
-static cucul_canvas_t *cuculize_big(uint32_t const *string,
-                                    unsigned int length)
-{
-    cucul_canvas_t *cv;
-    cucul_font_t *f;
-    char const * const * fonts;
-    unsigned char *buf;
-    unsigned int w, h, x, y, miny, maxy;
-
-    cv = cucul_create_canvas(length, 1);
-    for(x = 0; x < length; x++)
-        cucul_putchar(cv, x, 0, string[x]);
-
-    fonts = cucul_get_font_list();
-    f = cucul_load_font(fonts[0], 0);
-
-    /* Create our bitmap buffer (32-bit ARGB) */
-    w = cucul_get_canvas_width(cv) * cucul_get_font_width(f);
-    h = cucul_get_canvas_height(cv) * cucul_get_font_height(f);
-    buf = malloc(4 * w * h);
-
-    /* Render the canvas onto our image buffer */
-    cucul_render_canvas(cv, f, buf, w, h, 4 * w);
-
-    /* Free our canvas, and allocate a bigger one */
-    cucul_free_font(f);
-    cucul_free_canvas(cv);
-    cv = cucul_create_canvas(w, h);
-
-    /* Render the image buffer on the canvas */
-    cucul_set_color(cv, CUCUL_COLOR_WHITE, CUCUL_COLOR_TRANSPARENT);
-    cucul_clear_canvas(cv);
-
-    miny = h; maxy = 0;
-
-    for(y = 0; y < h; y++)
-       for(x = 0; x < w; x++)
-    {
-        unsigned char c = buf[4 * (x + y * w) + 2];
-
-        if(c >= 0xa0)
-            cucul_putstr(cv, x, y, "█");
-        else if(c >= 0x80)
-            cucul_putstr(cv, x, y, "▓");
-        else if(c >= 0x40)
-            cucul_putstr(cv, x, y, "▒");
-        else if(c >= 0x20)
-            cucul_putstr(cv, x, y, "░");
-    }
-
-    free(buf);
-
-    return cv;
-}
-
-static cucul_canvas_t *cuculize_tiny(uint32_t const *string,
-                                     unsigned int length)
-{
-    unsigned int x;
-    cucul_canvas_t *cv = cucul_create_canvas(length, 1);
-
-    for(x = 0; x < length; x++)
-        cucul_putchar(cv, x, 0, string[x]);
-
-    return cv;
-}
-
-static void filter_autocrop(cucul_canvas_t *cv)
-{
-    unsigned int x, y, w, h;
-    unsigned int xmin, xmax, ymin, ymax;
-
-    xmin = w = cucul_get_canvas_width(cv);
-    xmax = 0;
-    ymin = h = cucul_get_canvas_height(cv);
-    ymax = 0;
-
-    for(y = 0; y < h; y++)
-        for(x = 0; x < w; x++)
-    {
-        unsigned long int ch = cucul_getchar(cv, x, y);
-        if(ch != (unsigned char)' ')
-        {
-            if(x < xmin)
-                xmin = x;
-            if(x > xmax)
-                xmax = x;
-            if(y < ymin)
-                ymin = y;
-            if(y > ymax)
-                ymax = y;
-        }
-    }
-
-    cucul_set_canvas_boundaries(cv, xmin, ymin,
-                                xmax - xmin + 1, ymax - ymin + 1);
-}
-
-static void filter_metal(cucul_canvas_t *cv)
-{
-    static struct
-    {
-        char ch[6];
-        unsigned char fg, bg;
-    }
-    const palette[] =
-    {
-        { " ", CUCUL_COLOR_LIGHTBLUE, CUCUL_COLOR_LIGHTBLUE },
-        { "░", CUCUL_COLOR_BLUE, CUCUL_COLOR_LIGHTBLUE },
-        { "▒", CUCUL_COLOR_BLUE, CUCUL_COLOR_LIGHTBLUE },
-        { "░", CUCUL_COLOR_LIGHTBLUE, CUCUL_COLOR_BLUE },
-        { " ", CUCUL_COLOR_BLUE, CUCUL_COLOR_BLUE },
-        { " ", CUCUL_COLOR_LIGHTGRAY, CUCUL_COLOR_LIGHTGRAY },
-        { "░", CUCUL_COLOR_DARKGRAY, CUCUL_COLOR_LIGHTGRAY },
-        { "▒", CUCUL_COLOR_DARKGRAY, CUCUL_COLOR_LIGHTGRAY },
-        { "░", CUCUL_COLOR_LIGHTGRAY, CUCUL_COLOR_DARKGRAY },
-        { " ", CUCUL_COLOR_DARKGRAY, CUCUL_COLOR_DARKGRAY },
-    };
-
-    unsigned int x, y, w, h;
-
-    w = cucul_get_canvas_width(cv);
-    h = cucul_get_canvas_height(cv);
-
-    for(y = 0; y < h; y++)
-        for(x = 0; x < w; x++)
-    {
-        int i;
-
-        if(cucul_getchar(cv, x, y) == (unsigned char)' ')
-            continue;
-
-        i = y * 10 / h;
-        cucul_set_color(cv, palette[i].fg, palette[i].bg);
-        cucul_putstr(cv, x, y, palette[i].ch);
-    }
-}
-
-static void filter_gay(cucul_canvas_t *cv)
-{
-    static unsigned char const rainbow[] =
-    {
-        CUCUL_COLOR_LIGHTMAGENTA,
-        CUCUL_COLOR_LIGHTRED,
-        CUCUL_COLOR_YELLOW,
-        CUCUL_COLOR_LIGHTGREEN,
-        CUCUL_COLOR_LIGHTCYAN,
-        CUCUL_COLOR_LIGHTBLUE,
-    };
-    unsigned int x, y, w, h;
-
-    w = cucul_get_canvas_width(cv);
-    h = cucul_get_canvas_height(cv);
-
-    for(y = 0; y < h; y++)
-        for(x = 0; x < w; x++)
-    {
-        unsigned long int ch = cucul_getchar(cv, x, y);
-        if(ch != (unsigned char)' ')
-        {
-            cucul_set_color(cv, rainbow[(x / 2 + y) % 6],
-                                CUCUL_COLOR_TRANSPARENT);
-            cucul_putchar(cv, x, y, ch);
-        }
-    }
 }
 
