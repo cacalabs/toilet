@@ -160,14 +160,14 @@ int main(int argc, char *argv[])
 
     /* Render string to canvas */
     if(!strcasecmp(font, "mono9"))
+    {
         cv = render_big(string, length);
+        filter_autocrop(cv);
+    }
     else if(!strcasecmp(font, "term"))
         cv = render_tiny(string, length);
     else
         cv = render_figlet(string, length, font);
-
-    /* Crop output */
-    filter_autocrop(cv);
 
     /* Do gay stuff with our string (léopard) */
     if(flag_metal)
