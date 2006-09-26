@@ -49,6 +49,7 @@ int main(int argc, char *argv[])
 
     char const *export = "utf8";
     char const *font = "mono9";
+    char const *dir = "/usr/share/figlet/";
     unsigned int flag_gay = 0;
     unsigned int flag_metal = 0;
     unsigned int term_width = 80;
@@ -64,6 +65,7 @@ int main(int argc, char *argv[])
         {
             /* Long option, needs arg, flag, short option */
             { "font", 1, NULL, 'f' },
+            { "directory", 1, NULL, 'd' },
             { "width", 1, NULL, 'w' },
             { "gay", 0, NULL, 'g' },
             { "metal", 0, NULL, 'm' },
@@ -74,11 +76,11 @@ int main(int argc, char *argv[])
             { NULL, 0, NULL, 0 }
         };
 
-        int c = getopt_long(argc, argv, "f:w:gmihI:v",
+        int c = getopt_long(argc, argv, "d:f:I:w:ghimv",
                             long_options, &option_index);
 #   else
 #       define MOREINFO "Try `%s -h' for more information.\n"
-        int c = getopt(argc, argv, "f:w:gmihI:v");
+        int c = getopt(argc, argv, "d:f:I:w:ghimv");
 #   endif
         if(c == -1)
             break;
@@ -96,6 +98,9 @@ int main(int argc, char *argv[])
             return 0;
         case 'f': /* --font */
             font = optarg;
+            break;
+        case 'd': /* --directory */
+            dir = optarg;
             break;
         case 'g': /* --gay */
             flag_gay = 1;
@@ -134,10 +139,10 @@ int main(int argc, char *argv[])
             printf("20201\n");
             return 0;
         case 2:
-            printf("/usr/share/figlet\n");
+            printf("%s\n", dir);
             return 0;
         case 3:
-            printf("mono9\n");
+            printf("%s\n", font);
             return 0;
         case 4:
             printf("%u\n", term_width);
@@ -216,11 +221,12 @@ static void version(void)
 #if defined(HAVE_GETOPT_H)
 static void usage(void)
 {
-    printf("Usage: toilet [ -gmihv ] [ message ]\n");
+    printf("Usage: toilet [ -ghimv ] [ -d fontdirectory ]\n");
     printf("              [ -f fontfile ] [ -w outputwidth ]\n");
-    printf("              [ -I infocode ]\n");
+    printf("              [ -I infocode ] [ message ]\n");
 #   ifdef HAVE_GETOPT_LONG
     printf("  -f, --font <fontfile>    select the font\n");
+    printf("  -d, --directory <dir>    specify font directory\n");
     printf("  -w, --width <width>      set output width\n");
     printf("  -g, --gay                add a rainbow effect to the text\n");
     printf("  -m, --metal              add a metal effect to the text\n");
@@ -230,6 +236,7 @@ static void usage(void)
     printf("  -v, --version            output version information and exit\n");
 #   else
     printf("  -f <fontfile>    select the font\n");
+    printf("  -d <dir>         specify font directory\n");
     printf("  -w <width>       set output width\n");
     printf("  -g               add a rainbow effect to the text\n");
     printf("  -m               add a metal effect to the text\n");
