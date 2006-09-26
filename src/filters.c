@@ -51,6 +51,9 @@ void filter_autocrop(cucul_canvas_t *cv)
         }
     }
 
+    if(xmax < xmin || ymax < ymin)
+        return;
+
     cucul_set_canvas_boundaries(cv, xmin, ymin,
                                 xmax - xmin + 1, ymax - ymin + 1);
 }
