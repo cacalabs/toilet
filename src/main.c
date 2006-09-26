@@ -32,6 +32,11 @@
 #include "figlet.h"
 #include "filters.h"
 
+static void version(void);
+#if defined(HAVE_GETOPT_H)
+static void usage(void);
+#endif
+
 int main(int argc, char *argv[])
 {
     cucul_canvas_t *cv;
@@ -44,8 +49,10 @@ int main(int argc, char *argv[])
 
     char const *export = "utf8";
     char const *font = "mono9";
-    unsigned flag_gay = 0;
-    unsigned flag_metal = 0;
+    unsigned int flag_gay = 0;
+    unsigned int flag_metal = 0;
+    unsigned int term_width = 80;
+    int infocode = -1;
 
 #if defined(HAVE_GETOPT_H)
     for(;;)
@@ -57,18 +64,21 @@ int main(int argc, char *argv[])
         {
             /* Long option, needs arg, flag, short option */
             { "font", 1, NULL, 'f' },
+            { "width", 1, NULL, 'w' },
             { "gay", 0, NULL, 'g' },
             { "metal", 0, NULL, 'm' },
             { "irc", 0, NULL, 'i' },
             { "help", 0, NULL, 'h' },
+            { "infocode", 1, NULL, 'I' },
             { "version", 0, NULL, 'v' },
             { NULL, 0, NULL, 0 }
         };
 
-        int c = getopt_long(argc, argv, "f:gmihv", long_options, &option_index);
+        int c = getopt_long(argc, argv, "f:w:gmihI:v",
+                            long_options, &option_index);
 #   else
 #       define MOREINFO "Try `%s -h' for more information.\n"
-        int c = getopt(argc, argv, "f:gmihv");
+        int c = getopt(argc, argv, "f:w:gmihI:v");
 #   endif
         if(c == -1)
             break;
@@ -76,29 +86,13 @@ int main(int argc, char *argv[])
         switch(c)
         {
         case 'h': /* --help */
-            printf("Usage: %s [ -f:gmihv ] [ message ]\n", argv[0]);
-#   ifdef HAVE_GETOPT_LONG
-            printf("  -f, --font <fontfile>\n");
-            printf("                   select the font\n");
-            printf("  -g, --gay        add a rainbow effect to the text\n");
-            printf("  -m, --metal      add a metal effect to the text\n");
-            printf("  -i, --irc        output IRC colour codes\n");
-            printf("  -h, --help       display this help and exit\n");
-            printf("  -v, --version    output version information and exit\n");
-#   else
-            printf("  -f <fontfile>\n");
-            printf("        select the font\n");
-            printf("  -g    add a rainbow effect to the text\n");
-            printf("  -m    add a metal effect to the text\n");
-            printf("  -i    output IRC colour codes\n");
-            printf("  -h    display this help and exit\n");
-            printf("  -v    output version information and exit\n");
-#   endif
+            usage();
             return 0;
+        case 'I': /* --infocode */
+            infocode = atoi(optarg);
+            break;
         case 'v': /* --version */
-            printf("TOIlet Copyright 2006 Sam Hocevar %s\n", VERSION);
-            printf("Internet: <sam@zoy.org> Version: 0, date: 21 Sep 2006\n");
-            printf("\n");
+            version();
             return 0;
         case 'f': /* --font */
             font = optarg;
@@ -108,6 +102,9 @@ int main(int argc, char *argv[])
             break;
         case 'm': /* --metal */
             flag_metal = 1;
+            break;
+        case 'w': /* --width */
+            term_width = atoi(optarg);
             break;
         case 'i': /* --irc */
             export = "irc";
@@ -125,6 +122,29 @@ int main(int argc, char *argv[])
 #   define MOREINFO "Usage: %s message...\n"
     int optind = 1;
 #endif
+
+    switch(infocode)
+    {
+        case -1:
+            break;
+        case 0:
+            version();
+            return 0;
+        case 1:
+            printf("20201\n");
+            return 0;
+        case 2:
+            printf("/usr/share/figlet\n");
+            return 0;
+        case 3:
+            printf("mono9\n");
+            return 0;
+        case 4:
+            printf("%u\n", term_width);
+            return 0;
+        default:
+            return 0;
+    }
 
     if(optind >= argc)
     {
@@ -185,4 +205,39 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+
+static void version(void)
+{
+    printf("TOIlet Copyright 2006 Sam Hocevar %s\n", VERSION);
+    printf("Internet: <sam@zoy.org> Version: 0, date: 21 Sep 2006\n");
+    printf("\n");
+}
+
+#if defined(HAVE_GETOPT_H)
+static void usage(void)
+{
+    printf("Usage: toilet [ -gmihv ] [ message ]\n");
+    printf("              [ -f fontfile ] [ -w outputwidth ]\n");
+    printf("              [ -I infocode ]\n");
+#   ifdef HAVE_GETOPT_LONG
+    printf("  -f, --font <fontfile>    select the font\n");
+    printf("  -w, --width <width>      set output width\n");
+    printf("  -g, --gay                add a rainbow effect to the text\n");
+    printf("  -m, --metal              add a metal effect to the text\n");
+    printf("  -i, --irc                output IRC colour codes\n");
+    printf("  -h, --help               display this help and exit\n");
+    printf("  -I, --infocode           print FIGlet-compatible infocode\n");
+    printf("  -v, --version            output version information and exit\n");
+#   else
+    printf("  -f <fontfile>    select the font\n");
+    printf("  -w <width>       set output width\n");
+    printf("  -g               add a rainbow effect to the text\n");
+    printf("  -m               add a metal effect to the text\n");
+    printf("  -i               output IRC colour codes\n");
+    printf("  -h               display this help and exit\n");
+    printf("  -I               print FIGlet-compatible infocode\n");
+    printf("  -v               output version information and exit\n");
+#   endif
+}
+#endif
 
