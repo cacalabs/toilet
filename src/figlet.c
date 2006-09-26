@@ -68,6 +68,8 @@ cucul_canvas_t *render_figlet(uint32_t const *string, unsigned int length,
         x += font->lookup[c * 2 + 1];
     }
 
+    cucul_set_canvas_boundaries(cv, 0, 0, x, font->height);
+
     free_font(font);
 
     return cv;
@@ -134,11 +136,19 @@ static struct figfont *open_font(char const *fontname)
         else if(font->glyphs < (127 - 32) + 7)
         {
             static int const tab[7] = { 196, 214, 220, 228, 246, 252, 223 };
-            font->lookup[font->glyphs * 2] = tab[font->glyphs = (127 - 32)];
+            font->lookup[font->glyphs * 2] = tab[font->glyphs + (127 - 32)];
         }
         else
         {
-            fscanf(f, "%u %*[^\n]", &font->lookup[font->glyphs * 2]);
+            char number[10];
+
+            fscanf(f, "%s %*[^\n]", number);
+
+            if(number[1] == 'x')
+                sscanf(number, "%x", &font->lookup[font->glyphs * 2]);
+            else
+                sscanf(number, "%u", &font->lookup[font->glyphs * 2]);
+
             fscanf(f, "%*c");
         }
 
@@ -173,8 +183,9 @@ static struct figfont *open_font(char const *fontname)
             ch = cucul_getchar(font->image, i, j);
 
             if(ch == font->hardblank)
-                cucul_putchar(font->image, i, j, ' ');
-            else if(oldch && ch != oldch)
+                cucul_putchar(font->image, i, j, ch = ' ');
+
+            if(oldch && ch != oldch)
             {
                 if(!font->lookup[j / font->height * 2 + 1])
                     font->lookup[j / font->height * 2 + 1] = i + 1;
