@@ -34,6 +34,7 @@ cucul_canvas_t *render_big(uint32_t const *string, unsigned int length)
     unsigned int w, h, x, y, miny, maxy;
 
     cv = cucul_create_canvas(length, 1);
+    cucul_set_color(cv, CUCUL_COLOR_WHITE, CUCUL_COLOR_BLACK);
     for(x = 0; x < length; x++)
         cucul_putchar(cv, x, 0, string[x]);
 
