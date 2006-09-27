@@ -25,13 +25,26 @@ if test "$build" != "$host" -a "${PKG_CONFIG_LIBDIR}" = ""; then
   export PKG_CONFIG_LIBDIR=/dev/null
 fi
 
-AC_CHECK_HEADERS(getopt.h)
+AC_CHECK_HEADERS(getopt.h sys/ioctl.h)
+
 AC_CHECK_FUNCS(getopt_long,
  [AC_DEFINE(HAVE_GETOPT_LONG, 1, Define to 1 if you have the `getopt_long' function.)],
  [AC_CHECK_LIB(gnugetopt, getopt_long,
    [AC_DEFINE(HAVE_GETOPT_LONG, 1, Define to 1 if you have the `getopt_long' function.)
     GETOPT_LIBS="${GETOPT_LIBS} -lgnugetopt"])])
 AC_SUBST(GETOPT_LIBS)
+
+AC_CACHE_CHECK([for TIOCGWINSZ],
+  [ac_cv_have_tiocgwinsz],
+  [AC_TRY_COMPILE(
+    [#include <sys/ioctl.h>],
+    [struct winsize ws;
+     ioctl(1, TIOCGWINSZ, &ws);],
+    ac_cv_have_tiocgwinsz=yes,
+    ac_cv_have_tiocgwinsz=no)])
+if test "${ac_cv_have_tiocgwinsz}" = "yes"; then
+  AC_DEFINE(HAVE_TIOCGWINSZ, 1, [Define if you have TIOCGWINSZ])
+fi
 
 CUCUL="no"
 PKG_CHECK_MODULES(cucul, cucul >= 0.99.beta5,

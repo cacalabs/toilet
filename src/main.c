@@ -23,6 +23,9 @@
 #if defined(HAVE_GETOPT_H)
 #   include <getopt.h>
 #endif
+#if defined(HAVE_SYS_IOCTL_H) && defined(TIOCGWINSZ)
+#   include <sys/ioctl.h>
+#endif
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -67,6 +70,7 @@ int main(int argc, char *argv[])
             { "font", 1, NULL, 'f' },
             { "directory", 1, NULL, 'd' },
             { "width", 1, NULL, 'w' },
+            { "termwidth", 0, NULL, 't' },
             { "gay", 0, NULL, 'g' },
             { "metal", 0, NULL, 'm' },
             { "irc", 0, NULL, 'i' },
@@ -76,11 +80,11 @@ int main(int argc, char *argv[])
             { NULL, 0, NULL, 0 }
         };
 
-        int c = getopt_long(argc, argv, "d:f:I:w:ghimv",
+        int c = getopt_long(argc, argv, "d:f:I:w:ghimtv",
                             long_options, &option_index);
 #   else
 #       define MOREINFO "Try `%s -h' for more information.\n"
-        int c = getopt(argc, argv, "d:f:I:w:ghimv");
+        int c = getopt(argc, argv, "d:f:I:w:ghimtv");
 #   endif
         if(c == -1)
             break;
@@ -111,6 +115,18 @@ int main(int argc, char *argv[])
         case 'w': /* --width */
             term_width = atoi(optarg);
             break;
+        case 't': /* --termwidth */
+        {
+#if defined(HAVE_SYS_IOCTL_H) && defined(TIOCGWINSZ)
+            struct winsize ws;
+
+            if((ioctl(1, TIOCGWINSZ, &ws) != -1 ||
+                ioctl(2, TIOCGWINSZ, &ws) != -1 ||
+                ioctl(0, TIOCGWINSZ, &ws) != -1) && ws.ws_col != 0)
+                term_width = ws.ws_col;
+#endif
+            break;
+        }
         case 'i': /* --irc */
             export = "irc";
             break;
@@ -221,13 +237,14 @@ static void version(void)
 #if defined(HAVE_GETOPT_H)
 static void usage(void)
 {
-    printf("Usage: toilet [ -ghimv ] [ -d fontdirectory ]\n");
+    printf("Usage: toilet [ -ghimtv ] [ -d fontdirectory ]\n");
     printf("              [ -f fontfile ] [ -w outputwidth ]\n");
     printf("              [ -I infocode ] [ message ]\n");
 #   ifdef HAVE_GETOPT_LONG
     printf("  -f, --font <fontfile>    select the font\n");
     printf("  -d, --directory <dir>    specify font directory\n");
     printf("  -w, --width <width>      set output width\n");
+    printf("  -t, --termwidth          adapt to terminal's width\n");
     printf("  -g, --gay                add a rainbow effect to the text\n");
     printf("  -m, --metal              add a metal effect to the text\n");
     printf("  -i, --irc                output IRC colour codes\n");
@@ -238,6 +255,7 @@ static void usage(void)
     printf("  -f <fontfile>    select the font\n");
     printf("  -d <dir>         specify font directory\n");
     printf("  -w <width>       set output width\n");
+    printf("  -t               adapt to terminal's width\n");
     printf("  -g               add a rainbow effect to the text\n");
     printf("  -m               add a metal effect to the text\n");
     printf("  -i               output IRC colour codes\n");
