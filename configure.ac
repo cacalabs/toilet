@@ -47,10 +47,10 @@ if test "${ac_cv_have_tiocgwinsz}" = "yes"; then
 fi
 
 CUCUL="no"
-PKG_CHECK_MODULES(cucul, cucul >= 0.99.beta5,
+PKG_CHECK_MODULES(cucul, cucul >= 0.99.beta6,
  [CUCUL="yes"],
  [AC_MSG_RESULT(no)
-  AC_MSG_ERROR([you need libcucul version 0.99.beta5 or later])])
+  AC_MSG_ERROR([you need libcucul version 0.99.beta6 or later])])
 
 # Optimizations
 CFLAGS="${CFLAGS} -g -O2 -fno-strength-reduce -fomit-frame-pointer"
