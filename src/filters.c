@@ -60,23 +60,12 @@ void filter_autocrop(cucul_canvas_t *cv)
 
 void filter_metal(cucul_canvas_t *cv)
 {
-    static struct
+    static unsigned char const palette[] =
     {
-        char ch[6];
-        unsigned char fg, bg;
-    }
-    const palette[] =
-    {
-        { " ", CUCUL_COLOR_LIGHTBLUE, CUCUL_COLOR_LIGHTBLUE },
-        { "░", CUCUL_COLOR_BLUE, CUCUL_COLOR_LIGHTBLUE },
-        { "▒", CUCUL_COLOR_BLUE, CUCUL_COLOR_LIGHTBLUE },
-        { "░", CUCUL_COLOR_LIGHTBLUE, CUCUL_COLOR_BLUE },
-        { " ", CUCUL_COLOR_BLUE, CUCUL_COLOR_BLUE },
-        { " ", CUCUL_COLOR_LIGHTGRAY, CUCUL_COLOR_LIGHTGRAY },
-        { "░", CUCUL_COLOR_DARKGRAY, CUCUL_COLOR_LIGHTGRAY },
-        { "▒", CUCUL_COLOR_DARKGRAY, CUCUL_COLOR_LIGHTGRAY },
-        { "░", CUCUL_COLOR_LIGHTGRAY, CUCUL_COLOR_DARKGRAY },
-        { " ", CUCUL_COLOR_DARKGRAY, CUCUL_COLOR_DARKGRAY },
+        CUCUL_COLOR_LIGHTBLUE,
+        CUCUL_COLOR_BLUE,
+        CUCUL_COLOR_LIGHTGRAY,
+        CUCUL_COLOR_DARKGRAY,
     };
 
     unsigned int x, y, w, h;
@@ -87,14 +76,15 @@ void filter_metal(cucul_canvas_t *cv)
     for(y = 0; y < h; y++)
         for(x = 0; x < w; x++)
     {
+        unsigned long int ch = cucul_getchar(cv, x, y);
         int i;
 
-        if(cucul_getchar(cv, x, y) == (unsigned char)' ')
+        if(ch == (unsigned char)' ')
             continue;
 
-        i = y * 10 / h;
-        cucul_set_color(cv, palette[i].fg, palette[i].bg);
-        cucul_putstr(cv, x, y, palette[i].ch);
+        i = y * 4 / h;
+        cucul_set_color(cv, palette[i], CUCUL_COLOR_TRANSPARENT);
+        cucul_putchar(cv, x, y, ch);
     }
 }
 
