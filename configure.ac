@@ -60,6 +60,6 @@ CFLAGS="${CFLAGS} -Wall -Wpointer-arith -Wcast-align -Wcast-qual -Wstrict-protot
 AC_OUTPUT([
   Makefile
   src/Makefile
-  data/Makefile
+  fonts/Makefile
 ])
 
