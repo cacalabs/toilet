@@ -25,6 +25,7 @@
 #include <string.h>
 #include <cucul.h>
 
+#include "toilet.h"
 #include "figlet.h"
 
 struct figfont
@@ -40,17 +41,19 @@ struct figfont
     unsigned int *lookup;
 };
 
-static struct figfont *open_font(char const *);
+static struct figfont *open_font(void);
 static void free_font(struct figfont *);
 
-cucul_canvas_t *render_figlet(uint32_t const *string, unsigned int length,
-                              char const *fontname)
+cucul_canvas_t *render_figlet(uint32_t const *string, unsigned int length)
 {
     cucul_canvas_t *cv;
     struct figfont *font;
     unsigned int x, i, c;
 
-    font = open_font(fontname);
+    font = open_font();
+
+    if(!font)
+        return NULL;
 
     cv = cucul_create_canvas(length * font->max_length, font->height);
 
@@ -75,7 +78,7 @@ cucul_canvas_t *render_figlet(uint32_t const *string, unsigned int length,
     return cv;
 }
 
-static struct figfont *open_font(char const *fontname)
+static struct figfont *open_font(void)
 {
     char *data = NULL;
     char path[2048];
@@ -84,14 +87,20 @@ static struct figfont *open_font(char const *fontname)
     FILE *f;
     unsigned int i, j, size, comment_lines;
 
-    /* Open font */
-    snprintf(path, 2047, "/usr/share/figlet/%s.flf", fontname);
+    /* Open font: try .tlf, then .flf */
+    snprintf(path, 2047, "%s/%s.tlf", toilet_dir, toilet_font);
     path[2047] = '\0';
     f = fopen(path, "r");
     if(!f)
     {
-        fprintf(stderr, "font `%s' not found\n", path);
-        return NULL;
+        snprintf(path, 2047, "%s/%s.flf", toilet_dir, toilet_font);
+        path[2047] = '\0';
+        f = fopen(path, "r");
+        if(!f)
+        {
+            fprintf(stderr, "font `%s' not found\n", path);
+            return NULL;
+        }
     }
 
     font = malloc(sizeof(struct figfont));
@@ -100,7 +109,7 @@ static struct figfont *open_font(char const *fontname)
     font->print_direction = 0;
     font->full_layout = 0;
     font->codetag_count = 0;
-    if(fscanf(f, "flf2a%c %u %u %u %i %u %u %u %u\n", &font->hardblank,
+    if(fscanf(f, "%*[ft]lf2a%c %u %u %u %i %u %u %u %u\n", &font->hardblank,
               &font->height, &font->baseline, &font->max_length,
               &font->old_layout, &comment_lines, &font->print_direction,
               &font->full_layout, &font->codetag_count) < 6)
@@ -168,7 +177,7 @@ static struct figfont *open_font(char const *fontname)
 
     /* Import buffer into canvas */
     b = cucul_load_memory(data, i);
-    font->image = cucul_import_canvas(b, "ansi");
+    font->image = cucul_import_canvas(b, "utf8");
     cucul_free_buffer(b);
     free(data);
 

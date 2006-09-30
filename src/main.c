@@ -31,9 +31,14 @@
 #include <stdlib.h>
 #include <cucul.h>
 
+#include "toilet.h"
 #include "render.h"
 #include "figlet.h"
 #include "filters.h"
+
+char const *toilet_export = "utf8";
+char const *toilet_font = "mono9";
+char const *toilet_dir = "/usr/share/figlet/";
 
 static void version(void);
 #if defined(HAVE_GETOPT_H)
@@ -50,9 +55,6 @@ int main(int argc, char *argv[])
 
     int i;
 
-    char const *export = "utf8";
-    char const *font = "mono9";
-    char const *dir = "/usr/share/figlet/";
     unsigned int flag_gay = 0;
     unsigned int flag_metal = 0;
     unsigned int term_width = 80;
@@ -101,10 +103,10 @@ int main(int argc, char *argv[])
             version();
             return 0;
         case 'f': /* --font */
-            font = optarg;
+            toilet_font = optarg;
             break;
         case 'd': /* --directory */
-            dir = optarg;
+            toilet_dir = optarg;
             break;
         case 'g': /* --gay */
             flag_gay = 1;
@@ -128,7 +130,7 @@ int main(int argc, char *argv[])
             break;
         }
         case 'i': /* --irc */
-            export = "irc";
+            toilet_export = "irc";
             break;
         case '?':
             printf(MOREINFO, argv[0]);
@@ -155,10 +157,10 @@ int main(int argc, char *argv[])
             printf("20201\n");
             return 0;
         case 2:
-            printf("%s\n", dir);
+            printf("%s\n", toilet_dir);
             return 0;
         case 3:
-            printf("%s\n", font);
+            printf("%s\n", toilet_font);
             return 0;
         case 4:
             printf("%u\n", term_width);
@@ -200,15 +202,18 @@ int main(int argc, char *argv[])
     }
 
     /* Render string to canvas */
-    if(!strcasecmp(font, "mono9"))
+    if(!strcasecmp(toilet_font, "mono9"))
     {
         cv = render_big(string, length);
         filter_autocrop(cv);
     }
-    else if(!strcasecmp(font, "term"))
+    else if(!strcasecmp(toilet_font, "term"))
         cv = render_tiny(string, length);
     else
-        cv = render_figlet(string, length, font);
+        cv = render_figlet(string, length);
+
+    if(!cv)
+        return -1;
 
     /* Do gay stuff with our string (léopard) */
     if(flag_metal)
@@ -217,7 +222,7 @@ int main(int argc, char *argv[])
         filter_gay(cv);
 
     /* Output char */
-    buffer = cucul_export_canvas(cv, export);
+    buffer = cucul_export_canvas(cv, toilet_export);
     fwrite(cucul_get_buffer_data(buffer),
            cucul_get_buffer_size(buffer), 1, stdout);
     cucul_free_buffer(buffer);

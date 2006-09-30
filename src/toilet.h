@@ -12,7 +12,10 @@
  */
 
 /*
- * This header defines functions for handling FIGlet fonts.
+ * This header defines global variables.
  */
-extern cucul_canvas_t *render_figlet(uint32_t const *, unsigned int);
+
+extern char const *toilet_export;
+extern char const *toilet_font;
+extern char const *toilet_dir;
 
