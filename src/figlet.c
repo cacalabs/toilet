@@ -161,6 +161,7 @@ static struct figfont *open_font(void)
             if(!ret)
             {
                 free(data);
+                free(font->lookup);
                 free(font);
                 fprintf(stderr, "read error at glyph %u in `%s'\n",
                                 font->glyphs, path);
@@ -192,6 +193,7 @@ static struct figfont *open_font(void)
     if(font->glyphs < EXT_GLYPHS)
     {
         free(data);
+        free(font->lookup);
         free(font);
         fprintf(stderr, "only %u glyphs in `%s', expected at least %u\n",
                         font->glyphs, path, EXT_GLYPHS);
@@ -206,7 +208,7 @@ static struct figfont *open_font(void)
 
     if(!font->image)
     {
-        cucul_free_canvas(font->image);
+        free(font->lookup);
         free(font);
         fprintf(stderr, "libcucul could not load data in `%s'\n", path);
         return NULL;
