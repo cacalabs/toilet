@@ -1,0 +1,321 @@
+tlf2a 3 3 6 1 14 0 0 0
+Font: Emboss v0.1
+Author: Sam Hocevar <sam@zoy.org>
+Date: September 30th, 2006
+
+  This font is free software; you can redistribute it and/or
+  modify it under the terms of the Do What The Fuck You Want To
+  Public License, Version 2, as published by Sam Hocevar. See
+  http://sam.zoy.org/wtfpl/COPYING for more details.
+
+To create emboss2.tlf, use the following command:
+ % sed '/@@/,$y/═║╔╗╚╝/═║╔╗╚╝/' < emboss.tlf > emboss2.tlf
+
+This font is part of TOIlet’s official distribution. More information
+on the TOIlet website at http://libcaca.zoy.org/toilet.html
+ @
+ @
+ @@
+║!
+╝!
+╝!!
+╝╝"
+  "
+  ""
+ @
+ @
+#@@
+ @
+ @
+$@@
+ @
+ @
+%@@
+╔╝║ &
+║═╔╝&
+══╝ &&
+╝'
+ '
+ ''
+ ╝(
+║ (
+ ╝((
+═ )
+ ║)
+═ ))
+╝ ╝*
+═╔╝*
+╝ ╝**
+ ║ +
+═╔╝+
+ ╝ ++
+ @
+ @
+,@@
+  -
+═╝-
+  --
+ .
+ .
+╝..
+  ╝/
+ ╝ /
+╝  //
+╔═║0
+║╝║0
+══╝00
+═║ 1
+ ║ 1
+══╝11
+══║2
+╔═╝2
+══╝22
+══║3
+══║3
+══╝33
+║ ║4
+══║4
+  ╝44
+╔═╝5
+══║5
+══╝55
+╔═╝6
+╔═║6
+══╝66
+╔═║7
+  ║7
+  ╝77
+╔═║8
+╔═║8
+══╝88
+╔═║9
+══║9
+══╝99
+ :
+╝:
+╝::
+ @
+ @
+;@@
+ @
+ @
+<@@
+   =
+══╝=
+══╝==
+ @
+ @
+>@@
+╔═║?
+  ╝?
+ ╝ ??
+╔═║@
+║═╝@
+══╝@@
+╔═║A
+╔═║A
+╝ ╝AA
+╔═ B
+╔═║B
+══ BB
+╔═╝C
+║  C
+══╝CC
+╔═ D
+║ ║D
+══ DD
+╔═╝E
+╔═╝E
+══╝EE
+╔═╝F
+╔═╝F
+╝  FF
+╔═╝G
+║ ║G
+══╝GG
+║ ║H
+╔═║H
+╝ ╝HH
+╝I
+║I
+╝II
+ ╝J
+ ║J
+═╝JJ
+║ ║K
+╔╝ K
+╝ ╝KK
+║  L
+║  L
+══╝LL
+╔╔ M
+║║║M
+╝╝╝MM
+╔═ N
+║ ║N
+╝ ╝NN
+╔═║O
+║ ║O
+══╝OO
+╔═║p
+╔═╝P
+╝  PP
+╔═║ Q
+║ ║ Q
+═══╝QQ
+╔═║R
+╔╔╝R
+╝ ╝RR
+╔═╝S
+══║S
+══╝SS
+═╔╝T
+ ║ T
+ ╝ TT
+║ ║U
+║ ║U
+══╝UU
+║ ║V
+║ ║V
+ ╝ VV
+║║║W
+║║║W
+══╝WW
+║ ║X
+ ╝ X
+╝ ╝XX
+║ ║Y
+═╔╝Y
+ ╝ YY
+══║Z
+╔╝ Z
+══╝ZZ
+╔╝[
+║ [
+═╝[[
+╝  \
+ ╝ \
+  ╝\\
+═║]
+ ║]
+═╝]]
+ ╝ ^
+╝ ╝^
+   ^^
+   _
+   _
+══╝__
+╝ `
+ ╝`
+  ``
+ @
+ @
+a@@
+ @
+ @
+b@@
+ @
+ @
+c@@
+ @
+ @
+d@@
+ @
+ @
+e@@
+ @
+ @
+f@@
+ @
+ @
+g@@
+ @
+ @
+h@@
+ @
+ @
+i@@
+ @
+ @
+j@@
+ @
+ @
+k@@
+ @
+ @
+l@@
+ @
+ @
+m@@
+ @
+ @
+n@@
+ @
+ @
+o@@
+ @
+ @
+p@@
+ @
+ @
+q@@
+ @
+ @
+r@@
+ @
+ @
+s@@
+ @
+ @
+t@@
+ @
+ @
+u@@
+ @
+ @
+v@@
+ @
+ @
+w@@
+ @
+ @
+x@@
+ @
+ @
+y@@
+ @
+ @
+z@@
+ ╔╝{
+═║ {
+ ═╝{{
+║|
+║|
+╝||
+═║ }
+ ╔╝}
+═╝ }}
+ ╝ ╝~
+╝ ╝ ~
+    ~~
+╔═║╔═╝Ä
+╔═║╔═╝Ä
+╝ ╝══╝ÄÄ
+╔═║╔═╝Ö
+║ ║╔═╝Ö
+══╝══╝ÖÖ
+║ ║╔═╝Ü
+║ ║╔═╝Ü
+══╝══╝ÜÜ
+ @
+ @
+ä@@
+ @
+ @
+ö@@
+ @
+ @
+ü@@
+ @
+ @
+ß@@
