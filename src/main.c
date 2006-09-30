@@ -212,10 +212,12 @@ int main(int argc, char *argv[])
     else
         cv = render_figlet(string, length);
 
+    free(string);
+
     if(!cv)
         return -1;
 
-    /* Do gay stuff with our string (léopard) */
+    /* Apply optional effects to our string */
     if(flag_metal)
         filter_metal(cv);
     if(flag_gay)

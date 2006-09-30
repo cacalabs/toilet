@@ -28,6 +28,9 @@
 #include "toilet.h"
 #include "figlet.h"
 
+#define STD_GLYPHS (127 - 32)
+#define EXT_GLYPHS (STD_GLYPHS + 7)
+
 struct figfont
 {
     /* From the font format */
@@ -138,20 +141,31 @@ static struct figfont *open_font(void)
             font->lookup = realloc(font->lookup,
                                    (font->glyphs + 2048) * 2 * sizeof(int));
 
-        if(font->glyphs < 127 - 32)
+        if(font->glyphs < STD_GLYPHS)
         {
             font->lookup[font->glyphs * 2] = 32 + font->glyphs;
         }
-        else if(font->glyphs < (127 - 32) + 7)
+        else if(font->glyphs < EXT_GLYPHS)
         {
             static int const tab[7] = { 196, 214, 220, 228, 246, 252, 223 };
-            font->lookup[font->glyphs * 2] = tab[font->glyphs + (127 - 32)];
+            font->lookup[font->glyphs * 2] = tab[font->glyphs - STD_GLYPHS];
         }
         else
         {
             char number[10];
+            int ret = fscanf(f, "%s %*[^\n]", number);
 
-            fscanf(f, "%s %*[^\n]", number);
+            if(ret == EOF)
+                break;
+
+            if(!ret)
+            {
+                free(data);
+                free(font);
+                fprintf(stderr, "read error at glyph %u in `%s'\n",
+                                font->glyphs, path);
+                return NULL;
+            }
 
             if(number[1] == 'x')
                 sscanf(number, "%x", &font->lookup[font->glyphs * 2]);
@@ -175,11 +189,28 @@ static struct figfont *open_font(void)
 
     fclose(f);
 
+    if(font->glyphs < EXT_GLYPHS)
+    {
+        free(data);
+        free(font);
+        fprintf(stderr, "only %u glyphs in `%s', expected at least %u\n",
+                        font->glyphs, path, EXT_GLYPHS);
+        return NULL;
+    }
+
     /* Import buffer into canvas */
     b = cucul_load_memory(data, i);
     font->image = cucul_import_canvas(b, "utf8");
     cucul_free_buffer(b);
     free(data);
+
+    if(!font->image)
+    {
+        cucul_free_canvas(font->image);
+        free(font);
+        fprintf(stderr, "libcucul could not load data in `%s'\n", path);
+        return NULL;
+    }
 
     /* Remove EOL characters. For now we ignore hardblanks, don’t do any
      * smushing, nor any kind of error checking. */
@@ -214,6 +245,7 @@ static struct figfont *open_font(void)
 
 static void free_font(struct figfont *font)
 {
+    cucul_free_canvas(font->image);
     free(font->lookup);
     free(font);
 }
