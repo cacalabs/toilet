@@ -1,5 +1,5 @@
 
 fontdir = $(datarootdir)/figlet
 
-font_DATA = circle.tlf emboss.tlf emboss2.tlf future.flf smbraille.tlf
+font_DATA = circle.tlf emboss.tlf emboss2.tlf future.tlf smbraille.tlf
 
