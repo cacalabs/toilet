@@ -34,7 +34,7 @@
 struct figfont
 {
     /* From the font format */
-    unsigned char hardblank;
+    unsigned long int hardblank;
     unsigned int height, baseline, max_length;
     int old_layout;
     unsigned int print_direction, full_layout, codetag_count;
@@ -85,6 +85,7 @@ static struct figfont *open_font(void)
 {
     char *data = NULL;
     char path[2048];
+    char hardblank[10];
     struct figfont *font;
     cucul_buffer_t *b;
     FILE *f;
@@ -112,7 +113,7 @@ static struct figfont *open_font(void)
     font->print_direction = 0;
     font->full_layout = 0;
     font->codetag_count = 0;
-    if(fscanf(f, "%*[ft]lf2a%c %u %u %u %i %u %u %u %u\n", &font->hardblank,
+    if(fscanf(f, "%*[ft]lf2a%6s %u %u %u %i %u %u %u %u\n", hardblank,
               &font->height, &font->baseline, &font->max_length,
               &font->old_layout, &comment_lines, &font->print_direction,
               &font->full_layout, &font->codetag_count) < 6)
@@ -122,6 +123,8 @@ static struct figfont *open_font(void)
         fclose(f);
         return NULL;
     }
+
+    font->hardblank = cucul_utf8_to_utf32(hardblank, NULL);
 
     /* Skip comment lines */
     for(i = 0; i < comment_lines; i++)
