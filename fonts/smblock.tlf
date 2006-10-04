@@ -4,7 +4,7 @@ tlf2a$ 4 3 6 0 15 0 0 0
 
   2006/10/04 -- Sam Hocevar <sam@zoy.org>
                 font creation, all base characters
-                katakana characters, additional Latin characters
+                additional characters: latin1, katakana, blocks
 
   This font is free software; you can redistribute it and/or modify it under
 the terms of the Do What The Fuck You Want To Public License, Version 2,
@@ -14,10 +14,10 @@ details.
   This font is part of TOIlet’s official distribution. More information
 on the TOIlet website at http://libcaca.zoy.org/toilet.html
 ===============================================================================
- $@
- $@
- $@
- $@@
+  $@
+  $@
+  $@
+  $@@
 ▐ @
 ▐ @
 ▝ @
@@ -682,6 +682,86 @@ on the TOIlet website at http://libcaca.zoy.org/toilet.html
 ▌ ▌@
 ▚▄▌@
 ▗▄▘@@
+0x2580 ▀ UPPER HALF BLOCK
+███@
+███@
+   @
+   @@
+0x2584 ▄ LOWER HALF BLOCK
+   @
+   @
+███@
+███@
+0x2588 █ FULL BLOCK
+███@
+███@
+███@
+███@@
+0x258C ▌ LEFT HALF BLOCK
+█▌ @
+█▌ @
+█▌ @
+█▌ @@
+0x2590 ▐ RIGHT HALF BLOCK
+ ▐█@
+ ▐█@
+ ▐█@
+ ▐█@@
+0x2596 ▖ QUADRANT LOWER LEFT
+   @
+   @
+█▌ @
+█▌ @@
+0x2597 ▗ QUADRANT LOWER RIGHT
+   @
+   @
+ ▐█@
+ ▐█@@
+0x2598 ▘ QUADRANT UPPER LEFT
+█▌ @
+█▌ @
+   @
+   @@
+0x2599 ▙ QUADRANT UPPER LEFT AND LOWER LEFT AND LOWER RIGHT
+█▌ @
+█▌ @
+███@
+███@@
+0x259A ▚ QUADRANT UPPER LEFT AND LOWER RIGHT
+█▌ @
+█▌ @
+ ▐█@
+ ▐█@@
+0x259B ▛ QUADRANT UPPER LEFT AND UPPER RIGHT AND LOWER LEFT
+███@
+███@
+█▌ @
+█▌ @@
+0x259C ▜ QUADRANT UPPER LEFT AND UPPER RIGHT AND LOWER RIGHT
+███@
+███@
+ ▐█@
+ ▐█@@
+0x259D ▝ QUADRANT UPPER RIGHT
+ ▐█@
+ ▐█@
+   @
+   @@
+0x259E ▞ QUADRANT UPPER RIGHT AND LOWER LEFT
+ ▐█@
+ ▐█@
+█▌ @
+█▌ @@
+0x259F ▟ QUADRANT UPPER RIGHT AND LOWER LEFT AND LOWER RIGHT
+ ▐█@
+ ▐█@
+███@
+███@@
+0x25A0 ■ BLACK SQUARE
+   @
+███@
+███@
+   @@
 0x30A1 ァ KATAKANA LETTER SMALL A
    @
 ▗▄▖@
