@@ -52,6 +52,16 @@ PKG_CHECK_MODULES(cucul, cucul >= 0.99.beta6,
  [AC_MSG_RESULT(no)
   AC_MSG_ERROR([you need libcucul version 0.99.beta6 or later])])
 
+AC_CACHE_CHECK([for build date],
+  [ac_build_date],
+  [stamp="$(sed -ne 's/# \$Id: .*\(....-..-..\).*/\1/p;q' configure.ac)"
+   if date +"%e %B %Y" -d "$stamp" >/dev/null 2>&1; then
+     ac_build_date="$(LANG=C date +"%e %B %Y" -d "$stamp" | sed 's/^ //')"
+   else
+     ac_build_date="${stamp##*-} ${${stamp%-*}#*-} ${stamp%%-*}"
+   fi])
+AC_DEFINE_UNQUOTED(DATE, "$ac_build_date", [Define the version date])
+
 # Optimizations
 CFLAGS="${CFLAGS} -g -O2 -fno-strength-reduce -fomit-frame-pointer"
 # Code qui fait des warnings == code de porc == deux baffes dans ta gueule
