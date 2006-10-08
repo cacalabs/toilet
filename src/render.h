@@ -15,6 +15,5 @@
  * This header defines text to canvas rendering functions.
  */
 
-extern cucul_canvas_t *render_big(uint32_t const *, unsigned int);
-extern cucul_canvas_t *render_tiny(uint32_t const *, unsigned int);
+extern int init_tiny(context_t *);
 

@@ -23,8 +23,76 @@
 #include <stdlib.h>
 #include <cucul.h>
 
+#include "toilet.h"
 #include "render.h"
 
+static int feed_tiny(context_t *, uint32_t);
+static int end_tiny(context_t *);
+
+int init_tiny(context_t *cx)
+{
+    cx->ew = 16;
+    cx->eh = 2;
+    cx->x = cx->y = 0;
+    cx->w = cx->h = 0;
+    cx->cv = cucul_create_canvas(cx->ew, cx->eh);
+
+    cx->feed = feed_tiny;
+    cx->end = end_tiny;
+
+    return 0;
+}
+
+static int feed_tiny(context_t *cx, uint32_t ch)
+{
+    if(cx->x >= cx->w)
+        cx->w = cx->x + 1;
+
+    if(cx->y >= cx->h)
+        cx->h = cx->y + 1;
+
+    switch(ch)
+    {
+        case (uint32_t)'\r':
+            return 0;
+        case (uint32_t)'\n':
+            cx->x = 0;
+            cx->y++;
+            break;
+        case (uint32_t)'\t':
+            cx->x = (cx->x & ~7) + 8;
+            break;
+        default:
+            cucul_putchar(cx->cv, cx->x, cx->y, ch);
+            cx->x++;
+            break;
+    }
+
+    if(cx->x >= cx->term_width)
+    {
+        cx->x = 0;
+        cx->y++;
+    }
+
+    if(cx->x >= cx->ew)
+        cx->ew = cx->ew + cx->ew / 2;
+
+    if(cx->y >= cx->eh)
+        cx->eh = cx->eh + cx->eh / 2;
+
+    cucul_set_canvas_size(cx->cv, cx->ew, cx->eh);
+
+    return 0;
+}
+
+static int end_tiny(context_t *cx)
+{
+    cucul_set_canvas_size(cx->cv, cx->w, cx->h);
+
+    return 0;
+}
+
+#if 0
 cucul_canvas_t *render_big(uint32_t const *string, unsigned int length)
 {
     cucul_canvas_t *cv;
@@ -79,15 +147,5 @@ cucul_canvas_t *render_big(uint32_t const *string, unsigned int length)
 
     return cv;
 }
-
-cucul_canvas_t *render_tiny(uint32_t const *string, unsigned int length)
-{
-    unsigned int x;
-    cucul_canvas_t *cv = cucul_create_canvas(length, 1);
-
-    for(x = 0; x < length; x++)
-        cucul_putchar(cv, x, 0, string[x]);
-
-    return cv;
-}
+#endif
 

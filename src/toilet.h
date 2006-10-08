@@ -15,7 +15,20 @@
  * This header defines global variables.
  */
 
-extern char const *toilet_export;
-extern char const *toilet_font;
-extern char const *toilet_dir;
+struct toilet_context
+{
+    char const *export;
+    char const *font;
+    char const *dir;
+
+    unsigned int term_width;
+
+    cucul_canvas_t *cv;
+    unsigned int w, h, ew, eh, x, y;
+
+    int (*feed)(struct toilet_context *, uint32_t);
+    int (*end)(struct toilet_context *);
+};
+
+typedef struct toilet_context context_t;
 

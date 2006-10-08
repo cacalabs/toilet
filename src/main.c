@@ -36,10 +36,6 @@
 #include "figlet.h"
 #include "filters.h"
 
-char const *toilet_export = "utf8";
-char const *toilet_font = "mono9";
-char const *toilet_dir = "/usr/share/figlet/";
-
 static void version(void);
 #if defined(HAVE_GETOPT_H)
 static void usage(void);
@@ -47,18 +43,22 @@ static void usage(void);
 
 int main(int argc, char *argv[])
 {
-    cucul_canvas_t *cv;
+    context_t struct_cx;
+    context_t *cx = &struct_cx;
+
     cucul_buffer_t *buffer;
 
-    uint32_t *string = NULL;
-    unsigned int length;
-
-    int i;
+    int i, j;
 
     unsigned int flag_gay = 0;
     unsigned int flag_metal = 0;
-    unsigned int term_width = 80;
     int infocode = -1;
+
+    cx->export = "utf8";
+    cx->font = "mono9";
+    cx->dir = "/usr/share/figlet/";
+
+    cx->term_width = 80;
 
 #if defined(HAVE_GETOPT_H)
     for(;;)
@@ -103,10 +103,10 @@ int main(int argc, char *argv[])
             version();
             return 0;
         case 'f': /* --font */
-            toilet_font = optarg;
+            cx->font = optarg;
             break;
         case 'd': /* --directory */
-            toilet_dir = optarg;
+            cx->dir = optarg;
             break;
         case 'g': /* --gay */
             flag_gay = 1;
@@ -115,7 +115,7 @@ int main(int argc, char *argv[])
             flag_metal = 1;
             break;
         case 'w': /* --width */
-            term_width = atoi(optarg);
+            cx->term_width = atoi(optarg);
             break;
         case 't': /* --termwidth */
         {
@@ -125,12 +125,12 @@ int main(int argc, char *argv[])
             if((ioctl(1, TIOCGWINSZ, &ws) != -1 ||
                 ioctl(2, TIOCGWINSZ, &ws) != -1 ||
                 ioctl(0, TIOCGWINSZ, &ws) != -1) && ws.ws_col != 0)
-                term_width = ws.ws_col;
+                cx->term_width = ws.ws_col;
 #endif
             break;
         }
         case 'i': /* --irc */
-            toilet_export = "irc";
+            cx->export = "irc";
             break;
         case '?':
             printf(MOREINFO, argv[0]);
@@ -157,96 +157,125 @@ int main(int argc, char *argv[])
             printf("20201\n");
             return 0;
         case 2:
-            printf("%s\n", toilet_dir);
+            printf("%s\n", cx->dir);
             return 0;
         case 3:
-            printf("%s\n", toilet_font);
+            printf("%s\n", cx->font);
             return 0;
         case 4:
-            printf("%u\n", term_width);
+            printf("%u\n", cx->term_width);
             return 0;
         default:
             return 0;
     }
 
+#if 0
     if(optind >= argc)
-    {
-        printf("%s: too few arguments\n", argv[0]);
-        printf(MOREINFO, argv[0]);
-        return 1;
-    }
+#endif
 
-    /* Load rest of commandline into a UTF-32 string */
-    for(i = optind, length = 0; i < argc; i++)
-    {
-        unsigned int k, guessed_len, real_len;
-
-        guessed_len = strlen(argv[i]);
-
-        if(i > optind)
-            string[length++] = (uint32_t)' ';
-
-        string = realloc(string, (length + guessed_len + 1) * 4);
-
-        for(k = 0, real_len = 0; k < guessed_len; real_len++)
-        {
-            unsigned int char_len;
-
-            string[length + real_len] =
-                cucul_utf8_to_utf32(argv[i] + k, &char_len);
-
-            k += char_len;
-        }
-
-        length += real_len;
-    }
-
+#if 0
     /* Render string to canvas */
-    if(!strcasecmp(toilet_font, "mono9"))
+    if(!strcasecmp(cx->font, "mono9"))
     {
         cv = render_big(string, length);
         filter_autocrop(cv);
     }
-    else if(!strcasecmp(toilet_font, "term"))
+    else if(!strcasecmp(cx->font, "term"))
         cv = render_tiny(string, length);
     else
-        cv = render_figlet(string, length);
+        cv = render_figlet(cx, string, length);
+#endif
 
-    free(string);
+    init_tiny(cx);
 
-    if(!cv)
-        return -1;
+    if(optind >= argc)
+    {
+        char buf[10];
+        unsigned int len;
+        uint32_t ch;
+
+        i = 0;
+
+        /* Read from stdin */
+        while(!feof(stdin))
+        {
+            buf[i++] = getchar();
+            buf[i] = '\0';
+
+            ch = cucul_utf8_to_utf32(buf, &len);
+
+            if(!len)
+                continue;
+
+            cx->feed(cx, ch);
+            i = 0;
+        }
+    }
+    else for(i = optind; i < argc; i++)
+    {
+        /* Read from commandline */
+        unsigned int len;
+
+        if(i != optind)
+            cx->feed(cx, ' ');
+
+        for(j = 0; argv[i][j];)
+        {
+            cx->feed(cx, cucul_utf8_to_utf32(argv[i] + j, &len));
+            j += len;
+        }
+    }
+
+    cx->end(cx);
 
     /* Apply optional effects to our string */
     if(flag_metal)
-        filter_metal(cv);
+        filter_metal(cx->cv);
     if(flag_gay)
-        filter_gay(cv);
+        filter_gay(cx->cv);
 
     /* Output char */
-    buffer = cucul_export_canvas(cv, toilet_export);
+    buffer = cucul_export_canvas(cx->cv, cx->export);
     fwrite(cucul_get_buffer_data(buffer),
            cucul_get_buffer_size(buffer), 1, stdout);
     cucul_free_buffer(buffer);
 
-    cucul_free_canvas(cv);
+    cucul_free_canvas(cx->cv);
 
     return 0;
 }
 
+#if defined(HAVE_GETOPT_H)
+#   define USAGE \
+    "Usage: toilet [ -ghimtv ] [ -d fontdirectory ]\n" \
+    "              [ -f fontfile ] [ -w outputwidth ]\n" \
+    "              [ -I infocode ] [ message ]\n"
+#else
+#   define USAGE ""
+#endif
+
 static void version(void)
 {
-    printf("TOIlet Copyright 2006 Sam Hocevar %s\n", VERSION);
-    printf("Internet: <sam@zoy.org> Version: 0, date: 21 Sep 2006\n");
-    printf("\n");
+    printf(
+    "TOIlet Copyright 2006 Sam Hocevar\n"
+    "Internet: <sam@zoy.org> Version: %s, date: %s\n"
+    "\n"
+    "TOIlet, along with the various TOIlet fonts and documentation, may be\n"
+    "freely copied and distributed.\n"
+    "\n"
+    "If you use TOIlet, please send an e-mail message to <sam@zoy.org>.\n"
+    "\n"
+    "The latest version of TOIlet is available from the web site,\n"
+    "        http://libcaca.zoy.org/toilet.html\n"
+    "\n"
+    USAGE,
+    VERSION, DATE);
 }
 
 #if defined(HAVE_GETOPT_H)
 static void usage(void)
 {
-    printf("Usage: toilet [ -ghimtv ] [ -d fontdirectory ]\n");
-    printf("              [ -f fontfile ] [ -w outputwidth ]\n");
-    printf("              [ -I infocode ] [ message ]\n");
+    printf(USAGE);
 #   ifdef HAVE_GETOPT_LONG
     printf("  -f, --font <fontfile>    select the font\n");
     printf("  -d, --directory <dir>    specify font directory\n");

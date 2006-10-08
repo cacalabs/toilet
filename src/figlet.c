@@ -44,16 +44,17 @@ struct figfont
     unsigned int *lookup;
 };
 
-static struct figfont *open_font(void);
+static struct figfont *open_font(context_t *cx);
 static void free_font(struct figfont *);
 
-cucul_canvas_t *render_figlet(uint32_t const *string, unsigned int length)
+cucul_canvas_t *render_figlet(context_t *cx, uint32_t const *string,
+                              unsigned int length)
 {
     cucul_canvas_t *cv;
     struct figfont *font;
     unsigned int x, i, c;
 
-    font = open_font();
+    font = open_font(cx);
 
     if(!font)
         return NULL;
@@ -81,7 +82,7 @@ cucul_canvas_t *render_figlet(uint32_t const *string, unsigned int length)
     return cv;
 }
 
-static struct figfont *open_font(void)
+static struct figfont *open_font(context_t *cx)
 {
     char *data = NULL;
     char path[2048];
@@ -92,12 +93,12 @@ static struct figfont *open_font(void)
     unsigned int i, j, size, comment_lines;
 
     /* Open font: try .tlf, then .flf */
-    snprintf(path, 2047, "%s/%s.tlf", toilet_dir, toilet_font);
+    snprintf(path, 2047, "%s/%s.tlf", cx->dir, cx->font);
     path[2047] = '\0';
     f = fopen(path, "r");
     if(!f)
     {
-        snprintf(path, 2047, "%s/%s.flf", toilet_dir, toilet_font);
+        snprintf(path, 2047, "%s/%s.flf", cx->dir, cx->font);
         path[2047] = '\0';
         f = fopen(path, "r");
         if(!f)
@@ -227,8 +228,10 @@ static struct figfont *open_font(void)
         {
             ch = cucul_getchar(font->image, i, j);
 
+            /* Replace hardblanks with U+00A0 NO-BREAK SPACE */
             if(ch == font->hardblank)
                 cucul_putchar(font->image, i, j, ch = ' ');
+                //cucul_putchar(font->image, i, j, ch = 0xa0);
 
             if(oldch && ch != oldch)
             {
