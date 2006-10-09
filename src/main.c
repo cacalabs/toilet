@@ -169,24 +169,10 @@ int main(int argc, char *argv[])
             return 0;
     }
 
-#if 0
-    if(optind >= argc)
-#endif
-
-#if 0
-    /* Render string to canvas */
     if(!strcasecmp(cx->font, "mono9"))
-    {
-        cv = render_big(string, length);
-        filter_autocrop(cv);
-    }
-    else if(!strcasecmp(cx->font, "term"))
-        cv = render_tiny(string, length);
-    else
-        cv = render_figlet(cx, string, length);
-#endif
-
-    init_tiny(cx);
+        init_big(cx);
+    else /* if(!strcasecmp(cx->font, "term")) */
+        init_tiny(cx);
 
     if(optind >= argc)
     {
@@ -229,6 +215,8 @@ int main(int argc, char *argv[])
     cx->end(cx);
 
     /* Apply optional effects to our string */
+    if(!strcasecmp(cx->font, "mono9"))
+        filter_autocrop(cx->cv);
     if(flag_metal)
         filter_metal(cx->cv);
     if(flag_gay)

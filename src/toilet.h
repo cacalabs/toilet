@@ -26,8 +26,14 @@ struct toilet_context
     cucul_canvas_t *cv;
     unsigned int w, h, ew, eh, x, y;
 
+    /* Methods */
     int (*feed)(struct toilet_context *, uint32_t);
     int (*end)(struct toilet_context *);
+
+    /* Used by the big driver */
+    cucul_font_t *f;
+    cucul_canvas_t *onechar;
+    unsigned char *buf;
 };
 
 typedef struct toilet_context context_t;

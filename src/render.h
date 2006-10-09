@@ -16,4 +16,5 @@
  */
 
 extern int init_tiny(context_t *);
+extern int init_big(context_t *);
 

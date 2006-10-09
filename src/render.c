@@ -29,6 +29,9 @@
 static int feed_tiny(context_t *, uint32_t);
 static int end_tiny(context_t *);
 
+static int feed_big(context_t *, uint32_t);
+static int end_big(context_t *);
+
 int init_tiny(context_t *cx)
 {
     cx->ew = 16;
@@ -45,11 +48,29 @@ int init_tiny(context_t *cx)
 
 static int feed_tiny(context_t *cx, uint32_t ch)
 {
-    if(cx->x >= cx->w)
-        cx->w = cx->x + 1;
+    /* Check whether we reached the end of the screen */
+    if(cx->x && cx->x + 1 > cx->term_width)
+    {
+        cx->x = 0;
+        cx->y++;
+    }
 
-    if(cx->y >= cx->h)
+    /* Check whether the current canvas is large enough */
+    if(cx->x + 1 > cx->w)
+    {
+        cx->w = cx->x + 1 < cx->term_width ? cx->x + 1 : cx->term_width;
+        if(cx->w > cx->ew)
+            cx->ew = cx->ew + cx->ew / 2;
+    }
+
+    if(cx->y + 1 > cx->h)
+    {
         cx->h = cx->y + 1;
+        if(cx->h > cx->eh)
+            cx->eh = cx->eh + cx->eh / 2;
+    }
+
+    cucul_set_canvas_size(cx->cv, cx->ew, cx->eh);
 
     switch(ch)
     {
@@ -68,20 +89,6 @@ static int feed_tiny(context_t *cx, uint32_t ch)
             break;
     }
 
-    if(cx->x >= cx->term_width)
-    {
-        cx->x = 0;
-        cx->y++;
-    }
-
-    if(cx->x >= cx->ew)
-        cx->ew = cx->ew + cx->ew / 2;
-
-    if(cx->y >= cx->eh)
-        cx->eh = cx->eh + cx->eh / 2;
-
-    cucul_set_canvas_size(cx->cv, cx->ew, cx->eh);
-
     return 0;
 }
 
@@ -92,60 +99,80 @@ static int end_tiny(context_t *cx)
     return 0;
 }
 
-#if 0
-cucul_canvas_t *render_big(uint32_t const *string, unsigned int length)
+int init_big(context_t *cx)
 {
-    cucul_canvas_t *cv;
-    cucul_font_t *f;
     char const * const * fonts;
-    unsigned char *buf;
-    unsigned int w, h, x, y, miny, maxy;
-
-    cv = cucul_create_canvas(length, 1);
-    cucul_set_color(cv, CUCUL_COLOR_WHITE, CUCUL_COLOR_BLACK);
-    for(x = 0; x < length; x++)
-        cucul_putchar(cv, x, 0, string[x]);
 
     fonts = cucul_get_font_list();
-    f = cucul_load_font(fonts[0], 0);
+    cx->f = cucul_load_font(fonts[0], 0);
+    cx->buf = malloc(4 * cucul_get_font_width(cx->f)
+                       * cucul_get_font_height(cx->f));
+    cx->onechar = cucul_create_canvas(1, 1);
+    cucul_set_color(cx->onechar, CUCUL_COLOR_WHITE, CUCUL_COLOR_BLACK);
 
-    /* Create our bitmap buffer (32-bit ARGB) */
-    w = cucul_get_canvas_width(cv) * cucul_get_font_width(f);
-    h = cucul_get_canvas_height(cv) * cucul_get_font_height(f);
-    buf = malloc(4 * w * h);
+    cx->x = cx->y = 0;
+    cx->w = cx->h = 0;
+    cx->cv = cucul_create_canvas(1, 1);
 
-    /* Render the canvas onto our image buffer */
-    cucul_render_canvas(cv, f, buf, w, h, 4 * w);
+    cx->feed = feed_big;
+    cx->end = end_big;
 
-    /* Free our canvas, and allocate a bigger one */
-    cucul_free_font(f);
-    cucul_free_canvas(cv);
-    cv = cucul_create_canvas(w, h);
+    return 0;
+}
 
-    /* Render the image buffer on the canvas */
-    cucul_set_color(cv, CUCUL_COLOR_WHITE, CUCUL_COLOR_TRANSPARENT);
-    cucul_clear_canvas(cv);
+static int feed_big(context_t *cx, uint32_t ch)
+{
+    unsigned int w = cucul_get_font_width(cx->f);
+    unsigned int h = cucul_get_font_height(cx->f);
+    unsigned int x, y;
 
-    miny = h; maxy = 0;
+    /* Check whether we reached the end of the screen */
+    if(cx->x && cx->x + w > cx->term_width)
+    {
+        cx->x = 0;
+        cx->y += h;
+    }
+
+    /* Check whether the current canvas is large enough */
+    if(cx->x + w > cx->w)
+        cx->w = cx->x + w < cx->term_width ? cx->x + w : cx->term_width;
+
+    if(cx->y + h > cx->h)
+        cx->h = cx->y + h;
+
+    cucul_set_canvas_size(cx->cv, cx->w, cx->h);
+
+    /* Render our char */
+    cucul_putchar(cx->onechar, 0, 0, ch);
+    cucul_render_canvas(cx->onechar, cx->f, cx->buf, w, h, 4 * w);
 
     for(y = 0; y < h; y++)
        for(x = 0; x < w; x++)
     {
-        unsigned char c = buf[4 * (x + y * w) + 2];
+        unsigned char c = cx->buf[4 * (x + y * w) + 2];
 
         if(c >= 0xa0)
-            cucul_putstr(cv, x, y, "█");
+            cucul_putstr(cx->cv, cx->x + x, cx->y + y, "█");
         else if(c >= 0x80)
-            cucul_putstr(cv, x, y, "▓");
+            cucul_putstr(cx->cv, cx->x + x, cx->y + y, "▓");
         else if(c >= 0x40)
-            cucul_putstr(cv, x, y, "▒");
+            cucul_putstr(cx->cv, cx->x + x, cx->y + y, "▒");
         else if(c >= 0x20)
-            cucul_putstr(cv, x, y, "░");
+            cucul_putstr(cx->cv, cx->x + x, cx->y + y, "░");
     }
 
-    free(buf);
+    /* Advance cursor */
+    cx->x += w;
 
-    return cv;
+    return 0;
 }
-#endif
+
+static int end_big(context_t *cx)
+{
+    cucul_free_canvas(cx->onechar);
+    free(cx->buf);
+    cucul_free_font(cx->f);
+
+    return 0;
+}
 
