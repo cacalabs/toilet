@@ -34,6 +34,15 @@ struct toilet_context
     cucul_font_t *f;
     cucul_canvas_t *onechar;
     unsigned char *buf;
+
+    /* Used by the FIGlet driver */
+    unsigned long int hardblank;
+    unsigned int height, baseline, max_length;
+    int old_layout;
+    unsigned int print_direction, full_layout, codetag_count;
+    unsigned int glyphs;
+    cucul_canvas_t *image;
+    unsigned int *lookup;
 };
 
 typedef struct toilet_context context_t;

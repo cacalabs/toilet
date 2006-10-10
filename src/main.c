@@ -171,8 +171,10 @@ int main(int argc, char *argv[])
 
     if(!strcasecmp(cx->font, "mono9"))
         init_big(cx);
-    else /* if(!strcasecmp(cx->font, "term")) */
+    else if(!strcasecmp(cx->font, "term"))
         init_tiny(cx);
+    else
+        init_figlet(cx);
 
     if(optind >= argc)
     {

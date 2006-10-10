@@ -14,6 +14,5 @@
 /*
  * This header defines functions for handling FIGlet fonts.
  */
-extern cucul_canvas_t *render_figlet(context_t *, uint32_t const *,
-                                     unsigned int);
+extern int init_figlet(context_t *);
 

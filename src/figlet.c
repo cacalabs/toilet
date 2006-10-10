@@ -31,63 +31,95 @@
 #define STD_GLYPHS (127 - 32)
 #define EXT_GLYPHS (STD_GLYPHS + 7)
 
-struct figfont
+static int feed_figlet(context_t *, uint32_t);
+static int end_figlet(context_t *);
+
+static int open_font(context_t *cx);
+
+int init_figlet(context_t *cx)
 {
-    /* From the font format */
-    unsigned long int hardblank;
-    unsigned int height, baseline, max_length;
-    int old_layout;
-    unsigned int print_direction, full_layout, codetag_count;
+    if(open_font(cx))
+        return -1;
 
-    unsigned int glyphs;
-    cucul_canvas_t *image;
-    unsigned int *lookup;
-};
+    cx->x = cx->y = 0;
+    cx->w = cx->h = 0;
+    cx->cv = cucul_create_canvas(1, 1);
 
-static struct figfont *open_font(context_t *cx);
-static void free_font(struct figfont *);
+    cx->feed = feed_figlet;
+    cx->end = end_figlet;
 
-cucul_canvas_t *render_figlet(context_t *cx, uint32_t const *string,
-                              unsigned int length)
-{
-    cucul_canvas_t *cv;
-    struct figfont *font;
-    unsigned int x, i, c;
-
-    font = open_font(cx);
-
-    if(!font)
-        return NULL;
-
-    cv = cucul_create_canvas(length * font->max_length, font->height);
-
-    for(x = 0, i = 0; i < length; i++)
-    {
-        for(c = 0; c < font->glyphs; c++)
-            if(font->lookup[c * 2] == string[i])
-                break;
-
-        if(c == font->glyphs)
-            continue;
-
-        cucul_blit(cv, x, - (int)(c * font->height), font->image, NULL);
-
-        x += font->lookup[c * 2 + 1];
-    }
-
-    cucul_set_canvas_boundaries(cv, 0, 0, x, font->height);
-
-    free_font(font);
-
-    return cv;
+    return 0;
 }
 
-static struct figfont *open_font(context_t *cx)
+static int feed_figlet(context_t *cx, uint32_t ch)
+{
+    unsigned int c, w, h, x, y;
+
+    switch(ch)
+    {
+        case (uint32_t)'\r':
+            return 0;
+        case (uint32_t)'\n':
+            cx->x = 0;
+            cx->y += cx->height;
+            return 0;
+        /* FIXME: handle '\t' */
+    }
+
+    /* Look whether our glyph is available */
+    for(c = 0; c < cx->glyphs; c++)
+        if(cx->lookup[c * 2] == ch)
+            break;
+
+    if(c == cx->glyphs)
+        return 0;
+
+    w = cx->lookup[c * 2 + 1];
+    h = cx->height;
+
+    /* Check whether we reached the end of the screen */
+    if(cx->x && cx->x + w > cx->term_width)
+    {
+        cx->x = 0;
+        cx->y += h;
+    }
+
+    /* Check whether the current canvas is large enough */
+    if(cx->x + w > cx->w)
+        cx->w = cx->x + w < cx->term_width ? cx->x + w : cx->term_width;
+
+    if(cx->y + h > cx->h)
+        cx->h = cx->y + h;
+
+    cucul_set_canvas_size(cx->cv, cx->w, cx->h);
+
+    /* Render our char (FIXME: create a rect-aware cucul_blit_canvas?) */
+    for(y = 0; y < h; y++)
+        for(x = 0; x < w; x++)
+    {
+        uint32_t tmp = cucul_getchar(cx->image, x, y + c * cx->height);
+        cucul_putchar(cx->cv, cx->x + x, cx->y + y, tmp);
+    }
+
+    /* Advance cursor */
+    cx->x += w;
+
+    return 0;
+}
+
+static int end_figlet(context_t *cx)
+{
+    cucul_free_canvas(cx->image);
+    free(cx->lookup);
+
+    return 0;
+}
+
+static int open_font(context_t *cx)
 {
     char *data = NULL;
     char path[2048];
     char hardblank[10];
-    struct figfont *font;
     cucul_buffer_t *b;
     FILE *f;
     unsigned int i, j, size, comment_lines;
@@ -104,28 +136,25 @@ static struct figfont *open_font(context_t *cx)
         if(!f)
         {
             fprintf(stderr, "font `%s' not found\n", path);
-            return NULL;
+            return -1;
         }
     }
 
-    font = malloc(sizeof(struct figfont));
-
     /* Read header */
-    font->print_direction = 0;
-    font->full_layout = 0;
-    font->codetag_count = 0;
+    cx->print_direction = 0;
+    cx->full_layout = 0;
+    cx->codetag_count = 0;
     if(fscanf(f, "%*[ft]lf2a%6s %u %u %u %i %u %u %u %u\n", hardblank,
-              &font->height, &font->baseline, &font->max_length,
-              &font->old_layout, &comment_lines, &font->print_direction,
-              &font->full_layout, &font->codetag_count) < 6)
+              &cx->height, &cx->baseline, &cx->max_length,
+              &cx->old_layout, &comment_lines, &cx->print_direction,
+              &cx->full_layout, &cx->codetag_count) < 6)
     {
         fprintf(stderr, "font `%s' has invalid header\n", path);
-        free(font);
         fclose(f);
-        return NULL;
+        return -1;
     }
 
-    font->hardblank = cucul_utf8_to_utf32(hardblank, NULL);
+    cx->hardblank = cucul_utf8_to_utf32(hardblank, NULL);
 
     /* Skip comment lines */
     for(i = 0; i < comment_lines; i++)
@@ -136,23 +165,23 @@ static struct figfont *open_font(context_t *cx)
 
     /* Read mandatory characters (32-127, 196, 214, 220, 228, 246, 252, 223)
      * then read additional characters. */
-    font->glyphs = 0;
-    font->lookup = NULL;
+    cx->glyphs = 0;
+    cx->lookup = NULL;
 
-    for(i = 0, size = 0; !feof(f); font->glyphs++)
+    for(i = 0, size = 0; !feof(f); cx->glyphs++)
     {
-        if((font->glyphs % 2048) == 0)
-            font->lookup = realloc(font->lookup,
-                                   (font->glyphs + 2048) * 2 * sizeof(int));
+        if((cx->glyphs % 2048) == 0)
+            cx->lookup = realloc(cx->lookup,
+                                   (cx->glyphs + 2048) * 2 * sizeof(int));
 
-        if(font->glyphs < STD_GLYPHS)
+        if(cx->glyphs < STD_GLYPHS)
         {
-            font->lookup[font->glyphs * 2] = 32 + font->glyphs;
+            cx->lookup[cx->glyphs * 2] = 32 + cx->glyphs;
         }
-        else if(font->glyphs < EXT_GLYPHS)
+        else if(cx->glyphs < EXT_GLYPHS)
         {
             static int const tab[7] = { 196, 214, 220, 228, 246, 252, 223 };
-            font->lookup[font->glyphs * 2] = tab[font->glyphs - STD_GLYPHS];
+            cx->lookup[cx->glyphs * 2] = tab[cx->glyphs - STD_GLYPHS];
         }
         else
         {
@@ -165,24 +194,23 @@ static struct figfont *open_font(context_t *cx)
             if(!ret)
             {
                 free(data);
-                free(font->lookup);
-                free(font);
+                free(cx->lookup);
                 fprintf(stderr, "read error at glyph %u in `%s'\n",
-                                font->glyphs, path);
-                return NULL;
+                                cx->glyphs, path);
+                return -1;
             }
 
             if(number[1] == 'x')
-                sscanf(number, "%x", &font->lookup[font->glyphs * 2]);
+                sscanf(number, "%x", &cx->lookup[cx->glyphs * 2]);
             else
-                sscanf(number, "%u", &font->lookup[font->glyphs * 2]);
+                sscanf(number, "%u", &cx->lookup[cx->glyphs * 2]);
 
             fscanf(f, "%*c");
         }
 
-        font->lookup[font->glyphs * 2 + 1] = 0;
+        cx->lookup[cx->glyphs * 2 + 1] = 0;
 
-        for(j = 0; j < font->height; j++)
+        for(j = 0; j < cx->height; j++)
         {
             if(i + 2048 >= size)
                 data = realloc(data, size += 2048);
@@ -194,67 +222,58 @@ static struct figfont *open_font(context_t *cx)
 
     fclose(f);
 
-    if(font->glyphs < EXT_GLYPHS)
+    if(cx->glyphs < EXT_GLYPHS)
     {
         free(data);
-        free(font->lookup);
-        free(font);
+        free(cx->lookup);
         fprintf(stderr, "only %u glyphs in `%s', expected at least %u\n",
-                        font->glyphs, path, EXT_GLYPHS);
-        return NULL;
+                        cx->glyphs, path, EXT_GLYPHS);
+        return -1;
     }
 
     /* Import buffer into canvas */
     b = cucul_load_memory(data, i);
-    font->image = cucul_import_canvas(b, "utf8");
+    cx->image = cucul_import_canvas(b, "utf8");
     cucul_free_buffer(b);
     free(data);
 
-    if(!font->image)
+    if(!cx->image)
     {
-        free(font->lookup);
-        free(font);
+        free(cx->lookup);
         fprintf(stderr, "libcucul could not load data in `%s'\n", path);
-        return NULL;
+        return -1;
     }
 
     /* Remove EOL characters. For now we ignore hardblanks, don’t do any
      * smushing, nor any kind of error checking. */
-    for(j = 0; j < font->height * font->glyphs; j++)
+    for(j = 0; j < cx->height * cx->glyphs; j++)
     {
         unsigned long int ch, oldch = 0;
 
-        for(i = font->max_length; i--;)
+        for(i = cx->max_length; i--;)
         {
-            ch = cucul_getchar(font->image, i, j);
+            ch = cucul_getchar(cx->image, i, j);
 
-            /* Replace hardblanks with U+00A0 NO-BREAK SPACE */
-            if(ch == font->hardblank)
-                cucul_putchar(font->image, i, j, ch = ' ');
-                //cucul_putchar(font->image, i, j, ch = 0xa0);
+            /* TODO: Replace hardblanks with U+00A0 NO-BREAK SPACE */
+            if(ch == cx->hardblank)
+                cucul_putchar(cx->image, i, j, ch = ' ');
+                //cucul_putchar(cx->image, i, j, ch = 0xa0);
 
             if(oldch && ch != oldch)
             {
-                if(!font->lookup[j / font->height * 2 + 1])
-                    font->lookup[j / font->height * 2 + 1] = i + 1;
+                if(!cx->lookup[j / cx->height * 2 + 1])
+                    cx->lookup[j / cx->height * 2 + 1] = i + 1;
             }
             else if(oldch && ch == oldch)
-                cucul_putchar(font->image, i, j, ' ');
+                cucul_putchar(cx->image, i, j, ' ');
             else if(ch != ' ')
             {
                 oldch = ch;
-                cucul_putchar(font->image, i, j, ' ');
+                cucul_putchar(cx->image, i, j, ' ');
             }
         }
     }
 
-    return font;
-}
-
-static void free_font(struct figfont *font)
-{
-    cucul_free_canvas(font->image);
-    free(font->lookup);
-    free(font);
+    return 0;
 }
 
