@@ -23,7 +23,7 @@
 #if defined(HAVE_GETOPT_H)
 #   include <getopt.h>
 #endif
-#if defined(HAVE_SYS_IOCTL_H) && defined(TIOCGWINSZ)
+#if defined(HAVE_SYS_IOCTL_H) && defined(HAVE_TIOCGWINSZ)
 #   include <sys/ioctl.h>
 #endif
 #include <stdio.h>
@@ -119,7 +119,7 @@ int main(int argc, char *argv[])
             break;
         case 't': /* --termwidth */
         {
-#if defined(HAVE_SYS_IOCTL_H) && defined(TIOCGWINSZ)
+#if defined(HAVE_SYS_IOCTL_H) && defined(HAVE_TIOCGWINSZ)
             struct winsize ws;
 
             if((ioctl(1, TIOCGWINSZ, &ws) != -1 ||
