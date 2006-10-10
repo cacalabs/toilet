@@ -48,6 +48,19 @@ int init_tiny(context_t *cx)
 
 static int feed_tiny(context_t *cx, uint32_t ch)
 {
+    switch(ch)
+    {
+        case (uint32_t)'\r':
+            return 0;
+        case (uint32_t)'\n':
+            cx->x = 0;
+            cx->y++;
+            return 0;
+        case (uint32_t)'\t':
+            cx->x = (cx->x & ~7) + 8;
+            return 0;
+    }
+
     /* Check whether we reached the end of the screen */
     if(cx->x && cx->x + 1 > cx->term_width)
     {
@@ -72,22 +85,8 @@ static int feed_tiny(context_t *cx, uint32_t ch)
 
     cucul_set_canvas_size(cx->cv, cx->ew, cx->eh);
 
-    switch(ch)
-    {
-        case (uint32_t)'\r':
-            return 0;
-        case (uint32_t)'\n':
-            cx->x = 0;
-            cx->y++;
-            break;
-        case (uint32_t)'\t':
-            cx->x = (cx->x & ~7) + 8;
-            break;
-        default:
-            cucul_putchar(cx->cv, cx->x, cx->y, ch);
-            cx->x++;
-            break;
-    }
+    cucul_putchar(cx->cv, cx->x, cx->y, ch);
+    cx->x++;
 
     return 0;
 }
@@ -125,6 +124,19 @@ static int feed_big(context_t *cx, uint32_t ch)
     unsigned int w = cucul_get_font_width(cx->f);
     unsigned int h = cucul_get_font_height(cx->f);
     unsigned int x, y;
+
+    switch(ch)
+    {
+        case (uint32_t)'\r':
+            return 0;
+        case (uint32_t)'\n':
+            cx->x = 0;
+            cx->y += h;
+            return 0;
+        case (uint32_t)'\t':
+            cx->x = (((cx->x / w) & ~7) + 8) * w;
+            return 0;
+    }
 
     /* Check whether we reached the end of the screen */
     if(cx->x && cx->x + w > cx->term_width)
