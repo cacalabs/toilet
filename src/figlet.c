@@ -119,6 +119,7 @@ static int open_font(context_t *cx)
 {
     char *data = NULL;
     char path[2048];
+    char buf[2048];
     char hardblank[10];
     cucul_buffer_t *b;
     FILE *f;
@@ -144,7 +145,8 @@ static int open_font(context_t *cx)
     cx->print_direction = 0;
     cx->full_layout = 0;
     cx->codetag_count = 0;
-    if(fscanf(f, "%*[ft]lf2a%6s %u %u %u %i %u %u %u %u\n", hardblank,
+    fgets(buf, 2048, f);
+    if(sscanf(buf, "%*[ft]lf2a%6s %u %u %u %i %u %u %u %u\n", hardblank,
               &cx->height, &cx->baseline, &cx->max_length,
               &cx->old_layout, &comment_lines, &cx->print_direction,
               &cx->full_layout, &cx->codetag_count) < 6)
@@ -158,10 +160,7 @@ static int open_font(context_t *cx)
 
     /* Skip comment lines */
     for(i = 0; i < comment_lines; i++)
-    {
-        fscanf(f, "%*[^\n]");
-        fscanf(f, "%*c");
-    }
+        fgets(buf, 2048, f);
 
     /* Read mandatory characters (32-127, 196, 214, 220, 228, 246, 252, 223)
      * then read additional characters. */
@@ -185,13 +184,10 @@ static int open_font(context_t *cx)
         }
         else
         {
-            char number[10];
-            int ret = fscanf(f, "%s %*[^\n]", number);
-
-            if(ret == EOF)
+            if(fgets(buf, 2048, f) == NULL)
                 break;
 
-            if(!ret)
+            if(!buf[0])
             {
                 free(data);
                 free(cx->lookup);
@@ -200,12 +196,10 @@ static int open_font(context_t *cx)
                 return -1;
             }
 
-            if(number[1] == 'x')
-                sscanf(number, "%x", &cx->lookup[cx->glyphs * 2]);
+            if(buf[1] == 'x')
+                sscanf(buf, "%x", &cx->lookup[cx->glyphs * 2]);
             else
-                sscanf(number, "%u", &cx->lookup[cx->glyphs * 2]);
-
-            fscanf(f, "%*c");
+                sscanf(buf, "%u", &cx->lookup[cx->glyphs * 2]);
         }
 
         cx->lookup[cx->glyphs * 2 + 1] = 0;
