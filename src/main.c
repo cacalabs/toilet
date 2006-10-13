@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
 
     cucul_buffer_t *buffer;
 
-    int i, j;
+    int i, j, ret;
 
     unsigned int flag_gay = 0;
     unsigned int flag_metal = 0;
@@ -170,11 +170,14 @@ int main(int argc, char *argv[])
     }
 
     if(!strcasecmp(cx->font, "mono9"))
-        init_big(cx);
+        ret = init_big(cx);
     else if(!strcasecmp(cx->font, "term"))
-        init_tiny(cx);
+        ret = init_tiny(cx);
     else
-        init_figlet(cx);
+        ret = init_figlet(cx);
+
+    if(ret)
+        return -1;
 
     if(optind >= argc)
     {
