@@ -22,5 +22,6 @@ TOIFILE;
 
 TOIFILE *toiopen(const char *, const char *);
 int toiclose(TOIFILE *);
+int toieof(TOIFILE *);
 char *toigets(char *, int, TOIFILE *);
 

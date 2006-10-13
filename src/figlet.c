@@ -168,7 +168,7 @@ static int open_font(context_t *cx)
     cx->glyphs = 0;
     cx->lookup = NULL;
 
-    for(i = 0, size = 0; !feof(f); cx->glyphs++)
+    for(i = 0, size = 0; !toieof(f); cx->glyphs++)
     {
         if((cx->glyphs % 2048) == 0)
             cx->lookup = realloc(cx->lookup,

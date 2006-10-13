@@ -43,6 +43,11 @@ int toiclose(TOIFILE *toif)
     return fclose(f);
 }
 
+int toieof(TOIFILE *toif)
+{
+    return feof(toif->f);
+}
+
 char *toigets(char *s, int size, TOIFILE *toif)
 {
     return fgets(s, size, toif->f);
