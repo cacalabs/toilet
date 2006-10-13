@@ -26,6 +26,7 @@
 #include <cucul.h>
 
 #include "toilet.h"
+#include "io.h"
 #include "figlet.h"
 
 #define STD_GLYPHS (127 - 32)
@@ -122,18 +123,18 @@ static int open_font(context_t *cx)
     char buf[2048];
     char hardblank[10];
     cucul_buffer_t *b;
-    FILE *f;
+    TOIFILE *f;
     unsigned int i, j, size, comment_lines;
 
     /* Open font: try .tlf, then .flf */
     snprintf(path, 2047, "%s/%s.tlf", cx->dir, cx->font);
     path[2047] = '\0';
-    f = fopen(path, "r");
+    f = toiopen(path, "r");
     if(!f)
     {
         snprintf(path, 2047, "%s/%s.flf", cx->dir, cx->font);
         path[2047] = '\0';
-        f = fopen(path, "r");
+        f = toiopen(path, "r");
         if(!f)
         {
             fprintf(stderr, "font `%s' not found\n", path);
@@ -145,14 +146,14 @@ static int open_font(context_t *cx)
     cx->print_direction = 0;
     cx->full_layout = 0;
     cx->codetag_count = 0;
-    fgets(buf, 2048, f);
+    toigets(buf, 2048, f);
     if(sscanf(buf, "%*[ft]lf2a%6s %u %u %u %i %u %u %u %u\n", hardblank,
               &cx->height, &cx->baseline, &cx->max_length,
               &cx->old_layout, &comment_lines, &cx->print_direction,
               &cx->full_layout, &cx->codetag_count) < 6)
     {
         fprintf(stderr, "font `%s' has invalid header\n", path);
-        fclose(f);
+        toiclose(f);
         return -1;
     }
 
@@ -160,7 +161,7 @@ static int open_font(context_t *cx)
 
     /* Skip comment lines */
     for(i = 0; i < comment_lines; i++)
-        fgets(buf, 2048, f);
+        toigets(buf, 2048, f);
 
     /* Read mandatory characters (32-127, 196, 214, 220, 228, 246, 252, 223)
      * then read additional characters. */
@@ -184,7 +185,7 @@ static int open_font(context_t *cx)
         }
         else
         {
-            if(fgets(buf, 2048, f) == NULL)
+            if(toigets(buf, 2048, f) == NULL)
                 break;
 
             if(!buf[0])
@@ -209,12 +210,12 @@ static int open_font(context_t *cx)
             if(i + 2048 >= size)
                 data = realloc(data, size += 2048);
 
-            fgets(data + i, 2048, f);
+            toigets(data + i, 2048, f);
             i = (uintptr_t)strchr(data + i, 0) - (uintptr_t)data;
         }
     }
 
-    fclose(f);
+    toiclose(f);
 
     if(cx->glyphs < EXT_GLYPHS)
     {

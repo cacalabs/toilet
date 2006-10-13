@@ -2,6 +2,7 @@
 bin_PROGRAMS = toilet
 
 toilet_SOURCES = main.c \
+	io.c io.h \
 	render.c render.h \
 	filters.c filter.h \
 	figlet.c figlet.h
