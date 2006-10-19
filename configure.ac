@@ -25,7 +25,7 @@ if test "$build" != "$host" -a "${PKG_CONFIG_LIBDIR}" = ""; then
   export PKG_CONFIG_LIBDIR=/dev/null
 fi
 
-AC_CHECK_HEADERS(getopt.h sys/ioctl.h)
+AC_CHECK_HEADERS(getopt.h sys/ioctl.h zlib.h)
 
 AC_CHECK_FUNCS(getopt_long,
  [AC_DEFINE(HAVE_GETOPT_LONG, 1, Define to 1 if you have the `getopt_long' function.)],
@@ -33,6 +33,10 @@ AC_CHECK_FUNCS(getopt_long,
    [AC_DEFINE(HAVE_GETOPT_LONG, 1, Define to 1 if you have the `getopt_long' function.)
     GETOPT_LIBS="${GETOPT_LIBS} -lgnugetopt"])])
 AC_SUBST(GETOPT_LIBS)
+
+AC_CHECK_LIB(z, gzopen,
+ [ZLIB_LIBS="${ZLIB_LIBS} -lz"])
+AC_SUBST(ZLIB_LIBS)
 
 AC_CACHE_CHECK([for TIOCGWINSZ],
   [ac_cv_have_tiocgwinsz],
