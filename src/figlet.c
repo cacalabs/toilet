@@ -152,7 +152,7 @@ static int open_font(context_t *cx)
               &cx->old_layout, &comment_lines, &cx->print_direction,
               &cx->full_layout, &cx->codetag_count) < 6)
     {
-        fprintf(stderr, "font `%s' has invalid header\n", path);
+        fprintf(stderr, "font `%s' has invalid header: %s\n", path, buf);
         toiclose(f);
         return -1;
     }
