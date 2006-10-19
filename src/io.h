@@ -14,11 +14,7 @@
 /*
  * This header defines functions for compressed file I/O.
  */
-typedef struct toifile
-{
-    FILE *f;
-}
-TOIFILE;
+typedef struct toifile TOIFILE;
 
 TOIFILE *toiopen(const char *, const char *);
 int toiclose(TOIFILE *);

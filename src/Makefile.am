@@ -7,5 +7,5 @@ toilet_SOURCES = main.c \
 	filters.c filter.h \
 	figlet.c figlet.h
 toilet_CFLAGS = `pkg-config --cflags cucul`
-toilet_LDFLAGS = `pkg-config --libs cucul` @GETOPT_LIBS@
+toilet_LDFLAGS = `pkg-config --libs cucul` @GETOPT_LIBS@ @ZLIB_LIBS@
 
