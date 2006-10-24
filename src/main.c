@@ -34,7 +34,7 @@
 #include "toilet.h"
 #include "render.h"
 #include "figlet.h"
-#include "filters.h"
+#include "filter.h"
 
 static void version(void);
 #if defined(HAVE_GETOPT_H)

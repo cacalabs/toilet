@@ -22,7 +22,7 @@
 #endif
 #include <cucul.h>
 
-#include "filters.h"
+#include "filter.h"
 
 void filter_autocrop(cucul_canvas_t *cv)
 {
