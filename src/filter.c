@@ -20,11 +20,84 @@
 #if defined(HAVE_INTTYPES_H)
 #   include <inttypes.h>
 #endif
+#include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <cucul.h>
 
+#include "toilet.h"
 #include "filter.h"
 
-void filter_autocrop(cucul_canvas_t *cv)
+static void filter_crop(cucul_canvas_t *);
+static void filter_gay(cucul_canvas_t *);
+static void filter_metal(cucul_canvas_t *);
+static void filter_flip(cucul_canvas_t *);
+static void filter_flop(cucul_canvas_t *);
+static void filter_rotate(cucul_canvas_t *);
+
+struct
+{
+    char const *name;
+    void (*function)(cucul_canvas_t *);
+}
+const lookup[] =
+{
+    { "crop", filter_crop },
+    { "gay", filter_gay },
+    { "metal", filter_metal },
+    { "flip", filter_flip },
+    { "flop", filter_flop },
+    { "rotate", filter_rotate },
+};
+
+int filter_add(context_t *cx, char const *filter)
+{
+    unsigned int n;
+    int i;
+
+    for(;;)
+    {
+        while(*filter == ':')
+            filter++;
+
+        if(*filter == '\0')
+            break;
+
+        for(i = sizeof(lookup) / sizeof(lookup[0]); i--; )
+            if(!strncmp(filter, lookup[i].name, strlen(lookup[i].name)))
+                break;
+
+        n = strlen(lookup[i].name);
+
+        if(i == -1 || (filter[n] != ':' && filter[n] != '\0'))
+        {
+            fprintf(stderr, "unknown filter near `%s'\n", filter);
+            return -1;
+        }
+
+        if((cx->nfilters % 16) == 0)
+            cx->filters = realloc(cx->filters, (cx->nfilters + 16)
+                                                 * sizeof(lookup[0].function));
+        cx->filters[cx->nfilters] = lookup[i].function;
+        cx->nfilters++;
+
+        filter += n;
+    }
+
+    return 0;
+}
+
+int filter_do(context_t *cx)
+{
+    unsigned int i;
+
+    for(i = 0; i < cx->nfilters; i++)
+        cx->filters[i](cx->cv);
+
+    return 0;
+}
+
+static void filter_crop(cucul_canvas_t *cv)
 {
     unsigned int x, y, w, h;
     unsigned int xmin, xmax, ymin, ymax;
@@ -58,7 +131,7 @@ void filter_autocrop(cucul_canvas_t *cv)
                                 xmax - xmin + 1, ymax - ymin + 1);
 }
 
-void filter_metal(cucul_canvas_t *cv)
+static void filter_metal(cucul_canvas_t *cv)
 {
     static unsigned char const palette[] =
     {
@@ -88,7 +161,7 @@ void filter_metal(cucul_canvas_t *cv)
     }
 }
 
-void filter_gay(cucul_canvas_t *cv)
+static void filter_gay(cucul_canvas_t *cv)
 {
     static unsigned char const rainbow[] =
     {
@@ -115,5 +188,20 @@ void filter_gay(cucul_canvas_t *cv)
             cucul_putchar(cv, x, y, ch);
         }
     }
+}
+
+static void filter_flip(cucul_canvas_t *cv)
+{
+    cucul_flip(cv);
+}
+
+static void filter_flop(cucul_canvas_t *cv)
+{
+    cucul_flop(cv);
+}
+
+static void filter_rotate(cucul_canvas_t *cv)
+{
+    cucul_rotate(cv);
 }
 

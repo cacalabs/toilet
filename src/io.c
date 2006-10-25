@@ -45,7 +45,7 @@ struct toifile
     FILE *f;
 };
 
-TOIFILE *toiopen(const char *path, const char *mode)
+TOIFILE *toiopen(char const *path, const char *mode)
 {
     TOIFILE *toif = malloc(sizeof(*toif));
 

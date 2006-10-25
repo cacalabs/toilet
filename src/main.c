@@ -50,8 +50,6 @@ int main(int argc, char *argv[])
 
     int i, j, ret;
 
-    unsigned int flag_gay = 0;
-    unsigned int flag_metal = 0;
     int infocode = -1;
 
     cx->export = "utf8";
@@ -59,6 +57,9 @@ int main(int argc, char *argv[])
     cx->dir = "/usr/share/figlet/";
 
     cx->term_width = 80;
+
+    cx->filters = NULL;
+    cx->nfilters = 0;
 
 #if defined(HAVE_GETOPT_H)
     for(;;)
@@ -73,6 +74,7 @@ int main(int argc, char *argv[])
             { "directory", 1, NULL, 'd' },
             { "width", 1, NULL, 'w' },
             { "termwidth", 0, NULL, 't' },
+            { "filter", 1, NULL, 'F' },
             { "gay", 0, NULL, 'g' },
             { "metal", 0, NULL, 'm' },
             { "irc", 0, NULL, 'i' },
@@ -82,11 +84,11 @@ int main(int argc, char *argv[])
             { NULL, 0, NULL, 0 }
         };
 
-        int c = getopt_long(argc, argv, "d:f:I:w:ghimtv",
+        int c = getopt_long(argc, argv, "f:d:w:tF:gmihI:v",
                             long_options, &option_index);
 #   else
 #       define MOREINFO "Try `%s -h' for more information.\n"
-        int c = getopt(argc, argv, "d:f:I:w:ghimtv");
+        int c = getopt(argc, argv, "f:d:w:tF:gmihI:v");
 #   endif
         if(c == -1)
             break;
@@ -108,11 +110,15 @@ int main(int argc, char *argv[])
         case 'd': /* --directory */
             cx->dir = optarg;
             break;
+        case 'F': /* --filter */
+            if(filter_add(cx, optarg))
+                return -1;
+            break;
         case 'g': /* --gay */
-            flag_gay = 1;
+            filter_add(cx, "gay");
             break;
         case 'm': /* --metal */
-            flag_metal = 1;
+            filter_add(cx, "metal");
             break;
         case 'w': /* --width */
             cx->term_width = atoi(optarg);
@@ -220,12 +226,7 @@ int main(int argc, char *argv[])
     cx->end(cx);
 
     /* Apply optional effects to our string */
-    if(!strcasecmp(cx->font, "mono9"))
-        filter_autocrop(cx->cv);
-    if(flag_metal)
-        filter_metal(cx->cv);
-    if(flag_gay)
-        filter_gay(cx->cv);
+    filter_do(cx);
 
     /* Output char */
     buffer = cucul_export_canvas(cx->cv, cx->export);
@@ -240,7 +241,7 @@ int main(int argc, char *argv[])
 
 #if defined(HAVE_GETOPT_H)
 #   define USAGE \
-    "Usage: toilet [ -ghimtv ] [ -d fontdirectory ]\n" \
+    "Usage: toilet [ -ghimtvF ] [ -d fontdirectory ]\n" \
     "              [ -f fontfile ] [ -w outputwidth ]\n" \
     "              [ -I infocode ] [ message ]\n"
 #else
@@ -274,6 +275,7 @@ static void usage(void)
     printf("  -d, --directory <dir>    specify font directory\n");
     printf("  -w, --width <width>      set output width\n");
     printf("  -t, --termwidth          adapt to terminal's width\n");
+    printf("  -F, --filter             apply one or several filters to the text\n");
     printf("  -g, --gay                add a rainbow effect to the text\n");
     printf("  -m, --metal              add a metal effect to the text\n");
     printf("  -i, --irc                output IRC colour codes\n");
@@ -285,6 +287,7 @@ static void usage(void)
     printf("  -d <dir>         specify font directory\n");
     printf("  -w <width>       set output width\n");
     printf("  -t               adapt to terminal's width\n");
+    printf("  -F               apply one or several filters to the text\n");
     printf("  -g               add a rainbow effect to the text\n");
     printf("  -m               add a metal effect to the text\n");
     printf("  -i               output IRC colour codes\n");

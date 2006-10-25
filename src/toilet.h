@@ -26,7 +26,7 @@ struct toilet_context
     cucul_canvas_t *cv;
     unsigned int w, h, ew, eh, x, y;
 
-    /* Methods */
+    /* Render methods */
     int (*feed)(struct toilet_context *, uint32_t);
     int (*end)(struct toilet_context *);
 
@@ -43,6 +43,10 @@ struct toilet_context
     unsigned int glyphs;
     cucul_canvas_t *image;
     unsigned int *lookup;
+
+    /* Render filters */
+    void (**filters)(cucul_canvas_t *);
+    unsigned int nfilters;
 };
 
 typedef struct toilet_context context_t;

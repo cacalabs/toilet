@@ -15,7 +15,6 @@
  * This header defines post-processing filter functions.
  */
 
-extern void filter_autocrop(cucul_canvas_t *);
-extern void filter_metal(cucul_canvas_t *);
-extern void filter_gay(cucul_canvas_t *);
+extern int filter_add(context_t *, char const *);
+extern int filter_do(context_t *);
 
