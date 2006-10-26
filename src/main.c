@@ -27,13 +27,11 @@
 #   include <sys/ioctl.h>
 #endif
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
 #include <cucul.h>
 
 #include "toilet.h"
 #include "render.h"
-#include "figlet.h"
 #include "filter.h"
 
 static void version(void);
@@ -45,10 +43,6 @@ int main(int argc, char *argv[])
 {
     context_t struct_cx;
     context_t *cx = &struct_cx;
-
-    cucul_buffer_t *buffer;
-
-    int i, j, ret;
 
     int infocode = -1;
 
@@ -183,66 +177,16 @@ int main(int argc, char *argv[])
             return 0;
     }
 
-    if(!strcasecmp(cx->font, "mono9"))
-        ret = init_big(cx);
-    else if(!strcasecmp(cx->font, "term"))
-        ret = init_tiny(cx);
-    else
-        ret = init_figlet(cx);
-
-    if(ret)
+    if(render_init(cx) < 0)
         return -1;
 
     if(optind >= argc)
-    {
-        char buf[10];
-        unsigned int len;
-        uint32_t ch;
+        render_stdin(cx);
+    else
+        render_list(cx, argc - optind, argv + optind);
 
-        i = 0;
-
-        /* Read from stdin */
-        while(!feof(stdin))
-        {
-            buf[i++] = getchar();
-            buf[i] = '\0';
-
-            ch = cucul_utf8_to_utf32(buf, &len);
-
-            if(!len)
-                continue;
-
-            cx->feed(cx, ch);
-            i = 0;
-        }
-    }
-    else for(i = optind; i < argc; i++)
-    {
-        /* Read from commandline */
-        unsigned int len;
-
-        if(i != optind)
-            cx->feed(cx, ' ');
-
-        for(j = 0; argv[i][j];)
-        {
-            cx->feed(cx, cucul_utf8_to_utf32(argv[i] + j, &len));
-            j += len;
-        }
-    }
-
-    cx->end(cx);
-
-    /* Apply optional effects to our string */
-    filter_do(cx);
-
-    /* Output char */
-    buffer = cucul_export_canvas(cx->cv, cx->export);
-    fwrite(cucul_get_buffer_data(buffer),
-           cucul_get_buffer_size(buffer), 1, stdout);
-    cucul_free_buffer(buffer);
-
-    cucul_free_canvas(cx->cv);
+    render_end(cx);
+    filter_end(cx);
 
     return 0;
 }

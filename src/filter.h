@@ -17,4 +17,5 @@
 
 extern int filter_add(context_t *, char const *);
 extern int filter_do(context_t *);
+extern int filter_end(context_t *);
 

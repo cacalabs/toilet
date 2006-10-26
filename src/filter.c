@@ -92,7 +92,14 @@ int filter_do(context_t *cx)
     unsigned int i;
 
     for(i = 0; i < cx->nfilters; i++)
-        cx->filters[i](cx->cv);
+        cx->filters[i](cx->torender);
+
+    return 0;
+}
+
+int filter_end(context_t *cx)
+{
+    free(cx->filters);
 
     return 0;
 }

@@ -26,13 +26,14 @@
 #include <cucul.h>
 
 #include "toilet.h"
+#include "render.h"
 #include "io.h"
-#include "figlet.h"
 
 #define STD_GLYPHS (127 - 32)
 #define EXT_GLYPHS (STD_GLYPHS + 7)
 
 static int feed_figlet(context_t *, uint32_t);
+static int flush_figlet(context_t *);
 static int end_figlet(context_t *);
 
 static int open_font(context_t *cx);
@@ -47,6 +48,7 @@ int init_figlet(context_t *cx)
     cx->cv = cucul_create_canvas(1, 1);
 
     cx->feed = feed_figlet;
+    cx->flush = flush_figlet;
     cx->end = end_figlet;
 
     return 0;
@@ -108,9 +110,22 @@ static int feed_figlet(context_t *cx, uint32_t ch)
     return 0;
 }
 
+static int flush_figlet(context_t *cx)
+{
+    cx->torender = cx->cv;
+    cucul_set_canvas_size(cx->torender, cx->w, cx->h);
+
+    cx->x = cx->y = 0;
+    cx->w = cx->h = 0;
+    cx->cv = cucul_create_canvas(1, 1);
+
+    return 0;
+}
+
 static int end_figlet(context_t *cx)
 {
     cucul_free_canvas(cx->image);
+    cucul_free_canvas(cx->cv);
     free(cx->lookup);
 
     return 0;

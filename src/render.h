@@ -17,4 +17,11 @@
 
 extern int init_tiny(context_t *);
 extern int init_big(context_t *);
+extern int init_figlet(context_t *);
+
+extern int render_init(context_t *);
+extern int render_stdin(context_t *);
+extern int render_list(context_t *, unsigned int, char *[]);
+extern int render_line(context_t *);
+extern int render_end(context_t *);
 

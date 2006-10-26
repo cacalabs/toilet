@@ -24,10 +24,12 @@ struct toilet_context
     unsigned int term_width;
 
     cucul_canvas_t *cv;
+    cucul_canvas_t *torender;
     unsigned int w, h, ew, eh, x, y;
 
     /* Render methods */
     int (*feed)(struct toilet_context *, uint32_t);
+    int (*flush)(struct toilet_context *);
     int (*end)(struct toilet_context *);
 
     /* Used by the big driver */
