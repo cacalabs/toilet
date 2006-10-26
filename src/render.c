@@ -29,6 +29,8 @@
 #include "render.h"
 #include "filter.h"
 
+static int render_flush(context_t *);
+
 int render_init(context_t *cx)
 {
     cx->x = cx->y = 0;
@@ -66,7 +68,7 @@ int render_stdin(context_t *cx)
         i = 0;
 
         if(ch == '\n')
-            render_line(cx);
+            render_flush(cx);
     }
 
     return 0;
@@ -91,12 +93,22 @@ int render_list(context_t *cx, unsigned int argc, char *argv[])
         }
     }
 
-    render_line(cx);
+    render_flush(cx);
 
     return 0;
 }
 
-int render_line(context_t *cx)
+int render_end(context_t *cx)
+{
+    cx->end(cx);
+    cucul_free_canvas(cx->cv);
+
+    return 0;
+}
+
+/* XXX: Following functions are local */
+
+static int render_flush(context_t *cx)
 {
     cucul_buffer_t *buffer;
 
@@ -106,20 +118,14 @@ int render_line(context_t *cx)
     /* Apply optional effects to our string */
     filter_do(cx);
 
+    cx->lines += cucul_get_canvas_height(cx->torender);
+
     /* Output line */
     buffer = cucul_export_canvas(cx->torender, cx->export);
     fwrite(cucul_get_buffer_data(buffer),
            cucul_get_buffer_size(buffer), 1, stdout);
     cucul_free_buffer(buffer);
     cucul_free_canvas(cx->torender);
-
-    return 0;
-}
-
-int render_end(context_t *cx)
-{
-    cx->end(cx);
-    cucul_free_canvas(cx->cv);
 
     return 0;
 }

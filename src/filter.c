@@ -28,17 +28,17 @@
 #include "toilet.h"
 #include "filter.h"
 
-static void filter_crop(cucul_canvas_t *);
-static void filter_gay(cucul_canvas_t *);
-static void filter_metal(cucul_canvas_t *);
-static void filter_flip(cucul_canvas_t *);
-static void filter_flop(cucul_canvas_t *);
-static void filter_rotate(cucul_canvas_t *);
+static void filter_crop(context_t *);
+static void filter_gay(context_t *);
+static void filter_metal(context_t *);
+static void filter_flip(context_t *);
+static void filter_flop(context_t *);
+static void filter_rotate(context_t *);
 
 struct
 {
     char const *name;
-    void (*function)(cucul_canvas_t *);
+    void (*function)(context_t *);
 }
 const lookup[] =
 {
@@ -92,7 +92,7 @@ int filter_do(context_t *cx)
     unsigned int i;
 
     for(i = 0; i < cx->nfilters; i++)
-        cx->filters[i](cx->torender);
+        cx->filters[i](cx);
 
     return 0;
 }
@@ -104,20 +104,20 @@ int filter_end(context_t *cx)
     return 0;
 }
 
-static void filter_crop(cucul_canvas_t *cv)
+static void filter_crop(context_t *cx)
 {
     unsigned int x, y, w, h;
     unsigned int xmin, xmax, ymin, ymax;
 
-    xmin = w = cucul_get_canvas_width(cv);
+    xmin = w = cucul_get_canvas_width(cx->torender);
     xmax = 0;
-    ymin = h = cucul_get_canvas_height(cv);
+    ymin = h = cucul_get_canvas_height(cx->torender);
     ymax = 0;
 
     for(y = 0; y < h; y++)
         for(x = 0; x < w; x++)
     {
-        unsigned long int ch = cucul_getchar(cv, x, y);
+        unsigned long int ch = cucul_getchar(cx->torender, x, y);
         if(ch != (unsigned char)' ')
         {
             if(x < xmin)
@@ -134,11 +134,11 @@ static void filter_crop(cucul_canvas_t *cv)
     if(xmax < xmin || ymax < ymin)
         return;
 
-    cucul_set_canvas_boundaries(cv, xmin, ymin,
+    cucul_set_canvas_boundaries(cx->torender, xmin, ymin,
                                 xmax - xmin + 1, ymax - ymin + 1);
 }
 
-static void filter_metal(cucul_canvas_t *cv)
+static void filter_metal(context_t *cx)
 {
     static unsigned char const palette[] =
     {
@@ -150,25 +150,25 @@ static void filter_metal(cucul_canvas_t *cv)
 
     unsigned int x, y, w, h;
 
-    w = cucul_get_canvas_width(cv);
-    h = cucul_get_canvas_height(cv);
+    w = cucul_get_canvas_width(cx->torender);
+    h = cucul_get_canvas_height(cx->torender);
 
     for(y = 0; y < h; y++)
         for(x = 0; x < w; x++)
     {
-        unsigned long int ch = cucul_getchar(cv, x, y);
+        unsigned long int ch = cucul_getchar(cx->torender, x, y);
         int i;
 
         if(ch == (unsigned char)' ')
             continue;
 
-        i = y * 4 / h;
-        cucul_set_color(cv, palette[i], CUCUL_COLOR_TRANSPARENT);
-        cucul_putchar(cv, x, y, ch);
+        i = ((cx->lines + y + x / 8) / 2) % 4;
+        cucul_set_color(cx->torender, palette[i], CUCUL_COLOR_TRANSPARENT);
+        cucul_putchar(cx->torender, x, y, ch);
     }
 }
 
-static void filter_gay(cucul_canvas_t *cv)
+static void filter_gay(context_t *cx)
 {
     static unsigned char const rainbow[] =
     {
@@ -181,34 +181,34 @@ static void filter_gay(cucul_canvas_t *cv)
     };
     unsigned int x, y, w, h;
 
-    w = cucul_get_canvas_width(cv);
-    h = cucul_get_canvas_height(cv);
+    w = cucul_get_canvas_width(cx->torender);
+    h = cucul_get_canvas_height(cx->torender);
 
     for(y = 0; y < h; y++)
         for(x = 0; x < w; x++)
     {
-        unsigned long int ch = cucul_getchar(cv, x, y);
+        unsigned long int ch = cucul_getchar(cx->torender, x, y);
         if(ch != (unsigned char)' ')
         {
-            cucul_set_color(cv, rainbow[(x / 2 + y) % 6],
+            cucul_set_color(cx->torender, rainbow[(x / 2 + y + cx->lines) % 6],
                                 CUCUL_COLOR_TRANSPARENT);
-            cucul_putchar(cv, x, y, ch);
+            cucul_putchar(cx->torender, x, y, ch);
         }
     }
 }
 
-static void filter_flip(cucul_canvas_t *cv)
+static void filter_flip(context_t *cx)
 {
-    cucul_flip(cv);
+    cucul_flip(cx->torender);
 }
 
-static void filter_flop(cucul_canvas_t *cv)
+static void filter_flop(context_t *cx)
 {
-    cucul_flop(cv);
+    cucul_flop(cx->torender);
 }
 
-static void filter_rotate(cucul_canvas_t *cv)
+static void filter_rotate(context_t *cx)
 {
-    cucul_rotate(cv);
+    cucul_rotate(cx->torender);
 }
 

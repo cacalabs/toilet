@@ -47,7 +47,7 @@ struct toilet_context
     unsigned int *lookup;
 
     /* Render filters */
-    void (**filters)(cucul_canvas_t *);
+    void (**filters)(struct toilet_context *);
     unsigned int nfilters;
 };
 
