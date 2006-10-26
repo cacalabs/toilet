@@ -25,7 +25,7 @@ struct toilet_context
 
     cucul_canvas_t *cv;
     cucul_canvas_t *torender;
-    unsigned int w, h, ew, eh, x, y;
+    unsigned int w, h, ew, eh, x, y, lines;
 
     /* Render methods */
     int (*feed)(struct toilet_context *, uint32_t);

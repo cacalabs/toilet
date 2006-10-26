@@ -31,6 +31,11 @@
 
 int render_init(context_t *cx)
 {
+    cx->x = cx->y = 0;
+    cx->w = cx->h = 0;
+    cx->lines = 0;
+    cx->cv = cucul_create_canvas(0, 0);
+
     if(!strcasecmp(cx->font, "mono9"))
         return init_big(cx);
 
@@ -114,6 +119,7 @@ int render_line(context_t *cx)
 int render_end(context_t *cx)
 {
     cx->end(cx);
+    cucul_free_canvas(cx->cv);
 
     return 0;
 }

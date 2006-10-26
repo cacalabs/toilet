@@ -34,9 +34,6 @@ int init_tiny(context_t *cx)
 {
     cx->ew = 16;
     cx->eh = 2;
-    cx->x = cx->y = 0;
-    cx->w = cx->h = 0;
-    cx->cv = cucul_create_canvas(cx->ew, cx->eh);
 
     cx->feed = feed_tiny;
     cx->flush = flush_tiny;
@@ -106,8 +103,6 @@ static int flush_tiny(context_t *cx)
 
 static int end_tiny(context_t *cx)
 {
-    cucul_free_canvas(cx->cv);
-
     return 0;
 }
 

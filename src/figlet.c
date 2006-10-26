@@ -43,10 +43,6 @@ int init_figlet(context_t *cx)
     if(open_font(cx))
         return -1;
 
-    cx->x = cx->y = 0;
-    cx->w = cx->h = 0;
-    cx->cv = cucul_create_canvas(1, 1);
-
     cx->feed = feed_figlet;
     cx->flush = flush_figlet;
     cx->end = end_figlet;
@@ -125,7 +121,6 @@ static int flush_figlet(context_t *cx)
 static int end_figlet(context_t *cx)
 {
     cucul_free_canvas(cx->image);
-    cucul_free_canvas(cx->cv);
     free(cx->lookup);
 
     return 0;

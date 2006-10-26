@@ -41,10 +41,6 @@ int init_big(context_t *cx)
     cx->onechar = cucul_create_canvas(1, 1);
     cucul_set_color(cx->onechar, CUCUL_COLOR_WHITE, CUCUL_COLOR_BLACK);
 
-    cx->x = cx->y = 0;
-    cx->w = cx->h = 0;
-    cx->cv = cucul_create_canvas(1, 1);
-
     cx->feed = feed_big;
     cx->flush = flush_big;
     cx->end = end_big;
@@ -127,7 +123,6 @@ static int flush_big(context_t *cx)
 static int end_big(context_t *cx)
 {
     cucul_free_canvas(cx->onechar);
-    cucul_free_canvas(cx->cv);
     free(cx->buf);
     cucul_free_font(cx->f);
 
