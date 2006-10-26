@@ -75,20 +75,22 @@ int main(int argc, char *argv[])
             { "width", 1, NULL, 'w' },
             { "termwidth", 0, NULL, 't' },
             { "filter", 1, NULL, 'F' },
-            { "gay", 0, NULL, 'g' },
-            { "metal", 0, NULL, 'm' },
-            { "irc", 0, NULL, 'i' },
+            { "gay", 0, NULL, 130 },
+            { "metal", 0, NULL, 131 },
+            { "irc", 0, NULL, 140 },
+            { "html", 0, NULL, 141 },
+            { "tga", 0, NULL, 142 },
             { "help", 0, NULL, 'h' },
             { "infocode", 1, NULL, 'I' },
             { "version", 0, NULL, 'v' },
             { NULL, 0, NULL, 0 }
         };
 
-        int c = getopt_long(argc, argv, "f:d:w:tF:gmihI:v",
+        int c = getopt_long(argc, argv, "f:d:w:tF:hI:v",
                             long_options, &option_index);
 #   else
 #       define MOREINFO "Try `%s -h' for more information.\n"
-        int c = getopt(argc, argv, "f:d:w:tF:gmihI:v");
+        int c = getopt(argc, argv, "f:d:w:tF:hI:v");
 #   endif
         if(c == -1)
             break;
@@ -114,10 +116,10 @@ int main(int argc, char *argv[])
             if(filter_add(cx, optarg))
                 return -1;
             break;
-        case 'g': /* --gay */
+        case 130: /* --gay */
             filter_add(cx, "gay");
             break;
-        case 'm': /* --metal */
+        case 131: /* --metal */
             filter_add(cx, "metal");
             break;
         case 'w': /* --width */
@@ -135,8 +137,14 @@ int main(int argc, char *argv[])
 #endif
             break;
         }
-        case 'i': /* --irc */
+        case 140: /* --irc */
             cx->export = "irc";
+            break;
+        case 141: /* --html */
+            cx->export = "html";
+            break;
+        case 142: /* --tga */
+            cx->export = "tga";
             break;
         case '?':
             printf(MOREINFO, argv[0]);
@@ -241,8 +249,8 @@ int main(int argc, char *argv[])
 
 #if defined(HAVE_GETOPT_H)
 #   define USAGE \
-    "Usage: toilet [ -ghimtvF ] [ -d fontdirectory ]\n" \
-    "              [ -f fontfile ] [ -w outputwidth ]\n" \
+    "Usage: toilet [ -htv ] [ -d fontdirectory ]\n" \
+    "              [ -f fontfile ] [ -F filter ] [ -w outputwidth ]\n" \
     "              [ -I infocode ] [ message ]\n"
 #else
 #   define USAGE ""
@@ -271,28 +279,27 @@ static void usage(void)
 {
     printf(USAGE);
 #   ifdef HAVE_GETOPT_LONG
-    printf("  -f, --font <fontfile>    select the font\n");
+    printf("  -f, --font <name>        select the font\n");
     printf("  -d, --directory <dir>    specify font directory\n");
     printf("  -w, --width <width>      set output width\n");
     printf("  -t, --termwidth          adapt to terminal's width\n");
-    printf("  -F, --filter             apply one or several filters to the text\n");
-    printf("  -g, --gay                add a rainbow effect to the text\n");
-    printf("  -m, --metal              add a metal effect to the text\n");
-    printf("  -i, --irc                output IRC colour codes\n");
+    printf("  -F, --filter <name>      apply one or several filters to the text\n");
+    printf("      --gay                rainbow filter (same as -F gay)\n");
+    printf("      --metal              metal filter (same as -F metal)\n");
+    printf("      --irc                output IRC colour codes\n");
+    printf("      --html               output an HTML document\n");
+    printf("      --tga                output a TGA image\n");
     printf("  -h, --help               display this help and exit\n");
-    printf("  -I, --infocode           print FIGlet-compatible infocode\n");
+    printf("  -I, --infocode <code>    print FIGlet-compatible infocode\n");
     printf("  -v, --version            output version information and exit\n");
 #   else
-    printf("  -f <fontfile>    select the font\n");
+    printf("  -f <name>        select the font\n");
     printf("  -d <dir>         specify font directory\n");
     printf("  -w <width>       set output width\n");
     printf("  -t               adapt to terminal's width\n");
-    printf("  -F               apply one or several filters to the text\n");
-    printf("  -g               add a rainbow effect to the text\n");
-    printf("  -m               add a metal effect to the text\n");
-    printf("  -i               output IRC colour codes\n");
+    printf("  -F <name>        apply one or several filters to the text\n");
     printf("  -h               display this help and exit\n");
-    printf("  -I               print FIGlet-compatible infocode\n");
+    printf("  -I <code>        print FIGlet-compatible infocode\n");
     printf("  -v               output version information and exit\n");
 #   endif
 }
