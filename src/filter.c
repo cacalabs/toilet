@@ -65,9 +65,10 @@ int filter_add(context_t *cx, char const *filter)
 
         for(i = sizeof(lookup) / sizeof(lookup[0]); i--; )
             if(!strncmp(filter, lookup[i].name, strlen(lookup[i].name)))
+            {
+                n = strlen(lookup[i].name);
                 break;
-
-        n = strlen(lookup[i].name);
+            }
 
         if(i == -1 || (filter[n] != ':' && filter[n] != '\0'))
         {
