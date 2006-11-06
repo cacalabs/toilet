@@ -198,6 +198,10 @@ static int open_font(context_t *cx)
             if(toigets(buf, 2048, f) == NULL)
                 break;
 
+            /* Ignore blank lines, as in jacky.flf */
+            if(buf[0] == '\n' || buf[0] == '\r')
+                continue;
+
             if(!buf[0] || buf[0] < '0' || buf[0] > '9')
             {
                 free(data);
