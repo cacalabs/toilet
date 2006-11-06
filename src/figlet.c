@@ -202,6 +202,14 @@ static int open_font(context_t *cx)
             if(buf[0] == '\n' || buf[0] == '\r')
                 continue;
 
+            /* Ignore negative indices for now, as in ivrit.flf */
+            if(buf[0] == '-')
+            {
+                for(j = 0; j < cx->height; j++)
+                    toigets(buf, 2048, f);
+                continue;
+            }
+
             if(!buf[0] || buf[0] < '0' || buf[0] > '9')
             {
                 free(data);
