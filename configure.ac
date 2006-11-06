@@ -51,10 +51,10 @@ if test "${ac_cv_have_tiocgwinsz}" = "yes"; then
 fi
 
 CUCUL="no"
-PKG_CHECK_MODULES(cucul, cucul >= 0.99.beta6,
+PKG_CHECK_MODULES(cucul, cucul >= 0.99.beta9,
  [CUCUL="yes"],
  [AC_MSG_RESULT(no)
-  AC_MSG_ERROR([you need libcucul version 0.99.beta6 or later])])
+  AC_MSG_ERROR([you need libcucul version 0.99.beta9 or later])])
 
 AC_CACHE_CHECK([for build date],
   [ac_build_date],
@@ -74,6 +74,7 @@ CFLAGS="${CFLAGS} -Wall -Wpointer-arith -Wcast-align -Wcast-qual -Wstrict-protot
 AC_OUTPUT([
   Makefile
   src/Makefile
+  tools/Makefile
   fonts/Makefile
 ])
 

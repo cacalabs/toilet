@@ -1,5 +1,5 @@
 
-SUBDIRS = src fonts
+SUBDIRS = src tools fonts
 DIST_SUBDIRS = $(SUBDIRS)
 
 EXTRA_DIST = bootstrap
