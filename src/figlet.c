@@ -198,11 +198,11 @@ static int open_font(context_t *cx)
             if(toigets(buf, 2048, f) == NULL)
                 break;
 
-            if(!buf[0])
+            if(!buf[0] || buf[0] < '0' || buf[0] > '9')
             {
                 free(data);
                 free(cx->lookup);
-                fprintf(stderr, "read error at glyph %u in `%s'\n",
+                fprintf(stderr, "read error at glyph #%u in `%s'\n",
                                 cx->glyphs, path);
                 return -1;
             }
