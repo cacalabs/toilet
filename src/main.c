@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
     int infocode = -1;
 
     cx->export = "utf8";
-    cx->font = "mono9";
+    cx->font = "smblock";
     cx->dir = "/usr/share/figlet/";
 
     cx->term_width = 80;

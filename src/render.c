@@ -38,9 +38,6 @@ int render_init(context_t *cx)
     cx->lines = 0;
     cx->cv = cucul_create_canvas(0, 0);
 
-    if(!strcasecmp(cx->font, "mono9"))
-        return init_big(cx);
-
     if(!strcasecmp(cx->font, "term"))
         return init_tiny(cx);
 

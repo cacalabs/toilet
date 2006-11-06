@@ -16,7 +16,6 @@
  */
 
 extern int init_tiny(context_t *);
-extern int init_big(context_t *);
 extern int init_figlet(context_t *);
 
 extern int render_init(context_t *);
