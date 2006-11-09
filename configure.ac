@@ -56,7 +56,7 @@ PKG_CHECK_MODULES(cucul, cucul >= 0.99.beta9,
  [AC_MSG_RESULT(no)
   AC_MSG_ERROR([you need libcucul version 0.99.beta9 or later])])
 
-AC_CACHE_CHECK([for build date],
+AC_CACHE_CHECK([for release date],
   [ac_build_date],
   [stamp="$(sed -ne 's/# \$Id: .*\(....-..-..\).*/\1/p;q' configure.ac)"
    if date +"%e %B %Y" -d "$stamp" >/dev/null 2>&1; then
