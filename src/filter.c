@@ -143,10 +143,7 @@ static void filter_metal(context_t *cx)
 {
     static unsigned char const palette[] =
     {
-        CUCUL_COLOR_LIGHTBLUE,
-        CUCUL_COLOR_BLUE,
-        CUCUL_COLOR_LIGHTGRAY,
-        CUCUL_COLOR_DARKGRAY,
+        CUCUL_LIGHTBLUE, CUCUL_BLUE, CUCUL_LIGHTGRAY, CUCUL_DARKGRAY,
     };
 
     unsigned int x, y, w, h;
@@ -164,7 +161,7 @@ static void filter_metal(context_t *cx)
             continue;
 
         i = ((cx->lines + y + x / 8) / 2) % 4;
-        cucul_set_color(cx->torender, palette[i], CUCUL_COLOR_TRANSPARENT);
+        cucul_set_color_ansi(cx->torender, palette[i], CUCUL_TRANSPARENT);
         cucul_putchar(cx->torender, x, y, ch);
     }
 }
@@ -173,12 +170,8 @@ static void filter_gay(context_t *cx)
 {
     static unsigned char const rainbow[] =
     {
-        CUCUL_COLOR_LIGHTMAGENTA,
-        CUCUL_COLOR_LIGHTRED,
-        CUCUL_COLOR_YELLOW,
-        CUCUL_COLOR_LIGHTGREEN,
-        CUCUL_COLOR_LIGHTCYAN,
-        CUCUL_COLOR_LIGHTBLUE,
+        CUCUL_LIGHTMAGENTA, CUCUL_LIGHTRED, CUCUL_YELLOW,
+        CUCUL_LIGHTGREEN, CUCUL_LIGHTCYAN, CUCUL_LIGHTBLUE,
     };
     unsigned int x, y, w, h;
 
@@ -191,8 +184,9 @@ static void filter_gay(context_t *cx)
         unsigned long int ch = cucul_getchar(cx->torender, x, y);
         if(ch != (unsigned char)' ')
         {
-            cucul_set_color(cx->torender, rainbow[(x / 2 + y + cx->lines) % 6],
-                                CUCUL_COLOR_TRANSPARENT);
+            cucul_set_color_ansi(cx->torender,
+                                 rainbow[(x / 2 + y + cx->lines) % 6],
+                                 CUCUL_TRANSPARENT);
             cucul_putchar(cx->torender, x, y, ch);
         }
     }
