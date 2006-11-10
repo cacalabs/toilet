@@ -119,6 +119,8 @@ static int render_flush(context_t *cx)
 
     /* Output line */
     buffer = cucul_export_canvas(cx->torender, cx->export);
+    if(!buffer)
+        return -1;
     fwrite(cucul_get_buffer_data(buffer),
            cucul_get_buffer_size(buffer), 1, stdout);
     cucul_free_buffer(buffer);
