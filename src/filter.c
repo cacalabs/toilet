@@ -53,7 +53,7 @@ const lookup[] =
 
 int filter_list(void)
 {
-    int i;
+    unsigned int i;
 
     fprintf(stderr, "Available filters:\n");
     for(i = 0; i < sizeof(lookup) / sizeof(lookup[0]); i++)
