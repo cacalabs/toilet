@@ -34,12 +34,12 @@
 #include "toilet.h"
 #include "render.h"
 #include "filter.h"
+#include "export.h"
 
 static void version(void);
 #if defined(HAVE_GETOPT_H)
 static void usage(void);
 #endif
-static int export_list(void);
 
 int main(int argc, char *argv[])
 {
@@ -138,13 +138,14 @@ int main(int argc, char *argv[])
         case 'E': /* --export */
             if(!strcmp(optarg, "list"))
                 return export_list();
-            cx->export = optarg;
+            if(export_set(cx, optarg) < 0)
+                return -1;
             break;
         case 140: /* --irc */
-            cx->export = "irc";
+            export_set(cx, "irc");
             break;
         case 141: /* --html */
-            cx->export = "html";
+            export_set(cx, "html");
             break;
         case '?':
             printf(MOREINFO, argv[0]);
@@ -259,17 +260,4 @@ static void usage(void)
 #   endif
 }
 #endif
-
-static int export_list(void)
-{
-    char const * const * exports, * const * p;
-
-    exports = cucul_get_export_list();
-
-    printf("Available export formats:\n");
-    for(p = exports; *p; p += 2)
-        printf("\"%s\": %s\n", *p, *(p + 1));
-
-    return 0;
-}
 
