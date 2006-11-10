@@ -55,7 +55,7 @@ Use the given font instead of the default value. Fonts are
 or
 .B .tlf
 files stored in the
-.B /usr/share/figlet
+.B @datarootdir@/figlet
 directory. There is also a special built-in font called
 .I term
 that serves as a fallback if no font is available.
@@ -63,7 +63,7 @@ that serves as a fallback if no font is available.
 .B \-d, \-\-directory <dir>
 Specify the directory in which to look for fonts. The default value is set
 at build time and usually defaults to
-.B /usr/share/figlet.
+.B @datarootdir@/figlet.
 .TP
 .B \-w, \-\-width <width>
 Set the output width. By default,

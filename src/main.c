@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
 
     cx->export = "utf8";
     cx->font = "smblock";
-    cx->dir = "/usr/share/figlet/";
+    cx->dir = FONTDIR;
 
     cx->term_width = 80;
 
