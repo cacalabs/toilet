@@ -76,5 +76,6 @@ AC_OUTPUT([
   src/Makefile
   tools/Makefile
   fonts/Makefile
+  doc/Makefile
 ])
 

@@ -1,0 +1,152 @@
+.TH toilet 1 "2006-11-10" "libcaca"
+.SH NAME
+TOIlet \- display large colourful characters
+.SH SYNOPSIS
+.B toilet
+[
+.B \-htv
+] [
+.B \-d
+.I fontdirectory
+]
+.PD 0
+.IP
+.PD
+[
+.B \-f
+.I fontfile
+] [
+.B \-F
+.I filter
+] [
+.B \-w
+.I outputwidth
+]
+.PD 0
+.IP
+.PD
+[
+.B \-I
+.I infocode
+] [
+.B \-E
+.I format
+] [
+.I message
+]
+.RI
+.SH DESCRIPTION
+.B TOIlet
+prints text using large characters made of smaller characters. It is similar
+in many ways to
+.B FIGlet
+with additional features such as Unicode handling, colour fonts, filters
+and various export formats.
+.RI
+.SH USAGE
+.B TOIlet
+either reads its input from the command line or from the standard input.
+.RI
+.SH OPTIONS
+.TP
+.B \-f, \-\-font <name>
+Use the given font instead of the default value. Fonts are
+.B .flf
+or
+.B .tlf
+files stored in the
+.B /usr/share/figlet
+directory. There is also a special built-in font called
+.I term
+that serves as a fallback if no font is available.
+.TP
+.B \-d, \-\-directory <dir>
+Specify the directory in which to look for fonts. The default value is set
+at build time and usually defaults to
+.B /usr/share/figlet.
+.TP
+.B \-w, \-\-width <width>
+Set the output width. By default,
+.B TOIlet
+will wrap its output at 80 character columns.
+.TP
+.B \-t, \-\-termwidth
+Set the output width to the terminal width.
+.TP
+.B \-F, \-\-filter <filters>
+.PD 0
+.TP
+.B \-F, \-\-filter list
+.TP
+.B \-\-gay, \-\-metal
+.PD
+Specify a list of filters to be applied to the output.
+.I <filters>
+is a colon-separated list of filters such as
+.I crop:rotate:gay
+and the special argument
+.I list
+outputs a list of available filters.
+
+.B \-\-gay
+and
+.B \-\-metal
+are shortcuts to commonly used filters that are guaranteed to exist. Several
+.B \-F
+flags can also be specified on the command line, in which case filters will
+be applied in order of appearance.
+.TP
+.B \-E, \-\-export <format>
+.PD 0
+.TP
+.B \-E, \-\-export list
+.TP
+.B \-\-irc, \-\-html
+.PD
+Specify the output format. By default,
+.B TOIlet
+will output UTF-8 text using ANSI colour codes suitable for most terminals
+such as XTerm or rxvt.
+.I <format>
+is the name of the export format as recognised by libcucul. The special
+argument
+.I list
+outputs a list of available export formats.
+
+.B \-\-irc
+and
+.B \-\-html
+are shortcuts to commonly used export formats that are guaranteed to exist.
+.TP
+.B \-h, \-\-help
+Display a short help message and exit.
+.TP
+.B \-I, \-\-infocode <code>
+Print a
+.B FIGlet
+infocode. This flag is only here for
+.B FIGlet
+compatibility, see the
+.B figlet
+manpage for more information about it.
+.TP
+.B \-v, \-\-version
+Output version information and exit.
+.RI
+.SH EXAMPLES
+toilet Hello World
+
+toilet Hello | toilet
+
+tail -f /var/log/messages | toilet -f term --gay
+.RI
+.SH BUGS
+.B FIGlet
+compatibility is not complete yet.
+.RI
+.SH AUTHOR
+.B TOIlet
+and this manual page were written by Sam Hocevar <sam@zoy.org>. There is a
+webpage available at http://libcaca.zoy.org/toilet.html
+.SH SEE ALSO
+figlet(6)
