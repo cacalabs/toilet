@@ -55,9 +55,9 @@ int filter_list(void)
 {
     unsigned int i;
 
-    fprintf(stderr, "Available filters:\n");
+    printf("Available filters:\n");
     for(i = 0; i < sizeof(lookup) / sizeof(lookup[0]); i++)
-        fprintf(stderr, "\"%s\": %s\n", lookup[i].name, lookup[i].description);
+        printf("\"%s\": %s\n", lookup[i].name, lookup[i].description);
 
     return 0;
 }
