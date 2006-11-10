@@ -39,16 +39,28 @@ struct
 {
     char const *name;
     void (*function)(context_t *);
+    char const *description;
 }
 const lookup[] =
 {
-    { "crop", filter_crop },
-    { "gay", filter_gay },
-    { "metal", filter_metal },
-    { "flip", filter_flip },
-    { "flop", filter_flop },
-    { "rotate", filter_rotate },
+    { "crop", filter_crop, "crop unused blanks" },
+    { "gay", filter_gay, "add a rainbow colour effect" },
+    { "metal", filter_metal, "add a metallic colour effect" },
+    { "flip", filter_flip, "flip horizontally" },
+    { "flop", filter_flop, "flip vertically" },
+    { "rotate", filter_rotate, "perform a 180 degrees rotation" },
 };
+
+int filter_list(void)
+{
+    int i;
+
+    fprintf(stderr, "Available filters:\n");
+    for(i = 0; i < sizeof(lookup) / sizeof(lookup[0]); i++)
+        fprintf(stderr, "\"%s\": %s\n", lookup[i].name, lookup[i].description);
+
+    return 0;
+}
 
 int filter_add(context_t *cx, char const *filter)
 {

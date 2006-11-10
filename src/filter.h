@@ -15,6 +15,7 @@
  * This header defines post-processing filter functions.
  */
 
+extern int filter_list(void);
 extern int filter_add(context_t *, char const *);
 extern int filter_do(context_t *);
 extern int filter_end(context_t *);

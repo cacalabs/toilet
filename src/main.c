@@ -28,6 +28,7 @@
 #endif
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <cucul.h>
 
 #include "toilet.h"
@@ -38,6 +39,7 @@ static void version(void);
 #if defined(HAVE_GETOPT_H)
 static void usage(void);
 #endif
+static int export_list(void);
 
 int main(int argc, char *argv[])
 {
@@ -71,20 +73,20 @@ int main(int argc, char *argv[])
             { "filter", 1, NULL, 'F' },
             { "gay", 0, NULL, 130 },
             { "metal", 0, NULL, 131 },
+            { "export", 1, NULL, 'E' },
             { "irc", 0, NULL, 140 },
             { "html", 0, NULL, 141 },
-            { "tga", 0, NULL, 142 },
             { "help", 0, NULL, 'h' },
             { "infocode", 1, NULL, 'I' },
             { "version", 0, NULL, 'v' },
             { NULL, 0, NULL, 0 }
         };
 
-        int c = getopt_long(argc, argv, "f:d:w:tF:hI:v",
+        int c = getopt_long(argc, argv, "f:d:w:tF:E:hI:v",
                             long_options, &option_index);
 #   else
 #       define MOREINFO "Try `%s -h' for more information.\n"
-        int c = getopt(argc, argv, "f:d:w:tF:hI:v");
+        int c = getopt(argc, argv, "f:d:w:tF:E:hI:v");
 #   endif
         if(c == -1)
             break;
@@ -107,7 +109,9 @@ int main(int argc, char *argv[])
             cx->dir = optarg;
             break;
         case 'F': /* --filter */
-            if(filter_add(cx, optarg))
+            if(!strcmp(optarg, "list"))
+                return filter_list();
+            if(filter_add(cx, optarg) < 0)
                 return -1;
             break;
         case 130: /* --gay */
@@ -131,14 +135,16 @@ int main(int argc, char *argv[])
 #endif
             break;
         }
+        case 'E': /* --export */
+            if(!strcmp(optarg, "list"))
+                return export_list();
+            cx->export = optarg;
+            break;
         case 140: /* --irc */
             cx->export = "irc";
             break;
         case 141: /* --html */
             cx->export = "html";
-            break;
-        case 142: /* --tga */
-            cx->export = "tga";
             break;
         case '?':
             printf(MOREINFO, argv[0]);
@@ -195,7 +201,7 @@ int main(int argc, char *argv[])
 #   define USAGE \
     "Usage: toilet [ -htv ] [ -d fontdirectory ]\n" \
     "              [ -f fontfile ] [ -F filter ] [ -w outputwidth ]\n" \
-    "              [ -I infocode ] [ message ]\n"
+    "              [ -I infocode ] [ -E format ] [ message ]\n"
 #else
 #   define USAGE ""
 #endif
@@ -227,12 +233,14 @@ static void usage(void)
     printf("  -d, --directory <dir>    specify font directory\n");
     printf("  -w, --width <width>      set output width\n");
     printf("  -t, --termwidth          adapt to terminal's width\n");
-    printf("  -F, --filter <name>      apply one or several filters to the text\n");
+    printf("  -F, --filter <filters>   apply one or several filters to the text\n");
+    printf("  -F, --filter list        list available filters\n");
     printf("      --gay                rainbow filter (same as -F gay)\n");
     printf("      --metal              metal filter (same as -F metal)\n");
-    printf("      --irc                output IRC colour codes\n");
-    printf("      --html               output an HTML document\n");
-    printf("      --tga                output a TGA image\n");
+    printf("  -E, --export <format>    select export format\n");
+    printf("  -E, --export list        list available export formats\n");
+    printf("      --irc                output IRC colour codes (same as -E irc)\n");
+    printf("      --html               output an HTML document (same as -E html)\n");
     printf("  -h, --help               display this help and exit\n");
     printf("  -I, --infocode <code>    print FIGlet-compatible infocode\n");
     printf("  -v, --version            output version information and exit\n");
@@ -241,11 +249,27 @@ static void usage(void)
     printf("  -d <dir>         specify font directory\n");
     printf("  -w <width>       set output width\n");
     printf("  -t               adapt to terminal's width\n");
-    printf("  -F <name>        apply one or several filters to the text\n");
+    printf("  -F <filters>     apply one or several filters to the text\n");
+    printf("  -F list          list available filters\n");
+    printf("  -E <format>      select export format\n");
+    printf("  -E list          list available export formats\n");
     printf("  -h               display this help and exit\n");
     printf("  -I <code>        print FIGlet-compatible infocode\n");
     printf("  -v               output version information and exit\n");
 #   endif
 }
 #endif
+
+static int export_list(void)
+{
+    char const * const * exports, * const * p;
+
+    exports = cucul_get_export_list();
+
+    printf("Available export formats:\n");
+    for(p = exports; *p; p += 2)
+        printf("\"%s\": %s\n", *p, *(p + 1));
+
+    return 0;
+}
 
