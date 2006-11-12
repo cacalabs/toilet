@@ -28,13 +28,13 @@
 enum mode { GRAY, HALFBLOCKS, QUARTERBLOCKS } mode;
 
 static void list_fonts(void);
-static void add_char(unsigned int);
+static void add_char(unsigned long int);
 
 cucul_font_t *f;
 cucul_canvas_t *out, *onechar;
 unsigned long int const *blocks;
 uint8_t * image;
-unsigned int w, h, gw, gh, iw, ih;
+unsigned int w, h, gw, fgw, gh, iw, ih;
 
 int main(int argc, char *argv[])
 {
@@ -78,31 +78,34 @@ int main(int argc, char *argv[])
 
     w = cucul_get_font_width(f);
     h = cucul_get_font_height(f);
-    iw = w + 1;
+    iw = w * 2 + 1;
     ih = h + 1;
     switch(mode)
     {
     case GRAY:
         gw = w;
+        fgw = w * 2;
         gh = h;
         break;
     case HALFBLOCKS:
         gw = w;
+        fgw = w * 2;
         gh = (h + 1) / 2;
         break;
     case QUARTERBLOCKS:
         gw = (w + 1) / 2;
+        fgw = (w * 2 + 1) / 2;
         gh = (h + 1) / 2;
         break;
     }
 
     blocks = cucul_get_font_blocks(f);
-    onechar = cucul_create_canvas(1, 1); /* FIXME: support double width */
+    onechar = cucul_create_canvas(0, 0);
     cucul_set_color_ansi(onechar, CUCUL_WHITE, CUCUL_BLACK);
     image = malloc(4 * iw * ih);
 
-    out = cucul_create_canvas(gw + 2, gh);
-    printf("tlf2a$ %u %u %u 0 4 0 0 0\n", gh, gh - 1, gw + 2);
+    out = cucul_create_canvas(0, 0);
+    printf("tlf2a$ %u %u %u 0 4 0 0 0\n", gh, gh - 1, fgw + 2);
 
     printf("=============================================="
                                        "==================================\n");
@@ -163,19 +166,26 @@ static void list_fonts(void)
         fprintf(stderr, "  \"%s\"\n", fonts[i]);
 }
 
-static void add_char(unsigned int ch)
+static void add_char(unsigned long int ch)
 {
     cucul_buffer_t *buf;
-    unsigned int x, y;
+    unsigned int x, y, myw, mygw;
+    int full = cucul_utf32_is_fullwidth(ch);
 
+    cucul_set_canvas_size(onechar, full ? 2 : 1, 1);
     cucul_putchar(onechar, 0, 0, ch);
     cucul_render_canvas(onechar, f, image, iw, ih, 4 * iw);
+
+    myw = full ? 2 * w : w;
+    mygw = full ? fgw : gw;
+
+    cucul_set_canvas_size(out, (full ? fgw : gw) + 2, gh);
 
     switch(mode)
     {
     case GRAY:
         for(y = 0; y < h; y++)
-           for(x = 0; x < w; x++)
+            for(x = 0; x < myw; x++)
         {
             uint8_t c = image[4 * (x + y * iw) + 2];
 
@@ -193,20 +203,19 @@ static void add_char(unsigned int ch)
         break;
     case HALFBLOCKS:
         for(y = 0; y < gh; y++)
-           for(x = 0; x < gw; x++)
+            for(x = 0; x < mygw; x++)
         {
             static char const *str[] = { " ", "▀", "▄", "█" };
 
             uint8_t p1 = image[4 * (x + y * 2 * iw) + 2];
             uint8_t p2 = image[4 * (x + (y * 2 + 1) * iw) + 2];
 
-            cucul_putstr(out, x, y,
-                         str[(p1 < 0x80 ? 0 : 1) + (p2 < 0x80 ? 0 : 2)]);
+            cucul_putstr(out, x, y, str[(p1 > 0x80) + 2 * (p2 > 0x80)]);
         }
         break;
     case QUARTERBLOCKS:
         for(y = 0; y < gh; y++)
-           for(x = 0; x < gw; x++)
+            for(x = 0; x < mygw; x++)
         {
             static char const *str[] =
             {
@@ -219,15 +228,14 @@ static void add_char(unsigned int ch)
             uint8_t p3 = image[4 * (x * 2 + (y * 2 + 1) * iw) + 2];
             uint8_t p4 = image[4 * (x * 2 + 1 + (y * 2 + 1) * iw) + 2];
 
-            cucul_putstr(out, x, y,
-                         str[(p1 < 0x80 ? 0 : 1) + (p2 < 0x80 ? 0 : 2) +
-                             (p3 < 0x80 ? 0 : 4) + (p4 < 0x80 ? 0 : 8)]);
+            cucul_putstr(out, x, y, str[(p1 > 0x80) + 2 * (p2 > 0x80) +
+                                        4 * (p3 > 0x80) + 8 * (p4 > 0x80)]);
         }
         break;
     }
 
-    cucul_draw_line(out, gw, 0, gw, gh - 1, "@");
-    cucul_putchar(out, gw + 1, gh - 1, '@');
+    cucul_draw_line(out, mygw, 0, mygw, gh - 1, '@');
+    cucul_putchar(out, mygw + 1, gh - 1, '@');
 
     buf = cucul_export_canvas(out, "utf8");
     fwrite(cucul_get_buffer_data(buf), cucul_get_buffer_size(buf), 1, stdout);
