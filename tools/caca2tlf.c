@@ -168,12 +168,13 @@ static void list_fonts(void)
 
 static void add_char(unsigned long int ch)
 {
-    cucul_buffer_t *buf;
+    void *buf;
+    unsigned long int len;
     unsigned int x, y, myw, mygw;
     int full = cucul_utf32_is_fullwidth(ch);
 
     cucul_set_canvas_size(onechar, full ? 2 : 1, 1);
-    cucul_putchar(onechar, 0, 0, ch);
+    cucul_put_char(onechar, 0, 0, ch);
     cucul_render_canvas(onechar, f, image, iw, ih, 4 * iw);
 
     myw = full ? 2 * w : w;
@@ -190,15 +191,15 @@ static void add_char(unsigned long int ch)
             uint8_t c = image[4 * (x + y * iw) + 2];
 
             if(c >= 0xa0)
-                cucul_putstr(out, x, y, "█");
+                cucul_put_str(out, x, y, "█");
             else if(c >= 0x80)
-                cucul_putstr(out, x, y, "▓");
+                cucul_put_str(out, x, y, "▓");
             else if(c >= 0x40)
-                cucul_putstr(out, x, y, "▒");
+                cucul_put_str(out, x, y, "▒");
             else if(c >= 0x20)
-                cucul_putstr(out, x, y, "░");
+                cucul_put_str(out, x, y, "░");
             else
-                cucul_putchar(out, x, y, ' ');
+                cucul_put_char(out, x, y, ' ');
         }
         break;
     case HALFBLOCKS:
@@ -210,7 +211,7 @@ static void add_char(unsigned long int ch)
             uint8_t p1 = image[4 * (x + y * 2 * iw) + 2];
             uint8_t p2 = image[4 * (x + (y * 2 + 1) * iw) + 2];
 
-            cucul_putstr(out, x, y, str[(p1 > 0x80) + 2 * (p2 > 0x80)]);
+            cucul_put_str(out, x, y, str[(p1 > 0x80) + 2 * (p2 > 0x80)]);
         }
         break;
     case QUARTERBLOCKS:
@@ -228,17 +229,17 @@ static void add_char(unsigned long int ch)
             uint8_t p3 = image[4 * (x * 2 + (y * 2 + 1) * iw) + 2];
             uint8_t p4 = image[4 * (x * 2 + 1 + (y * 2 + 1) * iw) + 2];
 
-            cucul_putstr(out, x, y, str[(p1 > 0x80) + 2 * (p2 > 0x80) +
-                                        4 * (p3 > 0x80) + 8 * (p4 > 0x80)]);
+            cucul_put_str(out, x, y, str[(p1 > 0x80) + 2 * (p2 > 0x80) +
+                                         4 * (p3 > 0x80) + 8 * (p4 > 0x80)]);
         }
         break;
     }
 
     cucul_draw_line(out, mygw, 0, mygw, gh - 1, '@');
-    cucul_putchar(out, mygw + 1, gh - 1, '@');
+    cucul_put_char(out, mygw + 1, gh - 1, '@');
 
-    buf = cucul_export_canvas(out, "utf8");
-    fwrite(cucul_get_buffer_data(buf), cucul_get_buffer_size(buf), 1, stdout);
-    cucul_free_buffer(buf);
+    buf = cucul_export_memory(out, "utf8", &len);
+    fwrite(buf, len, 1, stdout);
+    free(buf);
 }
 

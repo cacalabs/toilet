@@ -6,5 +6,5 @@ CLEANFILES = toilet.1
 man_MANS = toilet.1
 
 toilet.1: toilet.1.in
-	sed -e "s,@data""rootdir@,$(datarootdir),g" $(srcdir)/$^ > $@
+	sed -e "s,[@]datarootdir@,$(datarootdir),g" $(srcdir)/$^ > $@
 

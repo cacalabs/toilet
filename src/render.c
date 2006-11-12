@@ -107,7 +107,8 @@ int render_end(context_t *cx)
 
 static int render_flush(context_t *cx)
 {
-    cucul_buffer_t *buffer;
+    unsigned long int len;
+    void *buffer;
 
     /* Flush current line */
     cx->flush(cx);
@@ -118,12 +119,11 @@ static int render_flush(context_t *cx)
     cx->lines += cucul_get_canvas_height(cx->torender);
 
     /* Output line */
-    buffer = cucul_export_canvas(cx->torender, cx->export);
+    buffer = cucul_export_memory(cx->torender, cx->export, &len);
     if(!buffer)
         return -1;
-    fwrite(cucul_get_buffer_data(buffer),
-           cucul_get_buffer_size(buffer), 1, stdout);
-    cucul_free_buffer(buffer);
+    fwrite(buffer, len, 1, stdout);
+    free(buffer);
     cucul_free_canvas(cx->torender);
 
     return 0;

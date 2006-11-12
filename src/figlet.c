@@ -96,8 +96,8 @@ static int feed_figlet(context_t *cx, uint32_t ch)
     for(y = 0; y < h; y++)
         for(x = 0; x < w; x++)
     {
-        uint32_t tmp = cucul_getchar(cx->image, x, y + c * cx->height);
-        cucul_putchar(cx->cv, cx->x + x, cx->y + y, tmp);
+        uint32_t tmp = cucul_get_char(cx->image, x, y + c * cx->height);
+        cucul_put_char(cx->cv, cx->x + x, cx->y + y, tmp);
     }
 
     /* Advance cursor */
@@ -132,7 +132,6 @@ static int open_font(context_t *cx)
     char path[2048];
     char buf[2048];
     char hardblank[10];
-    cucul_buffer_t *b;
     TOIFILE *f;
     unsigned int i, j, size, comment_lines;
 
@@ -249,17 +248,9 @@ static int open_font(context_t *cx)
     }
 
     /* Import buffer into canvas */
-    b = cucul_load_memory(data, i);
-    cx->image = cucul_import_canvas(b, "utf8");
-    cucul_free_buffer(b);
+    cx->image = cucul_create_canvas(0, 0);
+    cucul_import_memory(cx->image, data, i, "utf8");
     free(data);
-
-    if(!cx->image)
-    {
-        free(cx->lookup);
-        fprintf(stderr, "libcucul could not load data in `%s'\n", path);
-        return -1;
-    }
 
     /* Remove EOL characters. For now we ignore hardblanks, don’t do any
      * smushing, nor any kind of error checking. */
@@ -269,12 +260,12 @@ static int open_font(context_t *cx)
 
         for(i = cx->max_length; i--;)
         {
-            ch = cucul_getchar(cx->image, i, j);
+            ch = cucul_get_char(cx->image, i, j);
 
             /* TODO: Replace hardblanks with U+00A0 NO-BREAK SPACE */
             if(ch == cx->hardblank)
-                cucul_putchar(cx->image, i, j, ch = ' ');
-                //cucul_putchar(cx->image, i, j, ch = 0xa0);
+                cucul_put_char(cx->image, i, j, ch = ' ');
+                //cucul_put_char(cx->image, i, j, ch = 0xa0);
 
             if(oldch && ch != oldch)
             {
@@ -282,11 +273,11 @@ static int open_font(context_t *cx)
                     cx->lookup[j / cx->height * 2 + 1] = i + 1;
             }
             else if(oldch && ch == oldch)
-                cucul_putchar(cx->image, i, j, ' ');
+                cucul_put_char(cx->image, i, j, ' ');
             else if(ch != ' ')
             {
                 oldch = ch;
-                cucul_putchar(cx->image, i, j, ' ');
+                cucul_put_char(cx->image, i, j, ' ');
             }
         }
     }

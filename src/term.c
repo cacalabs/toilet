@@ -81,7 +81,7 @@ static int feed_tiny(context_t *cx, uint32_t ch)
 
     cucul_set_canvas_size(cx->cv, cx->ew, cx->eh);
 
-    cucul_putchar(cx->cv, cx->x, cx->y, ch);
+    cucul_put_char(cx->cv, cx->x, cx->y, ch);
     cx->x++;
 
     return 0;

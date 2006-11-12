@@ -130,7 +130,7 @@ static void filter_crop(context_t *cx)
     for(y = 0; y < h; y++)
         for(x = 0; x < w; x++)
     {
-        unsigned long int ch = cucul_getchar(cx->torender, x, y);
+        unsigned long int ch = cucul_get_char(cx->torender, x, y);
         if(ch != (unsigned char)' ')
         {
             if(x < xmin)
@@ -166,7 +166,7 @@ static void filter_metal(context_t *cx)
     for(y = 0; y < h; y++)
         for(x = 0; x < w; x++)
     {
-        unsigned long int ch = cucul_getchar(cx->torender, x, y);
+        unsigned long int ch = cucul_get_char(cx->torender, x, y);
         int i;
 
         if(ch == (unsigned char)' ')
@@ -174,7 +174,7 @@ static void filter_metal(context_t *cx)
 
         i = ((cx->lines + y + x / 8) / 2) % 4;
         cucul_set_color_ansi(cx->torender, palette[i], CUCUL_TRANSPARENT);
-        cucul_putchar(cx->torender, x, y, ch);
+        cucul_put_char(cx->torender, x, y, ch);
     }
 }
 
@@ -193,13 +193,13 @@ static void filter_gay(context_t *cx)
     for(y = 0; y < h; y++)
         for(x = 0; x < w; x++)
     {
-        unsigned long int ch = cucul_getchar(cx->torender, x, y);
+        unsigned long int ch = cucul_get_char(cx->torender, x, y);
         if(ch != (unsigned char)' ')
         {
             cucul_set_color_ansi(cx->torender,
                                  rainbow[(x / 2 + y + cx->lines) % 6],
                                  CUCUL_TRANSPARENT);
-            cucul_putchar(cx->torender, x, y, ch);
+            cucul_put_char(cx->torender, x, y, ch);
         }
     }
 }
