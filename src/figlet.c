@@ -32,7 +32,7 @@
 #define STD_GLYPHS (127 - 32)
 #define EXT_GLYPHS (STD_GLYPHS + 7)
 
-static int feed_figlet(context_t *, uint32_t);
+static int feed_figlet(context_t *, uint32_t, uint32_t);
 static int flush_figlet(context_t *);
 static int end_figlet(context_t *);
 
@@ -50,7 +50,7 @@ int init_figlet(context_t *cx)
     return 0;
 }
 
-static int feed_figlet(context_t *cx, uint32_t ch)
+static int feed_figlet(context_t *cx, uint32_t ch, uint32_t attr)
 {
     unsigned int c, w, h, x, y;
 
@@ -90,14 +90,21 @@ static int feed_figlet(context_t *cx, uint32_t ch)
     if(cx->y + h > cx->h)
         cx->h = cx->y + h;
 
+    if(attr)
+        cucul_set_attr(cx->cv, attr);
     cucul_set_canvas_size(cx->cv, cx->w, cx->h);
 
     /* Render our char (FIXME: create a rect-aware cucul_blit_canvas?) */
     for(y = 0; y < h; y++)
         for(x = 0; x < w; x++)
     {
-        uint32_t tmp = cucul_get_char(cx->image, x, y + c * cx->height);
-        cucul_put_char(cx->cv, cx->x + x, cx->y + y, tmp);
+        uint32_t tmpch = cucul_get_char(cx->image, x, y + c * cx->height);
+        //uint32_t tmpat = cucul_get_attr(cx->image, x, y + c * cx->height);
+        /* FIXME: this could be changed to cucul_put_attr() when the
+         * function is fixed in libcucul */
+        //cucul_set_attr(cx->cv, tmpat);
+        cucul_put_char(cx->cv, cx->x + x, cx->y + y, tmpch);
+        //cucul_put_attr(cx->cv, cx->x + x, cx->y + y, tmpat);
     }
 
     /* Advance cursor */

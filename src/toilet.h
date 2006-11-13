@@ -28,7 +28,7 @@ struct toilet_context
     unsigned int w, h, ew, eh, x, y, lines;
 
     /* Render methods */
-    int (*feed)(struct toilet_context *, uint32_t);
+    int (*feed)(struct toilet_context *, uint32_t, uint32_t);
     int (*flush)(struct toilet_context *);
     int (*end)(struct toilet_context *);
 

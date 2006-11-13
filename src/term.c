@@ -26,7 +26,7 @@
 #include "toilet.h"
 #include "render.h"
 
-static int feed_tiny(context_t *, uint32_t);
+static int feed_tiny(context_t *, uint32_t, uint32_t);
 static int flush_tiny(context_t *);
 static int end_tiny(context_t *);
 
@@ -42,7 +42,7 @@ int init_tiny(context_t *cx)
     return 0;
 }
 
-static int feed_tiny(context_t *cx, uint32_t ch)
+static int feed_tiny(context_t *cx, uint32_t ch, uint32_t attr)
 {
     switch(ch)
     {
@@ -79,6 +79,7 @@ static int feed_tiny(context_t *cx, uint32_t ch)
             cx->eh = cx->eh + cx->eh / 2;
     }
 
+    cucul_set_attr(cx->cv, attr);
     cucul_set_canvas_size(cx->cv, cx->ew, cx->eh);
 
     cucul_put_char(cx->cv, cx->x, cx->y, ch);

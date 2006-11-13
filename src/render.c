@@ -46,47 +46,83 @@ int render_init(context_t *cx)
 
 int render_stdin(context_t *cx)
 {
-    char buf[10];
-    unsigned int i = 0, len;
-    uint32_t ch;
+    cucul_canvas_t *cv;
+    char *line;
+    unsigned int i, len;
+
+    /* FIXME: we can't read longer lines */
+    len = 1024;
+    line = malloc(len);
+    cv = cucul_create_canvas(0, 0);
 
     /* Read from stdin */
     while(!feof(stdin))
     {
-        buf[i++] = getchar();
-        buf[i] = '\0';
+        if(!fgets(line, len, stdin))
+            break;
 
-        ch = cucul_utf8_to_utf32(buf, &len);
+        cucul_set_canvas_size(cv, 0, 0);
+        cucul_import_memory(cv, line, strlen(line), "utf8");
+        for(i = 0; i < cucul_get_canvas_width(cv); i++)
+        {
+            uint32_t ch = cucul_get_char(cv, i, 0);
+            uint32_t at = cucul_get_attr(cv, i, 0);
+            cx->feed(cx, ch, at);
+            if(cucul_utf32_is_fullwidth(ch)) i++;
+        }
 
-        if(!len)
-            continue;
-
-        cx->feed(cx, ch);
-        i = 0;
-
-        if(ch == '\n')
-            render_flush(cx);
+        render_flush(cx);
     }
+
+    free(line);
 
     return 0;
 }
 
 int render_list(context_t *cx, unsigned int argc, char *argv[])
 {
-    unsigned int i, j;
+    cucul_canvas_t *cv;
+    unsigned int i, j, len;
+    char *parser = NULL;
 
-    for(i = 0; i < argc; i++)
+    cv = cucul_create_canvas(0, 0);
+
+    for(j = 0; j < argc; )
     {
-        /* Read from commandline */
-        unsigned int len;
+        char *cr;
 
-        if(i)
-            cx->feed(cx, ' ');
-
-        for(j = 0; argv[i][j];)
+        if(!parser)
         {
-            cx->feed(cx, cucul_utf8_to_utf32(argv[i] + j, &len));
-            j += len;
+            if(j)
+                cx->feed(cx, ' ', 0);
+            parser = argv[j];
+        }
+
+        cr = strchr(parser, '\n');
+        if(cr)
+            len = (cr - parser) + 1;
+        else
+            len = strlen(parser);
+
+        cucul_set_canvas_size(cv, 0, 0);
+        cucul_import_memory(cv, parser, len, "utf8");
+        for(i = 0; i < cucul_get_canvas_width(cv); i++)
+        {
+            uint32_t ch = cucul_get_char(cv, i, 0);
+            uint32_t at = cucul_get_attr(cv, i, 0);
+            cx->feed(cx, ch, at);
+            if(cucul_utf32_is_fullwidth(ch)) i++;
+        }
+
+        if(cr)
+        {
+            parser += len;
+            render_flush(cx);
+        }
+        else
+        {
+            parser = NULL;
+            j++;
         }
     }
 
