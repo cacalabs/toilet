@@ -43,6 +43,9 @@ int init_figlet(context_t *cx)
     if(open_font(cx))
         return -1;
 
+    cx->left = malloc(cx->height * sizeof(int));
+    cx->right = malloc(cx->height * sizeof(int));
+
     cx->feed = feed_figlet;
     cx->flush = flush_figlet;
     cx->end = end_figlet;
@@ -52,7 +55,7 @@ int init_figlet(context_t *cx)
 
 static int feed_figlet(context_t *cx, uint32_t ch, uint32_t attr)
 {
-    unsigned int c, w, h, x, y;
+    unsigned int c, w, h, x, y, overlap, mx;
 
     switch(ch)
     {
@@ -83,9 +86,28 @@ static int feed_figlet(context_t *cx, uint32_t ch, uint32_t attr)
         cx->y += h;
     }
 
+    /* Compute how much the next character will overlap */
+    overlap = w;
+    for(y = 0; y < h; y++)
+    {
+        /* Compute how much spaces we can eat from the new glyph */
+        for(x = 0; x < overlap; x++)
+            if(cucul_get_char(cx->image, x, y + c * cx->height) != ' ')
+                break;
+
+        /* Compute how much spaces we can eat from the previous glyph */
+        for(mx = 0; x + mx < overlap && mx < cx->x; mx++)
+            if(cucul_get_char(cx->cv, cx->x - 1 - mx, cx->y + y) != ' ')
+                break;
+
+        if(x + mx < overlap)
+            overlap = x + mx;
+    }
+
     /* Check whether the current canvas is large enough */
-    if(cx->x + w > cx->w)
-        cx->w = cx->x + w < cx->term_width ? cx->x + w : cx->term_width;
+    if(cx->x + w - overlap > cx->w)
+        cx->w = cx->x + w - overlap < cx->term_width
+              ? cx->x + w - overlap : cx->term_width;
 
     if(cx->y + h > cx->h)
         cx->h = cx->y + h;
@@ -100,23 +122,37 @@ static int feed_figlet(context_t *cx, uint32_t ch, uint32_t attr)
     {
         uint32_t tmpch = cucul_get_char(cx->image, x, y + c * cx->height);
         //uint32_t tmpat = cucul_get_attr(cx->image, x, y + c * cx->height);
+        if(tmpch == ' ')
+            continue;
         /* FIXME: this could be changed to cucul_put_attr() when the
          * function is fixed in libcucul */
         //cucul_set_attr(cx->cv, tmpat);
-        cucul_put_char(cx->cv, cx->x + x, cx->y + y, tmpch);
+        cucul_put_char(cx->cv, cx->x + x - overlap, cx->y + y, tmpch);
         //cucul_put_attr(cx->cv, cx->x + x, cx->y + y, tmpat);
     }
 
     /* Advance cursor */
-    cx->x += w;
+    cx->x += w - overlap;
 
     return 0;
 }
 
 static int flush_figlet(context_t *cx)
 {
+    unsigned int x, y;
+
     cx->torender = cx->cv;
     cucul_set_canvas_size(cx->torender, cx->w, cx->h);
+
+    /* FIXME: do this somewhere else, or record hardblank positions */
+    for(y = 0; y < cx->h; y++)
+        for(x = 0; x < cx->w; x++)
+            if(cucul_get_char(cx->torender, x, y) == 0xa0)
+            {
+                uint32_t attr = cucul_get_attr(cx->torender, x, y);
+                cucul_put_char(cx->torender, x, y, ' ');
+                cucul_put_attr(cx->torender, x, y, attr);
+            }
 
     cx->x = cx->y = 0;
     cx->w = cx->h = 0;
@@ -127,6 +163,8 @@ static int flush_figlet(context_t *cx)
 
 static int end_figlet(context_t *cx)
 {
+    free(cx->left);
+    free(cx->right);
     cucul_free_canvas(cx->image);
     free(cx->lookup);
 
@@ -269,10 +307,9 @@ static int open_font(context_t *cx)
         {
             ch = cucul_get_char(cx->image, i, j);
 
-            /* TODO: Replace hardblanks with U+00A0 NO-BREAK SPACE */
+            /* Replace hardblanks with U+00A0 NO-BREAK SPACE */
             if(ch == cx->hardblank)
-                cucul_put_char(cx->image, i, j, ch = ' ');
-                //cucul_put_char(cx->image, i, j, ch = 0xa0);
+                cucul_put_char(cx->image, i, j, ch = 0xa0);
 
             if(oldch && ch != oldch)
             {

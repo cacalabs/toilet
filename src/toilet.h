@@ -32,11 +32,6 @@ struct toilet_context
     int (*flush)(struct toilet_context *);
     int (*end)(struct toilet_context *);
 
-    /* Used by the big driver */
-    cucul_font_t *f;
-    cucul_canvas_t *onechar;
-    unsigned char *buf;
-
     /* Used by the FIGlet driver */
     unsigned long int hardblank;
     unsigned int height, baseline, max_length;
@@ -44,6 +39,7 @@ struct toilet_context
     unsigned int print_direction, full_layout, codetag_count;
     unsigned int glyphs;
     cucul_canvas_t *image;
+    int *left, *right; /* Unused yet */
     unsigned int *lookup;
 
     /* Render filters */
