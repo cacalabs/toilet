@@ -124,8 +124,8 @@ static int feed_figlet(context_t *cx, uint32_t ch, uint32_t attr)
             if(cx->hlayout == H_SMUSH)
             {
                 if(xleft < cx->x &&
-                   smush(cucul_get_char(cx->charcv, xright, y),
-                         cucul_get_char(cx->cv, cx->x - 1 - xleft, cx->y + y),
+                   smush(cucul_get_char(cx->cv, cx->x - 1 - xleft, cx->y + y),
+                         cucul_get_char(cx->charcv, xright, y),
                          0))
                     xleft++;
             }
@@ -375,7 +375,6 @@ static int open_font(context_t *cx)
 
 static uint32_t smush(uint32_t ch1, uint32_t ch2, unsigned int mode)
 {
-
     /* Rule 1 */
     if(ch1 == ch2 && ch1 != 0xa0)
         return ch2;
@@ -390,6 +389,9 @@ static uint32_t smush(uint32_t ch1, uint32_t ch2, unsigned int mode)
         /* Rule 2 */
         if(ch1 == '_' && strchr(rule2, ch2))
             return ch2;
+
+        if(ch2 == '_' && strchr(rule2, ch1))
+            return ch1;
 
         /* Rule 3 */
         if((tmp1 = strchr(rule3, ch1)) && (tmp2 = strchr(rule3, ch2)))
