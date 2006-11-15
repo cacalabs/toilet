@@ -37,11 +37,18 @@ static int flush_figlet(context_t *);
 static int end_figlet(context_t *);
 
 static int open_font(context_t *cx);
+static uint32_t smush(uint32_t, uint32_t, unsigned int);
 
 int init_figlet(context_t *cx)
 {
     if(open_font(cx))
         return -1;
+
+    /* FIXME: read the font's contents */
+    if(cx->hlayout == H_DEFAULT)
+        cx->hlayout = H_SMUSH;
+
+    cx->charcv = cucul_create_canvas(cx->max_length - 2, cx->height);
 
     cx->left = malloc(cx->height * sizeof(int));
     cx->right = malloc(cx->height * sizeof(int));
@@ -55,7 +62,7 @@ int init_figlet(context_t *cx)
 
 static int feed_figlet(context_t *cx, uint32_t ch, uint32_t attr)
 {
-    unsigned int c, w, h, x, y, overlap, mx;
+    unsigned int c, w, h, x, y, overlap, extra, xleft, xright;
 
     switch(ch)
     {
@@ -79,6 +86,9 @@ static int feed_figlet(context_t *cx, uint32_t ch, uint32_t attr)
     w = cx->lookup[c * 2 + 1];
     h = cx->height;
 
+    cucul_set_canvas_handle(cx->fontcv, 0, c * cx->height);
+    cucul_blit(cx->charcv, 0, 0, cx->fontcv, NULL);
+
     /* Check whether we reached the end of the screen */
     if(cx->x && cx->x + w > cx->term_width)
     {
@@ -87,21 +97,48 @@ static int feed_figlet(context_t *cx, uint32_t ch, uint32_t attr)
     }
 
     /* Compute how much the next character will overlap */
-    overlap = w;
-    for(y = 0; y < h; y++)
+    switch(cx->hlayout)
     {
-        /* Compute how much spaces we can eat from the new glyph */
-        for(x = 0; x < overlap; x++)
-            if(cucul_get_char(cx->image, x, y + c * cx->height) != ' ')
-                break;
+    case H_SMUSH:
+    case H_KERN:
+    case H_OVERLAP:
+        extra = (cx->hlayout == H_OVERLAP);
+        overlap = w;
+        for(y = 0; y < h; y++)
+        {
+            /* Compute how much spaces we can eat from the new glyph */
+            for(xright = 0; xright < overlap; xright++)
+                if(cucul_get_char(cx->charcv, xright, y) != ' ')
+                    break;
 
-        /* Compute how much spaces we can eat from the previous glyph */
-        for(mx = 0; x + mx < overlap && mx < cx->x; mx++)
-            if(cucul_get_char(cx->cv, cx->x - 1 - mx, cx->y + y) != ' ')
-                break;
+            /* Compute how much spaces we can eat from the previous glyph */
+            for(xleft = 0; xright + xleft < overlap && xleft < cx->x; xleft++)
+                if(cucul_get_char(cx->cv, cx->x - 1 - xleft, cx->y + y) != ' ')
+                    break;
 
-        if(x + mx < overlap)
-            overlap = x + mx;
+            /* Handle overlapping */
+            if(cx->hlayout == H_OVERLAP && xleft < cx->x)
+                xleft++;
+
+            /* Handle smushing */
+            if(cx->hlayout == H_SMUSH)
+            {
+                if(xleft < cx->x &&
+                   smush(cucul_get_char(cx->charcv, xright, y),
+                         cucul_get_char(cx->cv, cx->x - 1 - xleft, cx->y + y),
+                         0))
+                    xleft++;
+            }
+ 
+            if(xleft + xright < overlap)
+                overlap = xleft + xright;
+        }
+        break;
+    case H_NONE:
+        overlap = 0;
+        break;
+    default:
+        return -1;
     }
 
     /* Check whether the current canvas is large enough */
@@ -120,14 +157,20 @@ static int feed_figlet(context_t *cx, uint32_t ch, uint32_t attr)
     for(y = 0; y < h; y++)
         for(x = 0; x < w; x++)
     {
-        uint32_t tmpch = cucul_get_char(cx->image, x, y + c * cx->height);
-        //uint32_t tmpat = cucul_get_attr(cx->image, x, y + c * cx->height);
-        if(tmpch == ' ')
+        uint32_t ch1, ch2;
+        //uint32_t tmpat = cucul_get_attr(cx->fontcv, x, y + c * cx->height);
+        ch2 = cucul_get_char(cx->charcv, x, y);
+        if(ch2 == ' ')
             continue;
+        ch1 = cucul_get_char(cx->cv, cx->x + x - overlap, cx->y + y);
         /* FIXME: this could be changed to cucul_put_attr() when the
          * function is fixed in libcucul */
         //cucul_set_attr(cx->cv, tmpat);
-        cucul_put_char(cx->cv, cx->x + x - overlap, cx->y + y, tmpch);
+        if(ch1 == ' ' || cx->hlayout != H_SMUSH)
+            cucul_put_char(cx->cv, cx->x + x - overlap, cx->y + y, ch2);
+        else
+            cucul_put_char(cx->cv, cx->x + x - overlap, cx->y + y,
+                           smush(ch1, ch2, 0));
         //cucul_put_attr(cx->cv, cx->x + x, cx->y + y, tmpat);
     }
 
@@ -165,7 +208,8 @@ static int end_figlet(context_t *cx)
 {
     free(cx->left);
     free(cx->right);
-    cucul_free_canvas(cx->image);
+    cucul_free_canvas(cx->charcv);
+    cucul_free_canvas(cx->fontcv);
     free(cx->lookup);
 
     return 0;
@@ -293,8 +337,8 @@ static int open_font(context_t *cx)
     }
 
     /* Import buffer into canvas */
-    cx->image = cucul_create_canvas(0, 0);
-    cucul_import_memory(cx->image, data, i, "utf8");
+    cx->fontcv = cucul_create_canvas(0, 0);
+    cucul_import_memory(cx->fontcv, data, i, "utf8");
     free(data);
 
     /* Remove EOL characters. For now we ignore hardblanks, don’t do any
@@ -305,11 +349,11 @@ static int open_font(context_t *cx)
 
         for(i = cx->max_length; i--;)
         {
-            ch = cucul_get_char(cx->image, i, j);
+            ch = cucul_get_char(cx->fontcv, i, j);
 
             /* Replace hardblanks with U+00A0 NO-BREAK SPACE */
             if(ch == cx->hardblank)
-                cucul_put_char(cx->image, i, j, ch = 0xa0);
+                cucul_put_char(cx->fontcv, i, j, ch = 0xa0);
 
             if(oldch && ch != oldch)
             {
@@ -317,13 +361,68 @@ static int open_font(context_t *cx)
                     cx->lookup[j / cx->height * 2 + 1] = i + 1;
             }
             else if(oldch && ch == oldch)
-                cucul_put_char(cx->image, i, j, ' ');
+                cucul_put_char(cx->fontcv, i, j, ' ');
             else if(ch != ' ')
             {
                 oldch = ch;
-                cucul_put_char(cx->image, i, j, ' ');
+                cucul_put_char(cx->fontcv, i, j, ' ');
             }
         }
+    }
+
+    return 0;
+}
+
+static uint32_t smush(uint32_t ch1, uint32_t ch2, unsigned int mode)
+{
+
+    /* Rule 1 */
+    if(ch1 == ch2 && ch1 != 0xa0)
+        return ch2;
+
+    if(ch1 < 0x80 && ch2 < 0x80)
+    {
+        char const rule2[] = "|/\\[]{}()<>";
+        char const rule3[] = "||/\\[]{}()<>";
+        char *tmp1, *tmp2;
+        uint16_t s, p;
+
+        /* Rule 2 */
+        if(ch1 == '_' && strchr(rule2, ch2))
+            return ch2;
+
+        /* Rule 3 */
+        if((tmp1 = strchr(rule3, ch1)) && (tmp2 = strchr(rule3, ch2)))
+        {
+            int cl1 = (tmp1 - rule3) / 2;
+            int cl2 = (tmp2 - rule3) / 2;
+
+            if(cl1 < cl2)
+                return ch2;
+            if(cl1 > cl2)
+                return ch1;
+        }
+
+        /* Rule 4 */
+        s = ch1 + ch2;
+        p = ch1 * ch2;
+
+        if(p == 15375 /* '{' * '}' */
+            || p == 8463 /* '[' * ']' */
+            || (p == 1640 && s == 81)) /* '(' *|+ ')' */
+            return '|';
+
+        /* Rule 5 */
+        switch((ch1 << 8) | ch2)
+        {
+            case 0x2f5c: return '|'; /* /\ */
+            case 0x5c2f: return 'Y'; /* \/ */
+            case 0x3e3c: return 'X'; /* >< */
+        }
+
+        /* Rule 6 */
+        if(ch1 == ch2 && ch1 == 0xa0)
+            return 0xa0;
     }
 
     return 0;

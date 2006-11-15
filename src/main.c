@@ -54,6 +54,8 @@ int main(int argc, char *argv[])
 
     cx->term_width = 80;
 
+    cx->hlayout = H_DEFAULT;
+
     cx->filters = NULL;
     cx->nfilters = 0;
 
@@ -82,11 +84,11 @@ int main(int argc, char *argv[])
             { NULL, 0, NULL, 0 }
         };
 
-        int c = getopt_long(argc, argv, "f:d:w:tF:E:hI:v",
+        int c = getopt_long(argc, argv, "f:d:w:tsSkWoF:E:hI:v",
                             long_options, &option_index);
 #   else
 #       define MOREINFO "Try `%s -h' for more information.\n"
-        int c = getopt(argc, argv, "f:d:w:tF:E:hI:v");
+        int c = getopt(argc, argv, "f:d:w:tsSkWoF:E:hI:v");
 #   endif
         if(c == -1)
             break;
@@ -135,6 +137,21 @@ int main(int argc, char *argv[])
 #endif
             break;
         }
+        case 's':
+            cx->hlayout = H_DEFAULT;
+            break;
+        case 'S':
+            cx->hlayout = H_SMUSH;
+            break;
+        case 'k':
+            cx->hlayout = H_KERN;
+            break;
+        case 'W':
+            cx->hlayout = H_NONE;
+            break;
+        case 'o':
+            cx->hlayout = H_OVERLAP;
+            break;
         case 'E': /* --export */
             if(!strcmp(optarg, "list"))
                 return export_list();
