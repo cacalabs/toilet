@@ -217,7 +217,7 @@ int main(int argc, char *argv[])
 
 #if defined(HAVE_GETOPT_H)
 #   define USAGE \
-    "Usage: toilet [ -htv ] [ -d fontdirectory ]\n" \
+    "Usage: toilet [ -hkostvSW ] [ -d fontdirectory ]\n" \
     "              [ -f fontfile ] [ -F filter ] [ -w outputwidth ]\n" \
     "              [ -I infocode ] [ -E format ] [ message ]\n"
 #else
@@ -249,6 +249,8 @@ static void usage(void)
 #   ifdef HAVE_GETOPT_LONG
     printf("  -f, --font <name>        select the font\n");
     printf("  -d, --directory <dir>    specify font directory\n");
+    printf("  -s, -S, -k, -W, -o       render mode (default smushing, force smushing,\n");
+    printf("                           kerning, full width, overlap)\n");
     printf("  -w, --width <width>      set output width\n");
     printf("  -t, --termwidth          adapt to terminal's width\n");
     printf("  -F, --filter <filters>   apply one or several filters to the text\n");
@@ -263,17 +265,19 @@ static void usage(void)
     printf("  -I, --infocode <code>    print FIGlet-compatible infocode\n");
     printf("  -v, --version            output version information and exit\n");
 #   else
-    printf("  -f <name>        select the font\n");
-    printf("  -d <dir>         specify font directory\n");
-    printf("  -w <width>       set output width\n");
-    printf("  -t               adapt to terminal's width\n");
-    printf("  -F <filters>     apply one or several filters to the text\n");
-    printf("  -F list          list available filters\n");
-    printf("  -E <format>      select export format\n");
-    printf("  -E list          list available export formats\n");
-    printf("  -h               display this help and exit\n");
-    printf("  -I <code>        print FIGlet-compatible infocode\n");
-    printf("  -v               output version information and exit\n");
+    printf("  -f <name>           select the font\n");
+    printf("  -d <dir>            specify font directory\n");
+    printf("  -s, -S, -k, -W, -o  render mode (default smushing, force smushing,\n");
+    printf("                      kerning, full width, overlap)\n");
+    printf("  -w <width>          set output width\n");
+    printf("  -t                  adapt to terminal's width\n");
+    printf("  -F <filters>        apply one or several filters to the text\n");
+    printf("  -F list             list available filters\n");
+    printf("  -E <format>         select export format\n");
+    printf("  -E list             list available export formats\n");
+    printf("  -h                  display this help and exit\n");
+    printf("  -I <code>           print FIGlet-compatible infocode\n");
+    printf("  -v                  output version information and exit\n");
 #   endif
 }
 #endif

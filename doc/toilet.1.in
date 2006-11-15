@@ -4,7 +4,7 @@ TOIlet \- display large colourful characters
 .SH SYNOPSIS
 .B toilet
 [
-.B \-htv
+.B \-hkostvSW
 ] [
 .B \-d
 .I fontdirectory
@@ -64,6 +64,20 @@ that serves as a fallback if no font is available.
 Specify the directory in which to look for fonts. The default value is set
 at build time and usually defaults to
 .B @datarootdir@/figlet.
+.TP
+.B \-s, \-S, \-k, \-W, \-o
+Select character composition rules.
+.B \-S
+sets smushing (nicely merging glyphs),
+.B \-k
+sets kerning (rendering subcharacters as close to each other as possible),
+.B \-W
+renders characters at their full width and
+.B \-o
+sets overlapping (glyphs slightly overlap the previous one).
+.B \-s
+(default behaviour) uses the font's smushing information if any, otherwise
+forces overlapping, or does nothing if the glyph only has one subcharacter.
 .TP
 .B \-w, \-\-width <width>
 Set the output width. By default,
