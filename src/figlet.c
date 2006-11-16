@@ -37,16 +37,42 @@ static int flush_figlet(context_t *);
 static int end_figlet(context_t *);
 
 static int open_font(context_t *cx);
-static uint32_t smush(uint32_t, uint32_t, unsigned int);
+static uint32_t hsmush(uint32_t, uint32_t, unsigned int);
 
 int init_figlet(context_t *cx)
 {
     if(open_font(cx))
         return -1;
 
-    /* FIXME: read the font's contents */
-    if(cx->hlayout == H_DEFAULT)
-        cx->hlayout = H_SMUSH;
+    if(cx->full_layout & 0x3f)
+        cx->hsmushrule = cx->full_layout & 0x3f;
+    else if(cx->old_layout > 0)
+        cx->hsmushrule = cx->old_layout;
+
+    switch(cx->hmode)
+    {
+    case H_DEFAULT:
+        if(cx->old_layout == -1)
+            cx->hmode = H_NONE;
+        else if(cx->old_layout == 0 && (cx->full_layout & 0xc0) == 0x40)
+            cx->hmode = H_KERN;
+        else if((cx->old_layout & 0x3f) && (cx->full_layout & 0x3f)
+                 && (cx->full_layout & 0x80))
+        {
+            cx->hmode = H_SMUSH;
+            cx->hsmushrule = cx->full_layout & 0x3f;
+        }
+        else if(cx->old_layout == 0 && (cx->full_layout & 0xbf) == 0x80)
+        {
+            cx->hmode = H_SMUSH;
+            cx->hsmushrule = 0x3f;
+        }
+        else
+            cx->hmode = H_OVERLAP;
+        break;
+    default:
+        break;
+    }
 
     cx->charcv = cucul_create_canvas(cx->max_length - 2, cx->height);
 
@@ -97,12 +123,12 @@ static int feed_figlet(context_t *cx, uint32_t ch, uint32_t attr)
     }
 
     /* Compute how much the next character will overlap */
-    switch(cx->hlayout)
+    switch(cx->hmode)
     {
     case H_SMUSH:
     case H_KERN:
     case H_OVERLAP:
-        extra = (cx->hlayout == H_OVERLAP);
+        extra = (cx->hmode == H_OVERLAP);
         overlap = w;
         for(y = 0; y < h; y++)
         {
@@ -117,16 +143,16 @@ static int feed_figlet(context_t *cx, uint32_t ch, uint32_t attr)
                     break;
 
             /* Handle overlapping */
-            if(cx->hlayout == H_OVERLAP && xleft < cx->x)
+            if(cx->hmode == H_OVERLAP && xleft < cx->x)
                 xleft++;
 
             /* Handle smushing */
-            if(cx->hlayout == H_SMUSH)
+            if(cx->hmode == H_SMUSH)
             {
                 if(xleft < cx->x &&
-                   smush(cucul_get_char(cx->cv, cx->x - 1 - xleft, cx->y + y),
-                         cucul_get_char(cx->charcv, xright, y),
-                         0))
+                   hsmush(cucul_get_char(cx->cv, cx->x - 1 - xleft, cx->y + y),
+                          cucul_get_char(cx->charcv, xright, y),
+                          cx->hsmushrule))
                     xleft++;
             }
  
@@ -166,11 +192,11 @@ static int feed_figlet(context_t *cx, uint32_t ch, uint32_t attr)
         /* FIXME: this could be changed to cucul_put_attr() when the
          * function is fixed in libcucul */
         //cucul_set_attr(cx->cv, tmpat);
-        if(ch1 == ' ' || cx->hlayout != H_SMUSH)
+        if(ch1 == ' ' || cx->hmode != H_SMUSH)
             cucul_put_char(cx->cv, cx->x + x - overlap, cx->y + y, ch2);
         else
             cucul_put_char(cx->cv, cx->x + x - overlap, cx->y + y,
-                           smush(ch1, ch2, 0));
+                           hsmush(ch1, ch2, cx->hsmushrule));
         //cucul_put_attr(cx->cv, cx->x + x, cx->y + y, tmpat);
     }
 
@@ -251,6 +277,16 @@ static int open_font(context_t *cx)
               &cx->full_layout, &cx->codetag_count) < 6)
     {
         fprintf(stderr, "font `%s' has invalid header: %s\n", path, buf);
+        toiclose(f);
+        return -1;
+    }
+
+    if(cx->old_layout < -1 || cx->old_layout > 63 || cx->full_layout > 32767
+        || ((cx->full_layout & 0x80) && (cx->full_layout & 0x3f) == 0
+            && cx->old_layout))
+    {
+        fprintf(stderr, "font `%s' has invalid layout %i/%u\n",
+                path, cx->old_layout, cx->full_layout);
         toiclose(f);
         return -1;
     }
@@ -373,31 +409,33 @@ static int open_font(context_t *cx)
     return 0;
 }
 
-static uint32_t smush(uint32_t ch1, uint32_t ch2, unsigned int mode)
+static uint32_t hsmush(uint32_t ch1, uint32_t ch2, unsigned int rule)
 {
     /* Rule 1 */
-    if(ch1 == ch2 && ch1 != 0xa0)
+    if((rule & 0x01) && ch1 == ch2 && ch1 != 0xa0)
         return ch2;
 
     if(ch1 < 0x80 && ch2 < 0x80)
     {
-        char const rule2[] = "|/\\[]{}()<>";
-        char const rule3[] = "||/\\[]{}()<>";
+        char const charlist[] = "|/\\[]{}()<>";
         char *tmp1, *tmp2;
-        uint16_t s, p;
 
         /* Rule 2 */
-        if(ch1 == '_' && strchr(rule2, ch2))
-            return ch2;
+        if(rule & 0x02)
+        {
+            if(ch1 == '_' && strchr(charlist, ch2))
+                return ch2;
 
-        if(ch2 == '_' && strchr(rule2, ch1))
-            return ch1;
+            if(ch2 == '_' && strchr(charlist, ch1))
+                return ch1;
+        }
 
         /* Rule 3 */
-        if((tmp1 = strchr(rule3, ch1)) && (tmp2 = strchr(rule3, ch2)))
+        if((rule & 0x04) &&
+           (tmp1 = strchr(charlist, ch1)) && (tmp2 = strchr(charlist, ch2)))
         {
-            int cl1 = (tmp1 - rule3) / 2;
-            int cl2 = (tmp2 - rule3) / 2;
+            int cl1 = (tmp1 + 1 - charlist) / 2;
+            int cl2 = (tmp2 + 1 - charlist) / 2;
 
             if(cl1 < cl2)
                 return ch2;
@@ -406,24 +444,30 @@ static uint32_t smush(uint32_t ch1, uint32_t ch2, unsigned int mode)
         }
 
         /* Rule 4 */
-        s = ch1 + ch2;
-        p = ch1 * ch2;
+        if(rule & 0x08)
+        {
+            uint16_t s = ch1 + ch2;
+            uint16_t p = ch1 * ch2;
 
-        if(p == 15375 /* '{' * '}' */
-            || p == 8463 /* '[' * ']' */
-            || (p == 1640 && s == 81)) /* '(' *|+ ')' */
-            return '|';
+            if(p == 15375 /* '{' * '}' */
+                || p == 8463 /* '[' * ']' */
+                || (p == 1640 && s == 81)) /* '(' *|+ ')' */
+                return '|';
+        }
 
         /* Rule 5 */
-        switch((ch1 << 8) | ch2)
+        if(rule & 0x10)
         {
-            case 0x2f5c: return '|'; /* /\ */
-            case 0x5c2f: return 'Y'; /* \/ */
-            case 0x3e3c: return 'X'; /* >< */
+            switch((ch1 << 8) | ch2)
+            {
+                case 0x2f5c: return '|'; /* /\ */
+                case 0x5c2f: return 'Y'; /* \/ */
+                case 0x3e3c: return 'X'; /* >< */
+            }
         }
 
         /* Rule 6 */
-        if(ch1 == ch2 && ch1 == 0xa0)
+        if((rule & 0x20) && ch1 == ch2 && ch1 == 0xa0)
             return 0xa0;
     }
 

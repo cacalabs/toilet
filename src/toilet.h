@@ -33,7 +33,8 @@ struct toilet_context
     int (*end)(struct toilet_context *);
 
     /* Used by the FIGlet driver */
-    enum { H_DEFAULT, H_KERN, H_SMUSH, H_NONE, H_OVERLAP } hlayout;
+    enum { H_DEFAULT, H_KERN, H_SMUSH, H_NONE, H_OVERLAP } hmode;
+    unsigned int hsmushrule;
     unsigned long int hardblank;
     unsigned int height, baseline, max_length;
     int old_layout;

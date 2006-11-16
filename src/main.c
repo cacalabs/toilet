@@ -54,7 +54,7 @@ int main(int argc, char *argv[])
 
     cx->term_width = 80;
 
-    cx->hlayout = H_DEFAULT;
+    cx->hmode = H_DEFAULT;
 
     cx->filters = NULL;
     cx->nfilters = 0;
@@ -138,19 +138,19 @@ int main(int argc, char *argv[])
             break;
         }
         case 's':
-            cx->hlayout = H_DEFAULT;
+            cx->hmode = H_DEFAULT;
             break;
         case 'S':
-            cx->hlayout = H_SMUSH;
+            cx->hmode = H_SMUSH;
             break;
         case 'k':
-            cx->hlayout = H_KERN;
+            cx->hmode = H_KERN;
             break;
         case 'W':
-            cx->hlayout = H_NONE;
+            cx->hmode = H_NONE;
             break;
         case 'o':
-            cx->hlayout = H_OVERLAP;
+            cx->hmode = H_OVERLAP;
             break;
         case 'E': /* --export */
             if(!strcmp(optarg, "list"))
@@ -249,7 +249,7 @@ static void usage(void)
 #   ifdef HAVE_GETOPT_LONG
     printf("  -f, --font <name>        select the font\n");
     printf("  -d, --directory <dir>    specify font directory\n");
-    printf("  -s, -S, -k, -W, -o       render mode (default smushing, force smushing,\n");
+    printf("  -s, -S, -k, -W, -o       render mode (default, force smushing,\n");
     printf("                           kerning, full width, overlap)\n");
     printf("  -w, --width <width>      set output width\n");
     printf("  -t, --termwidth          adapt to terminal's width\n");
@@ -267,7 +267,7 @@ static void usage(void)
 #   else
     printf("  -f <name>           select the font\n");
     printf("  -d <dir>            specify font directory\n");
-    printf("  -s, -S, -k, -W, -o  render mode (default smushing, force smushing,\n");
+    printf("  -s, -S, -k, -W, -o  render mode (default, force smushing,\n");
     printf("                      kerning, full width, overlap)\n");
     printf("  -w <width>          set output width\n");
     printf("  -t                  adapt to terminal's width\n");
