@@ -23,23 +23,23 @@ on the TOIlet website at http://libcaca.zoy.org/toilet.html
 ▝ @
 ▝ @@
 ▜▝▌@
-▘▝ @
+▘▝$@
    @
    @@
-[33;45mABC[0m@
+  $@
 ▟▟▖@
 ▟▟▖@
-▝▝ @@
+▝▝$@@
 ▗▙▖@
 ▚▙ @
 ▄▙▘@
- ▘ @@
+ ▘$@@
 █ ▌@
- ▞ @
+ ▞$@
 ▞▗▖@
 ▘▝▘@@
 ▞▚ @
-▚  @
+▚ $@
 ▌▚▘@
 ▝▘▘@@
 ▝▌@
@@ -47,7 +47,7 @@ on the TOIlet website at http://libcaca.zoy.org/toilet.html
   @
   @@
  ▞ @
-▐  @
+▐$ @
 ▝▖ @
  ▝ @@
 ▝▖ @
@@ -60,7 +60,7 @@ on the TOIlet website at http://libcaca.zoy.org/toilet.html
    @@
  ▖ @
 ▄▙▖@
- ▌ @
+ ▌$@
    @@
   @
   @
@@ -71,21 +71,21 @@ on the TOIlet website at http://libcaca.zoy.org/toilet.html
    @
    @@
   @
-  @
+ $@
 ▗▖@
 ▝▘@@
   ▌@
- ▞ @
-▞  @
+ ▞$@
+▞$ @
 ▘  @@
 ▞▀▖@
 ▌▞▌@
 ▛ ▌@
 ▝▀ @@
-▗▌ @
- ▌ @
- ▌ @
-▝▀ @@
+▗▌$@
+ ▌$@
+ ▌$@
+▝▀$@@
 ▞▀▖@
  ▗▘@
 ▗▘ @
@@ -155,7 +155,7 @@ on the TOIlet website at http://libcaca.zoy.org/toilet.html
 ▌ ▌@
 ▀▀ @@
 ▞▀▖@
-▌  @
+▌ $@
 ▌ ▖@
 ▝▀ @@
 ▛▀▖@
@@ -251,8 +251,8 @@ on the TOIlet website at http://libcaca.zoy.org/toilet.html
 ▞  @
 ▀▀▘@@
 ▐▀▘@
-▐  @
-▐  @
+▐$ @
+▐$ @
 ▝▀▘@@
 ▌  @
 ▝▖ @
@@ -295,7 +295,7 @@ on the TOIlet website at http://libcaca.zoy.org/toilet.html
 ▛▀ @
 ▝▀▘@@
 ▗▀▖@
-▐  @
+▐ $@
 ▜▀ @
 ▐  @@
    @
@@ -344,7 +344,7 @@ on the TOIlet website at http://libcaca.zoy.org/toilet.html
   ▌@@
    @
 ▙▀▖@
-▌  @
+▌ $@
 ▘  @@
    @
 ▞▀▘@
@@ -379,7 +379,7 @@ on the TOIlet website at http://libcaca.zoy.org/toilet.html
 ▗▘ @
 ▀▀▘@@
 ▗▀ @
-▞  @
+▞$ @
 ▐  @
  ▀ @@
 ▐ @
@@ -685,11 +685,11 @@ on the TOIlet website at http://libcaca.zoy.org/toilet.html
 0x2580 ▀ UPPER HALF BLOCK
 ███@
 ███@
-   @
-   @@
+  $@
+  $@@
 0x2584 ▄ LOWER HALF BLOCK
-   @
-   @
+  $@
+  $@
 ███@
 ███@
 0x2588 █ FULL BLOCK
@@ -698,45 +698,45 @@ on the TOIlet website at http://libcaca.zoy.org/toilet.html
 ███@
 ███@@
 0x258C ▌ LEFT HALF BLOCK
-█▌ @
-█▌ @
-█▌ @
-█▌ @@
+█▌$@
+█▌$@
+█▌$@
+█▌$@@
 0x2590 ▐ RIGHT HALF BLOCK
  ▐█@
  ▐█@
  ▐█@
  ▐█@@
 0x2596 ▖ QUADRANT LOWER LEFT
-   @
-   @
-█▌ @
-█▌ @@
+  $@
+  $@
+█▌$@
+█▌$@@
 0x2597 ▗ QUADRANT LOWER RIGHT
-   @
-   @
+  $@
+  $@
  ▐█@
  ▐█@@
 0x2598 ▘ QUADRANT UPPER LEFT
-█▌ @
-█▌ @
-   @
-   @@
+█▌$@
+█▌$@
+  $@
+  $@@
 0x2599 ▙ QUADRANT UPPER LEFT AND LOWER LEFT AND LOWER RIGHT
-█▌ @
-█▌ @
+█▌$@
+█▌$@
 ███@
 ███@@
 0x259A ▚ QUADRANT UPPER LEFT AND LOWER RIGHT
-█▌ @
-█▌ @
+█▌$@
+█▌$@
  ▐█@
  ▐█@@
 0x259B ▛ QUADRANT UPPER LEFT AND UPPER RIGHT AND LOWER LEFT
 ███@
 ███@
-█▌ @
-█▌ @@
+█▌$@
+█▌$@@
 0x259C ▜ QUADRANT UPPER LEFT AND UPPER RIGHT AND LOWER RIGHT
 ███@
 ███@
@@ -745,32 +745,32 @@ on the TOIlet website at http://libcaca.zoy.org/toilet.html
 0x259D ▝ QUADRANT UPPER RIGHT
  ▐█@
  ▐█@
-   @
-   @@
+  $@
+  $@@
 0x259E ▞ QUADRANT UPPER RIGHT AND LOWER LEFT
  ▐█@
  ▐█@
-█▌ @
-█▌ @@
+█▌$@
+█▌$@@
 0x259F ▟ QUADRANT UPPER RIGHT AND LOWER LEFT AND LOWER RIGHT
  ▐█@
  ▐█@
 ███@
 ███@@
 0x25A0 ■ BLACK SQUARE
-   @
+  $@
 ███@
 ███@
-   @@
+  $@@
 0x30A1 ァ KATAKANA LETTER SMALL A
      @
  ▄▄▖ @
- ▐▞  @
+ ▐▞$ @
  ▘   @@
 0x30A2 ア KATAKANA LETTER A
 ▗▄▄▄▖@
   ▙▞ @
- ▗▘  @
+ ▗▘$ @
  ▘   @@
 0x30A3 ィ KATAKANA LETTER SMALL I
      @

@@ -105,7 +105,7 @@ int main(int argc, char *argv[])
     image = malloc(4 * iw * ih);
 
     out = cucul_create_canvas(0, 0);
-    printf("tlf2a$ %u %u %u 0 4 0 0 0\n", gh, gh - 1, fgw + 2);
+    printf("tlf2a$ %u %u %u -1 4 0 0 0\n", gh, gh - 1, fgw + 2);
 
     printf("=============================================="
                                        "==================================\n");
@@ -233,6 +233,12 @@ static void add_char(unsigned long int ch)
                                          4 * (p3 > 0x80) + 8 * (p4 > 0x80)]);
         }
         break;
+    }
+
+    if(ch == ' ' || ch == 0xa0)
+    {
+        cucul_draw_line(out, mygw - 1, 0, mygw - 1, gh - 1, '$');
+        cucul_draw_line(out, mygw / 2, 0, mygw / 2, gh - 1, '$');
     }
 
     cucul_draw_line(out, mygw, 0, mygw, gh - 1, '@');
