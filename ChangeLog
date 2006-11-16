@@ -1,0 +1,489 @@
+------------------------------------------------------------------------
+r89 | sam | 2006-11-16 01:12:06 +0100 (Thu, 16 Nov 2006) | 2 lines
+
+  * Fix layout information of shipped fonts.
+
+------------------------------------------------------------------------
+r88 | sam | 2006-11-16 01:05:22 +0100 (Thu, 16 Nov 2006) | 2 lines
+
+  * Define default layout as fullwidth for generated fonts.
+
+------------------------------------------------------------------------
+r87 | sam | 2006-11-16 01:04:39 +0100 (Thu, 16 Nov 2006) | 2 lines
+
+  * Completed support for -s, -S, -k, -W, -o.
+
+------------------------------------------------------------------------
+r86 | sam | 2006-11-16 00:12:58 +0100 (Thu, 16 Nov 2006) | 2 lines
+
+  * Updated help and manpage.
+
+------------------------------------------------------------------------
+r85 | sam | 2006-11-15 13:07:00 +0100 (Wed, 15 Nov 2006) | 2 lines
+
+  * Fix universal smushing.
+
+------------------------------------------------------------------------
+r84 | sam | 2006-11-15 04:29:34 +0100 (Wed, 15 Nov 2006) | 2 lines
+
+  * Smushing support. Yeah baby.
+
+------------------------------------------------------------------------
+r83 | sam | 2006-11-15 00:42:11 +0100 (Wed, 15 Nov 2006) | 17 lines
+
+  * Kerning support. We used to have:
+ __   __  _
+ \ \ / / (_)  ___   _  _  __ __    _ __   ___   _ _   __
+  \ V /  | | / -_) | || | \ \ /   | '_ \ / _ \ | '_| / _|
+   \_/   |_| \___|  \_,_| /_\_\   | .__/ \___/ |_|   \__|
+                                  |_|
+
+   Now we have:
+
+__   __ _
+\ \ / /(_) ___  _  _ __ __  _ __  ___  _ _  __
+ \ V / | |/ -_)| || |\ \ / | '_ \/ _ \| '_|/ _|
+  \_/  |_|\___| \_,_|/_\_\ | .__/\___/|_|  \__|
+                           |_|
+
+   Now we just need smushing.
+
+------------------------------------------------------------------------
+r82 | sam | 2006-11-13 02:02:05 +0100 (Mon, 13 Nov 2006) | 5 lines
+
+  * Support for ANSI escape codes in the input:
+      http://zoy.org/~sam/toilet-ansi.png
+      http://zoy.org/~sam/toilet-ansi2.png
+  * Empty lines are currently broken.
+
+------------------------------------------------------------------------
+r81 | sam | 2006-11-12 23:52:05 +0100 (Sun, 12 Nov 2006) | 2 lines
+
+  * Fix max width in smblock.tlf.
+
+------------------------------------------------------------------------
+r80 | sam | 2006-11-12 21:37:58 +0100 (Sun, 12 Nov 2006) | 2 lines
+
+  * Now that libcaca 0.99.beta10 is out, we can switch to the new API.
+
+------------------------------------------------------------------------
+r79 | sam | 2006-11-12 19:09:54 +0100 (Sun, 12 Nov 2006) | 2 lines
+
+  * Double width support in caca2tlf.
+
+------------------------------------------------------------------------
+r78 | sam | 2006-11-12 19:02:15 +0100 (Sun, 12 Nov 2006) | 2 lines
+
+  * Add a "make fonts" rule to rebuild all generated fonts.
+
+------------------------------------------------------------------------
+r77 | sam | 2006-11-10 15:58:12 +0100 (Fri, 10 Nov 2006) | 4 lines
+
+  * Generate the manpage in the make rule, not the configure rule, because
+    at configure time ${datarootdir} depends on ${prefix} which is defined
+    a bit too late in the script.
+
+------------------------------------------------------------------------
+r76 | sam | 2006-11-10 15:30:22 +0100 (Fri, 10 Nov 2006) | 2 lines
+
+  * Allow setting the font directory using --datadir / --datarootdir.
+
+------------------------------------------------------------------------
+r75 | sam | 2006-11-10 15:19:13 +0100 (Fri, 10 Nov 2006) | 2 lines
+
+  * Do not cache ac_build_date.
+
+------------------------------------------------------------------------
+r74 | sam | 2006-11-10 09:54:04 +0100 (Fri, 10 Nov 2006) | 2 lines
+
+  * Add a manual page.
+
+------------------------------------------------------------------------
+r73 | sam | 2006-11-10 09:29:10 +0100 (Fri, 10 Nov 2006) | 2 lines
+
+  * Output filter list to stdout, not stderr.
+
+------------------------------------------------------------------------
+r72 | sam | 2006-11-10 08:56:55 +0100 (Fri, 10 Nov 2006) | 3 lines
+
+  * Moved export stuff in export.c.
+  * Bail out with an error if the requested export format is unsupported.
+
+------------------------------------------------------------------------
+r71 | sam | 2006-11-10 08:51:21 +0100 (Fri, 10 Nov 2006) | 2 lines
+
+  * Fix signed/unsigned warning.
+
+------------------------------------------------------------------------
+r70 | sam | 2006-11-10 08:47:17 +0100 (Fri, 10 Nov 2006) | 3 lines
+
+  * Use "-F list" to list available filters.
+  * Use "-E" to specify export format, "-E list" to list them.
+
+------------------------------------------------------------------------
+r69 | sam | 2006-11-10 08:38:52 +0100 (Fri, 10 Nov 2006) | 2 lines
+
+  * Don't crash if an export error occurs.
+
+------------------------------------------------------------------------
+r68 | sam | 2006-11-09 22:58:43 +0100 (Thu, 09 Nov 2006) | 2 lines
+
+  * Updated code to the beta9 API.
+
+------------------------------------------------------------------------
+r67 | sam | 2006-11-09 22:58:21 +0100 (Thu, 09 Nov 2006) | 2 lines
+
+  * Minor cosmetic change in the configure output.
+
+------------------------------------------------------------------------
+r66 | sam | 2006-11-06 18:39:42 +0100 (Mon, 06 Nov 2006) | 2 lines
+
+  * Ignore negative indices in font data.
+
+------------------------------------------------------------------------
+r65 | sam | 2006-11-06 18:33:31 +0100 (Mon, 06 Nov 2006) | 2 lines
+
+  * Make figlet font importer more tolerant with empty lines.
+
+------------------------------------------------------------------------
+r64 | sam | 2006-11-06 18:24:40 +0100 (Mon, 06 Nov 2006) | 2 lines
+
+  * Updated mono9 and mono12 fonts and added small and big variants.
+
+------------------------------------------------------------------------
+r63 | sam | 2006-11-06 18:24:02 +0100 (Mon, 06 Nov 2006) | 2 lines
+
+  * Add --half and --quarter options to caca2tlf.
+
+------------------------------------------------------------------------
+r62 | sam | 2006-11-06 02:13:38 +0100 (Mon, 06 Nov 2006) | 2 lines
+
+  * Got rid of the mono9.c renderer. We now have a .tlf font instead.
+
+------------------------------------------------------------------------
+r61 | sam | 2006-11-06 02:11:27 +0100 (Mon, 06 Nov 2006) | 4 lines
+
+  * Added two new fonts created with caca2tlf:
+      caca2tlf "Monospace 9" | zip >| fonts/mono9.tlf
+      caca2tlf "Monospace Bold 12" | zip >| fonts/mono12.tlf
+
+------------------------------------------------------------------------
+r60 | sam | 2006-11-06 02:09:44 +0100 (Mon, 06 Nov 2006) | 3 lines
+
+  * Added the caca2tlf tool, which converts a libcaca font into a TOIlet font
+    using a naive pixel-to-glyphs algorithm. I will improve it later.
+
+------------------------------------------------------------------------
+r59 | sam | 2006-11-06 01:55:49 +0100 (Mon, 06 Nov 2006) | 2 lines
+
+  * Distribute fonts with the tarball.
+
+------------------------------------------------------------------------
+r58 | sam | 2006-11-06 01:45:34 +0100 (Mon, 06 Nov 2006) | 2 lines
+
+  * Add a sanity check to the FIGlet font loader.
+
+------------------------------------------------------------------------
+r57 | sam | 2006-11-06 01:45:14 +0100 (Mon, 06 Nov 2006) | 2 lines
+
+  * Add missing toilet.h to the toilet sources.
+
+------------------------------------------------------------------------
+r56 | sam | 2006-11-04 18:43:13 +0100 (Sat, 04 Nov 2006) | 2 lines
+
+  * Fix uninitialised variable in the filter handler.
+
+------------------------------------------------------------------------
+r55 | sam | 2006-10-26 15:30:14 +0200 (Thu, 26 Oct 2006) | 2 lines
+
+  * Make filters line-feed aware.
+
+------------------------------------------------------------------------
+r54 | sam | 2006-10-26 15:14:37 +0200 (Thu, 26 Oct 2006) | 2 lines
+
+  * Factor code from renderers to main render.c functions.
+
+------------------------------------------------------------------------
+r53 | sam | 2006-10-26 15:07:58 +0200 (Thu, 26 Oct 2006) | 4 lines
+
+  * Make stdin input line-aware so that we don't have to wait until EOF to
+    display stuff.
+  * Reorganise stuff and fix memory leaks.
+
+------------------------------------------------------------------------
+r52 | sam | 2006-10-26 14:12:44 +0200 (Thu, 26 Oct 2006) | 3 lines
+
+  * Get rid of -g -i -m short options, only keep --gay --irc --metal.
+  * Add --html and --tga flags.
+
+------------------------------------------------------------------------
+r51 | sam | 2006-10-25 18:06:19 +0200 (Wed, 25 Oct 2006) | 4 lines
+
+  * Added filter_flip, filter_flop and filter_rotate.
+  * Add a -F flag to specify filters to apply. Can be specified more than
+    once, and filters can be chained using ":", eg. "-F flip:gay".
+
+------------------------------------------------------------------------
+r50 | sam | 2006-10-24 14:39:57 +0200 (Tue, 24 Oct 2006) | 2 lines
+
+  * Renamed filters.* to filter.*.
+
+------------------------------------------------------------------------
+r49 | sam | 2006-10-19 22:55:44 +0200 (Thu, 19 Oct 2006) | 2 lines
+
+  * Support for PKZIP-compressed fonts using zlib.
+
+------------------------------------------------------------------------
+r48 | sam | 2006-10-19 22:53:36 +0200 (Thu, 19 Oct 2006) | 2 lines
+
+  * Check for zlib if available.
+
+------------------------------------------------------------------------
+r47 | sam | 2006-10-19 22:53:07 +0200 (Thu, 19 Oct 2006) | 2 lines
+
+  * Minor debugging information in the FIGlet font parser.
+
+------------------------------------------------------------------------
+r46 | sam | 2006-10-13 15:38:50 +0200 (Fri, 13 Oct 2006) | 2 lines
+
+  * Add feof() to the list of I/O functions.
+
+------------------------------------------------------------------------
+r45 | sam | 2006-10-13 15:36:23 +0200 (Fri, 13 Oct 2006) | 2 lines
+
+  * Moved I/O functions into a separate module.
+
+------------------------------------------------------------------------
+r44 | sam | 2006-10-13 15:19:45 +0200 (Fri, 13 Oct 2006) | 3 lines
+
+  * Use fgets() instead of fscanf(). Uses an additional memory buffer, but
+    paves the way for custom IO functions.
+
+------------------------------------------------------------------------
+r43 | sam | 2006-10-13 15:11:20 +0200 (Fri, 13 Oct 2006) | 2 lines
+
+  * Fix a crash when font opening fails.
+
+------------------------------------------------------------------------
+r42 | sam | 2006-10-10 09:24:41 +0200 (Tue, 10 Oct 2006) | 2 lines
+
+  * Fixed an ifdef error that caused -t to be ignored.
+
+------------------------------------------------------------------------
+r41 | sam | 2006-10-10 09:20:15 +0200 (Tue, 10 Oct 2006) | 2 lines
+
+  * Fixed the FIGlet renderer. It now has char wrapping and stdin input.
+
+------------------------------------------------------------------------
+r40 | sam | 2006-10-10 09:15:28 +0200 (Tue, 10 Oct 2006) | 2 lines
+
+  * Properly handle \r \n \t in the big and tiny renderers.
+
+------------------------------------------------------------------------
+r39 | sam | 2006-10-10 01:54:40 +0200 (Tue, 10 Oct 2006) | 2 lines
+
+  * The mono9 driver works again. With wrapping and stdin reading.
+
+------------------------------------------------------------------------
+r38 | sam | 2006-10-08 14:14:13 +0200 (Sun, 08 Oct 2006) | 4 lines
+
+  * Break everything. Temporarily. Only the term output works.
+  * Allow to read from stdin.
+  * Wrap at terminal width (currently letter-wrap, not word-wrap).
+
+------------------------------------------------------------------------
+r37 | sam | 2006-10-08 14:04:04 +0200 (Sun, 08 Oct 2006) | 3 lines
+
+  * Retrieve the configure.ac timestamp at configure time and store it in
+    a C macro for better FIGlet emulation.
+
+------------------------------------------------------------------------
+r36 | sam | 2006-10-05 23:43:53 +0200 (Thu, 05 Oct 2006) | 2 lines
+
+  * Fully reworked the katakana part of Small Block.
+
+------------------------------------------------------------------------
+r35 | sam | 2006-10-05 00:15:23 +0200 (Thu, 05 Oct 2006) | 2 lines
+
+  * Added Unicode drawing blocks to Small Block.
+
+------------------------------------------------------------------------
+r34 | sam | 2006-10-04 23:58:52 +0200 (Wed, 04 Oct 2006) | 2 lines
+
+  * Added most of latin1 additional characters.
+
+------------------------------------------------------------------------
+r33 | sam | 2006-10-04 04:21:24 +0200 (Wed, 04 Oct 2006) | 2 lines
+
+  * Added a new font: "Small Block".
+
+------------------------------------------------------------------------
+r32 | sam | 2006-10-02 21:17:00 +0200 (Mon, 02 Oct 2006) | 2 lines
+
+  * Use ${datadir} for fonts instead of ${datarootdir}.
+
+------------------------------------------------------------------------
+r31 | sam | 2006-10-02 21:09:58 +0200 (Mon, 02 Oct 2006) | 2 lines
+
+  * Oops, fixed the lowercase "x" in Future.
+
+------------------------------------------------------------------------
+r30 | sam | 2006-10-02 21:08:14 +0200 (Mon, 02 Oct 2006) | 2 lines
+
+  * Big update to the Future font.
+
+------------------------------------------------------------------------
+r29 | sam | 2006-10-02 14:17:39 +0200 (Mon, 02 Oct 2006) | 2 lines
+
+  * Updated "Future" font.
+
+------------------------------------------------------------------------
+r28 | sam | 2006-10-01 17:10:27 +0200 (Sun, 01 Oct 2006) | 2 lines
+
+  * Oops, fixed typo in fonts/Makefile.am.
+
+------------------------------------------------------------------------
+r27 | sam | 2006-10-01 17:09:29 +0200 (Sun, 01 Oct 2006) | 2 lines
+
+  * Added "Future" font.
+
+------------------------------------------------------------------------
+r26 | sam | 2006-10-01 16:21:25 +0200 (Sun, 01 Oct 2006) | 2 lines
+
+  * Added simple "Circle" font.
+
+------------------------------------------------------------------------
+r25 | sam | 2006-10-01 09:55:45 +0200 (Sun, 01 Oct 2006) | 2 lines
+
+  * Allow the hardblank character to be UTF-8.
+
+------------------------------------------------------------------------
+r24 | sam | 2006-09-30 22:18:32 +0200 (Sat, 30 Sep 2006) | 3 lines
+
+  * There is no way emboss.tlf can have proper lowercase characters. Filled
+    them with the uppercase ones.
+
+------------------------------------------------------------------------
+r23 | sam | 2006-09-30 21:05:41 +0200 (Sat, 30 Sep 2006) | 2 lines
+
+  * Require libcucul 0.99.beta6 (utf8 import).
+
+------------------------------------------------------------------------
+r22 | sam | 2006-09-30 20:06:47 +0200 (Sat, 30 Sep 2006) | 2 lines
+
+  * Fixed a few unimportant memory leaks upon error.
+
+------------------------------------------------------------------------
+r21 | sam | 2006-09-30 19:53:59 +0200 (Sat, 30 Sep 2006) | 2 lines
+
+  * Fixed a lot of memory leaks and added a few error checks.
+
+------------------------------------------------------------------------
+r20 | sam | 2006-09-30 18:24:27 +0200 (Sat, 30 Sep 2006) | 2 lines
+
+  * Updated font data.
+
+------------------------------------------------------------------------
+r19 | sam | 2006-09-30 18:19:42 +0200 (Sat, 30 Sep 2006) | 2 lines
+
+  * New font: Small Braille.
+
+------------------------------------------------------------------------
+r18 | sam | 2006-09-30 13:47:22 +0200 (Sat, 30 Sep 2006) | 2 lines
+
+  * Created emboss2.tlf with a simple sed rule.
+
+------------------------------------------------------------------------
+r17 | sam | 2006-09-30 13:34:37 +0200 (Sat, 30 Sep 2006) | 2 lines
+
+  * Created emboss.tlf, a Unicode font for the official TOIlet distribution.
+
+------------------------------------------------------------------------
+r16 | sam | 2006-09-30 13:06:20 +0200 (Sat, 30 Sep 2006) | 4 lines
+
+  * Better error checking in the figlet renderer.
+  * Allow to open fonts that have Unicode data (requires libcucul 0.99.beta6
+    which is not yet released).
+
+------------------------------------------------------------------------
+r15 | sam | 2006-09-30 12:48:32 +0200 (Sat, 30 Sep 2006) | 2 lines
+
+  * Make the --metal filter only change the colour, not the characters.
+
+------------------------------------------------------------------------
+r14 | sam | 2006-09-27 09:18:20 +0200 (Wed, 27 Sep 2006) | 2 lines
+
+  * Implemented figlet's -t (adapt to terminal's width).
+
+------------------------------------------------------------------------
+r13 | sam | 2006-09-27 01:13:01 +0200 (Wed, 27 Sep 2006) | 2 lines
+
+  * Added -d and completed -I options.
+
+------------------------------------------------------------------------
+r12 | sam | 2006-09-27 00:54:15 +0200 (Wed, 27 Sep 2006) | 3 lines
+
+  * Implemented figlet's -I (infocode) option.
+  * Added -w flag. Ignored for now.
+
+------------------------------------------------------------------------
+r11 | sam | 2006-09-26 23:58:26 +0200 (Tue, 26 Sep 2006) | 4 lines
+
+  * Crop the final canvas to the effective width.
+  * Fixed a bug that prevented loading characters after 127.
+  * Allow to load fonts that hex-encode their Unicode values.
+
+------------------------------------------------------------------------
+r10 | sam | 2006-09-26 23:51:13 +0200 (Tue, 26 Sep 2006) | 4 lines
+
+  * Fix libcucul font rendering. Now that the default canvas has a
+    transparent background, we need to explicitely draw our temporary string
+    in white on black.
+
+------------------------------------------------------------------------
+r9 | sam | 2006-09-26 23:40:35 +0200 (Tue, 26 Sep 2006) | 2 lines
+
+  * Don't autocrop final canvas if it was rendered with the figlet engine.
+
+------------------------------------------------------------------------
+r8 | sam | 2006-09-26 23:39:07 +0200 (Tue, 26 Sep 2006) | 2 lines
+
+  * Do not try to autocrop a canvas that has only spaces.
+
+------------------------------------------------------------------------
+r7 | sam | 2006-09-26 15:57:01 +0200 (Tue, 26 Sep 2006) | 3 lines
+
+  * Improved support for figlet fonts. We can now load them and print text.
+    Still no smushing, no hard blanks, no line wrapping...
+
+------------------------------------------------------------------------
+r6 | sam | 2006-09-24 00:58:02 +0200 (Sun, 24 Sep 2006) | 2 lines
+
+  * Added content description to all source files.
+
+------------------------------------------------------------------------
+r5 | sam | 2006-09-24 00:53:17 +0200 (Sun, 24 Sep 2006) | 2 lines
+
+  * Created skeleton for future FIGlet font handling. Nothing here yet.
+
+------------------------------------------------------------------------
+r4 | sam | 2006-09-23 21:54:20 +0200 (Sat, 23 Sep 2006) | 2 lines
+
+  * Split main.c into main.c/render.c/filters.c.
+
+------------------------------------------------------------------------
+r3 | sam | 2006-09-23 21:27:19 +0200 (Sat, 23 Sep 2006) | 2 lines
+
+  * Added -m/--metal flag. Pretty ugly.
+
+------------------------------------------------------------------------
+r2 | sam | 2006-09-23 01:36:35 +0200 (Sat, 23 Sep 2006) | 2 lines
+
+  * Import toilet source code from libcaca's repository.
+
+------------------------------------------------------------------------
+r1 | sam | 2006-09-22 19:03:41 +0200 (Fri, 22 Sep 2006) | 2 lines
+
+  * Initial tree.
+
+------------------------------------------------------------------------

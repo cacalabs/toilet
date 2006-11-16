@@ -1,0 +1,6 @@
+$Id$
+
+New in 0.1:
+ - initial release
+ - opens all known FIGlet fonts
+ - handles horizontal smushing
