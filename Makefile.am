@@ -19,4 +19,10 @@ fonts: tools/caca2tlf FORCE
 	$(top_builddir)/tools/caca2tlf --quarter "Monospace Bold 12" | zip \
 	    > $(top_builddir)/fonts/smmono12.tlf
 
+webhost = poulet.zoy.org
+webdir = /srv/libcaca.zoy.org/var/www/
+
+upload: FORCE
+	scp $(distdir).tar.gz $(webhost):$(webdir)/files/
+
 FORCE:
