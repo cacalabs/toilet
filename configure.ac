@@ -1,4 +1,4 @@
-# $Id: configure.ac 98 2006-11-16 16:27:37Z sam $
+# $Id$
 
 AC_INIT(toilet, 0.1)
 
