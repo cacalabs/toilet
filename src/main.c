@@ -17,13 +17,13 @@
 
 #include "config.h"
 
-#if defined(HAVE_INTTYPES_H)
+#if defined HAVE_INTTYPES_H
 #   include <inttypes.h>
 #endif
-#if defined(HAVE_GETOPT_H)
+#if defined HAVE_GETOPT_H
 #   include <getopt.h>
 #endif
-#if defined(HAVE_SYS_IOCTL_H) && defined(HAVE_TIOCGWINSZ)
+#if defined HAVE_SYS_IOCTL_H && defined HAVE_TIOCGWINSZ
 #   include <sys/ioctl.h>
 #endif
 #include <stdio.h>
@@ -37,7 +37,7 @@
 #include "export.h"
 
 static void version(void);
-#if defined(HAVE_GETOPT_H)
+#if defined HAVE_GETOPT_H
 static void usage(void);
 #endif
 
@@ -59,7 +59,7 @@ int main(int argc, char *argv[])
     cx->filters = NULL;
     cx->nfilters = 0;
 
-#if defined(HAVE_GETOPT_H)
+#if defined HAVE_GETOPT_H
     for(;;)
     {
 #   ifdef HAVE_GETOPT_LONG
@@ -127,7 +127,7 @@ int main(int argc, char *argv[])
             break;
         case 't': /* --termwidth */
         {
-#if defined(HAVE_SYS_IOCTL_H) && defined(HAVE_TIOCGWINSZ)
+#if defined HAVE_SYS_IOCTL_H && defined HAVE_TIOCGWINSZ
             struct winsize ws;
 
             if((ioctl(1, TIOCGWINSZ, &ws) != -1 ||
@@ -215,13 +215,49 @@ int main(int argc, char *argv[])
     return 0;
 }
 
-#if defined(HAVE_GETOPT_H)
+#if defined HAVE_GETOPT_H
 #   define USAGE \
     "Usage: toilet [ -hkostvSW ] [ -d fontdirectory ]\n" \
     "              [ -f fontfile ] [ -F filter ] [ -w outputwidth ]\n" \
     "              [ -I infocode ] [ -E format ] [ message ]\n"
 #else
 #   define USAGE ""
+#endif
+
+#if defined HAVE_GETOPT_LONG
+#   define HELP \
+    "  -f, --font <name>        select the font\n" \
+    "  -d, --directory <dir>    specify font directory\n" \
+    "  -s, -S, -k, -W, -o       render mode (default, force smushing,\n" \
+    "                           kerning, full width, overlap)\n" \
+    "  -w, --width <width>      set output width\n" \
+    "  -t, --termwidth          adapt to terminal's width\n" \
+    "  -F, --filter <filters>   apply one or several filters to the text\n" \
+    "  -F, --filter list        list available filters\n" \
+    "      --gay                rainbow filter (same as -F gay)\n" \
+    "      --metal              metal filter (same as -F metal)\n" \
+    "  -E, --export <format>    select export format\n" \
+    "  -E, --export list        list available export formats\n" \
+    "      --irc                output IRC colour codes (same as -E irc)\n" \
+    "      --html               output an HTML document (same as -E html)\n" \
+    "  -h, --help               display this help and exit\n" \
+    "  -I, --infocode <code>    print FIGlet-compatible infocode\n" \
+    "  -v, --version            output version information and exit\n"
+#else
+#   define HELP \
+    "  -f <name>           select the font\n" \
+    "  -d <dir>            specify font directory\n" \
+    "  -s, -S, -k, -W, -o  render mode (default, force smushing,\n" \
+    "                      kerning, full width, overlap)\n" \
+    "  -w <width>          set output width\n" \
+    "  -t                  adapt to terminal's width\n" \
+    "  -F <filters>        apply one or several filters to the text\n" \
+    "  -F list             list available filters\n" \
+    "  -E <format>         select export format\n" \
+    "  -E list             list available export formats\n" \
+    "  -h                  display this help and exit\n" \
+    "  -I <code>           print FIGlet-compatible infocode\n" \
+    "  -v                  output version information and exit\n"
 #endif
 
 static void version(void)
@@ -238,47 +274,13 @@ static void version(void)
     "The latest version of TOIlet is available from the web site,\n"
     "        http://libcaca.zoy.org/toilet.html\n"
     "\n"
-    USAGE,
-    VERSION, DATE);
+    "%s", VERSION, DATE, USAGE);
 }
 
-#if defined(HAVE_GETOPT_H)
+#if defined HAVE_GETOPT_H
 static void usage(void)
 {
-    printf(USAGE);
-#   ifdef HAVE_GETOPT_LONG
-    printf("  -f, --font <name>        select the font\n");
-    printf("  -d, --directory <dir>    specify font directory\n");
-    printf("  -s, -S, -k, -W, -o       render mode (default, force smushing,\n");
-    printf("                           kerning, full width, overlap)\n");
-    printf("  -w, --width <width>      set output width\n");
-    printf("  -t, --termwidth          adapt to terminal's width\n");
-    printf("  -F, --filter <filters>   apply one or several filters to the text\n");
-    printf("  -F, --filter list        list available filters\n");
-    printf("      --gay                rainbow filter (same as -F gay)\n");
-    printf("      --metal              metal filter (same as -F metal)\n");
-    printf("  -E, --export <format>    select export format\n");
-    printf("  -E, --export list        list available export formats\n");
-    printf("      --irc                output IRC colour codes (same as -E irc)\n");
-    printf("      --html               output an HTML document (same as -E html)\n");
-    printf("  -h, --help               display this help and exit\n");
-    printf("  -I, --infocode <code>    print FIGlet-compatible infocode\n");
-    printf("  -v, --version            output version information and exit\n");
-#   else
-    printf("  -f <name>           select the font\n");
-    printf("  -d <dir>            specify font directory\n");
-    printf("  -s, -S, -k, -W, -o  render mode (default, force smushing,\n");
-    printf("                      kerning, full width, overlap)\n");
-    printf("  -w <width>          set output width\n");
-    printf("  -t                  adapt to terminal's width\n");
-    printf("  -F <filters>        apply one or several filters to the text\n");
-    printf("  -F list             list available filters\n");
-    printf("  -E <format>         select export format\n");
-    printf("  -E list             list available export formats\n");
-    printf("  -h                  display this help and exit\n");
-    printf("  -I <code>           print FIGlet-compatible infocode\n");
-    printf("  -v                  output version information and exit\n");
-#   endif
+    printf("%s%s", HELP, USAGE);
 }
 #endif
 
