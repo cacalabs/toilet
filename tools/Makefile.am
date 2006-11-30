@@ -3,6 +3,6 @@
 noinst_PROGRAMS = caca2tlf
 
 caca2tlf_SOURCES = caca2tlf.c
-caca2tlf_CFLAGS = `pkg-config --cflags cucul`
-caca2tlf_LDFLAGS = `pkg-config --libs cucul`
+caca2tlf_CFLAGS = @CUCUL_CFLAGS@
+caca2tlf_LDFLAGS = @CUCUL_LIBS@
 

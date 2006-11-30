@@ -8,6 +8,6 @@ toilet_SOURCES = main.c toilet.h \
 	export.c export.h \
 	term.c figlet.c
 toilet_CPPFLAGS = -DFONTDIR=\"$(datadir)/figlet\"
-toilet_CFLAGS = `pkg-config --cflags cucul`
-toilet_LDFLAGS = `pkg-config --libs cucul` @GETOPT_LIBS@ @ZLIB_LIBS@
+toilet_CFLAGS = @CUCUL_CFLAGS@
+toilet_LDADD = @CUCUL_LIBS@ @GETOPT_LIBS@ @ZLIB_LIBS@
 
