@@ -4,5 +4,5 @@ noinst_PROGRAMS = caca2tlf
 
 caca2tlf_SOURCES = caca2tlf.c
 caca2tlf_CFLAGS = @CUCUL_CFLAGS@
-caca2tlf_LDFLAGS = @CUCUL_LIBS@
+caca2tlf_LDADD = @CUCUL_LIBS@
 
