@@ -100,7 +100,7 @@ TOIFILE *toiopen(char const *path, const char *mode)
 #else
     toif->f = fopen(path, mode);
 
-    if(!f)
+    if(!toif->f)
     {
         free(toif);
         return NULL;
