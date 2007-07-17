@@ -1,4 +1,4 @@
-tlf2a$ 4 3 8 0 15 0 64 0
+tlf2a$ 4 3 8 0 16 0 64 0
 ===============================================================================
   This is smblock.tlf, or “Small Block”, by Sam Hocevar.
 
@@ -394,7 +394,7 @@ on the TOIlet website at http://libcaca.zoy.org/toilet.html
    @
 ▗▖▖@
 ▘▝ @
-   @
+   @@
 ▚▄▘@
 ▙▄▌@
 ▌ ▌@
@@ -1102,7 +1102,7 @@ on the TOIlet website at http://libcaca.zoy.org/toilet.html
      @
  ▐▄▖ @
 ▝▜▝  @
- ▝   @@ 
+ ▝   @@
 0x30E4 ヤ KATAKANA LETTER YA
  ▐ ▄▖@
 ▄▞▛▗▘@
