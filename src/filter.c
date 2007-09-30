@@ -34,7 +34,9 @@ static void filter_gay(context_t *);
 static void filter_metal(context_t *);
 static void filter_flip(context_t *);
 static void filter_flop(context_t *);
-static void filter_rotate(context_t *);
+static void filter_180(context_t *);
+static void filter_left(context_t *);
+static void filter_right(context_t *);
 
 struct
 {
@@ -49,7 +51,10 @@ const lookup[] =
     { "metal", filter_metal, "add a metallic colour effect" },
     { "flip", filter_flip, "flip horizontally" },
     { "flop", filter_flop, "flip vertically" },
-    { "rotate", filter_rotate, "perform a 180 degrees rotation" },
+    { "rotate", filter_180, NULL }, /* backwards compatibility */
+    { "180", filter_180, "rotate 180 degrees" },
+    { "left", filter_left, "rotate 90 degrees counterclockwise" },
+    { "right", filter_right, "rotate 90 degrees clockwise" },
 };
 
 int filter_list(void)
@@ -58,7 +63,8 @@ int filter_list(void)
 
     printf("Available filters:\n");
     for(i = 0; i < sizeof(lookup) / sizeof(lookup[0]); i++)
-        printf("\"%s\": %s\n", lookup[i].name, lookup[i].description);
+        if(lookup[i].description)
+            printf("\"%s\": %s\n", lookup[i].name, lookup[i].description);
 
     return 0;
 }
@@ -215,8 +221,18 @@ static void filter_flop(context_t *cx)
     cucul_flop(cx->torender);
 }
 
-static void filter_rotate(context_t *cx)
+static void filter_180(context_t *cx)
 {
-    cucul_rotate(cx->torender);
+    cucul_rotate_180(cx->torender);
+}
+
+static void filter_left(context_t *cx)
+{
+    cucul_rotate_left(cx->torender);
+}
+
+static void filter_right(context_t *cx)
+{
+    cucul_rotate_right(cx->torender);
 }
 
