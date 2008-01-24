@@ -61,7 +61,8 @@ stamp="$(sed -ne 's/# \$Id: .*\(....-..-..\).*/\1/p;q' configure.ac)"
  if date +"%e %B %Y" -d "$stamp" >/dev/null 2>&1; then
    ac_build_date="$(LANG=C date +"%e %B %Y" -d "$stamp" | sed 's/^ //')"
  else
-   ac_build_date="${stamp##*-} ${${stamp%-*}#*-} ${stamp%%-*}"
+   tmp="${stamp%-*}"
+   ac_build_date="${stamp##*-} ${tmp#*-} ${stamp%%-*}"
  fi
 AC_MSG_RESULT([$ac_build_date])
 AC_DEFINE_UNQUOTED(DATE, "$ac_build_date", [Define the version date])
