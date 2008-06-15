@@ -33,7 +33,7 @@ static void add_char(unsigned long int);
 
 cucul_font_t *f;
 cucul_canvas_t *out, *onechar;
-unsigned long int const *blocks;
+uint32_t const *blocks;
 uint8_t * image;
 unsigned int w, h, gw, fgw, gh, iw, ih;
 
