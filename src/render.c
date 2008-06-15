@@ -49,7 +49,7 @@ int render_stdin(context_t *cx)
 {
     cucul_canvas_t *cv;
     char *line;
-    unsigned int i, len;
+    int i, len;
 
     /* FIXME: we can't read longer lines */
     len = 1024;
@@ -80,10 +80,10 @@ int render_stdin(context_t *cx)
     return 0;
 }
 
-int render_list(context_t *cx, unsigned int argc, char *argv[])
+int render_list(context_t *cx, int argc, char *argv[])
 {
     cucul_canvas_t *cv;
-    unsigned int i, j, len;
+    int i, j, len;
     char *parser = NULL;
 
     cv = cucul_create_canvas(0, 0);
@@ -129,6 +129,8 @@ int render_list(context_t *cx, unsigned int argc, char *argv[])
 
     render_flush(cx);
 
+    cucul_free_canvas(cv);
+
     return 0;
 }
 
@@ -153,15 +155,12 @@ static int render_flush(context_t *cx)
     /* Apply optional effects to our string */
     filter_do(cx);
 
-    cx->lines += cucul_get_canvas_height(cx->torender);
-
     /* Output line */
-    buffer = cucul_export_memory(cx->torender, cx->export, &len);
+    buffer = cucul_export_memory(cx->cv, cx->export, &len);
     if(!buffer)
         return -1;
     fwrite(buffer, len, 1, stdout);
     free(buffer);
-    cucul_free_canvas(cx->torender);
 
     return 0;
 }
