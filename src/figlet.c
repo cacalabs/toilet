@@ -28,7 +28,6 @@
 
 #include "toilet.h"
 #include "render.h"
-#include "io.h"
 
 #define STD_GLYPHS (127 - 32)
 #define EXT_GLYPHS (STD_GLYPHS + 7)
