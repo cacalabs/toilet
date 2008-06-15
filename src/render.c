@@ -156,11 +156,12 @@ static int render_flush(context_t *cx)
     filter_do(cx);
 
     /* Output line */
-    buffer = cucul_export_memory(cx->cv, cx->export, &len);
+    buffer = cucul_export_memory(cx->torender, cx->export, &len);
     if(!buffer)
         return -1;
     fwrite(buffer, len, 1, stdout);
     free(buffer);
+    cucul_free_canvas(cx->torender);
 
     return 0;
 }

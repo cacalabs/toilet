@@ -59,7 +59,10 @@ static int feed_figlet(context_t *cx, uint32_t ch, uint32_t attr)
 
 static int flush_figlet(context_t *cx)
 {
-    return cucul_flush_figlet(cx->cv);
+    int ret = cucul_flush_figlet(cx->cv);
+    cx->torender = cx->cv;
+    cx->cv = cucul_create_canvas(0, 0);
+    return ret;
 }
 
 static int end_figlet(context_t *cx)
