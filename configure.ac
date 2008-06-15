@@ -4,7 +4,7 @@ AC_INIT(toilet, 0.1)
 
 AC_PREREQ(2.50)
 AC_CONFIG_SRCDIR(src/main.c)
-AC_CONFIG_AUX_DIR(autotools)
+AC_CONFIG_AUX_DIR(.auto)
 AC_CANONICAL_SYSTEM
 
 AM_INIT_AUTOMAKE(toilet, 0.1)
