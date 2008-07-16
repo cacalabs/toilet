@@ -51,10 +51,10 @@ if test "${ac_cv_have_tiocgwinsz}" = "yes"; then
 fi
 
 CUCUL="no"
-PKG_CHECK_MODULES(CUCUL, cucul >= 0.99.beta15,
+PKG_CHECK_MODULES(CUCUL, cucul >= 0.99.beta14,
  [CUCUL="yes"],
  [AC_MSG_RESULT(no)
-  AC_MSG_ERROR([you need libcucul version 0.99.beta15 or later])])
+  AC_MSG_ERROR([you need libcucul version 0.99.beta14 or later])])
 
 AC_MSG_CHECKING([for release date])
 stamp="$(sed -ne 's/# \$Id: .*\(....-..-..\).*/\1/p;q' configure.ac)"
