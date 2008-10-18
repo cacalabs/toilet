@@ -24,7 +24,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <cucul.h>
+#include <caca.h>
 
 #include "toilet.h"
 #include "filter.h"
@@ -129,15 +129,15 @@ static void filter_crop(context_t *cx)
     unsigned int x, y, w, h;
     unsigned int xmin, xmax, ymin, ymax;
 
-    xmin = w = cucul_get_canvas_width(cx->torender);
+    xmin = w = caca_get_canvas_width(cx->torender);
     xmax = 0;
-    ymin = h = cucul_get_canvas_height(cx->torender);
+    ymin = h = caca_get_canvas_height(cx->torender);
     ymax = 0;
 
     for(y = 0; y < h; y++)
         for(x = 0; x < w; x++)
     {
-        unsigned long int ch = cucul_get_char(cx->torender, x, y);
+        unsigned long int ch = caca_get_char(cx->torender, x, y);
         if(ch != (unsigned char)' ')
         {
             if(x < xmin)
@@ -154,7 +154,7 @@ static void filter_crop(context_t *cx)
     if(xmax < xmin || ymax < ymin)
         return;
 
-    cucul_set_canvas_boundaries(cx->torender, xmin, ymin,
+    caca_set_canvas_boundaries(cx->torender, xmin, ymin,
                                 xmax - xmin + 1, ymax - ymin + 1);
 }
 
@@ -162,26 +162,26 @@ static void filter_metal(context_t *cx)
 {
     static unsigned char const palette[] =
     {
-        CUCUL_LIGHTBLUE, CUCUL_BLUE, CUCUL_LIGHTGRAY, CUCUL_DARKGRAY,
+        CACA_LIGHTBLUE, CACA_BLUE, CACA_LIGHTGRAY, CACA_DARKGRAY,
     };
 
     unsigned int x, y, w, h;
 
-    w = cucul_get_canvas_width(cx->torender);
-    h = cucul_get_canvas_height(cx->torender);
+    w = caca_get_canvas_width(cx->torender);
+    h = caca_get_canvas_height(cx->torender);
 
     for(y = 0; y < h; y++)
         for(x = 0; x < w; x++)
     {
-        unsigned long int ch = cucul_get_char(cx->torender, x, y);
+        unsigned long int ch = caca_get_char(cx->torender, x, y);
         int i;
 
         if(ch == (unsigned char)' ')
             continue;
 
         i = ((cx->lines + y + x / 8) / 2) % 4;
-        cucul_set_color_ansi(cx->torender, palette[i], CUCUL_TRANSPARENT);
-        cucul_put_char(cx->torender, x, y, ch);
+        caca_set_color_ansi(cx->torender, palette[i], CACA_TRANSPARENT);
+        caca_put_char(cx->torender, x, y, ch);
     }
 }
 
@@ -189,50 +189,50 @@ static void filter_gay(context_t *cx)
 {
     static unsigned char const rainbow[] =
     {
-        CUCUL_LIGHTMAGENTA, CUCUL_LIGHTRED, CUCUL_YELLOW,
-        CUCUL_LIGHTGREEN, CUCUL_LIGHTCYAN, CUCUL_LIGHTBLUE,
+        CACA_LIGHTMAGENTA, CACA_LIGHTRED, CACA_YELLOW,
+        CACA_LIGHTGREEN, CACA_LIGHTCYAN, CACA_LIGHTBLUE,
     };
     unsigned int x, y, w, h;
 
-    w = cucul_get_canvas_width(cx->torender);
-    h = cucul_get_canvas_height(cx->torender);
+    w = caca_get_canvas_width(cx->torender);
+    h = caca_get_canvas_height(cx->torender);
 
     for(y = 0; y < h; y++)
         for(x = 0; x < w; x++)
     {
-        unsigned long int ch = cucul_get_char(cx->torender, x, y);
+        unsigned long int ch = caca_get_char(cx->torender, x, y);
         if(ch != (unsigned char)' ')
         {
-            cucul_set_color_ansi(cx->torender,
+            caca_set_color_ansi(cx->torender,
                                  rainbow[(x / 2 + y + cx->lines) % 6],
-                                 CUCUL_TRANSPARENT);
-            cucul_put_char(cx->torender, x, y, ch);
+                                 CACA_TRANSPARENT);
+            caca_put_char(cx->torender, x, y, ch);
         }
     }
 }
 
 static void filter_flip(context_t *cx)
 {
-    cucul_flip(cx->torender);
+    caca_flip(cx->torender);
 }
 
 static void filter_flop(context_t *cx)
 {
-    cucul_flop(cx->torender);
+    caca_flop(cx->torender);
 }
 
 static void filter_180(context_t *cx)
 {
-    cucul_rotate_180(cx->torender);
+    caca_rotate_180(cx->torender);
 }
 
 static void filter_left(context_t *cx)
 {
-    cucul_rotate_left(cx->torender);
+    caca_rotate_left(cx->torender);
 }
 
 static void filter_right(context_t *cx)
 {
-    cucul_rotate_right(cx->torender);
+    caca_rotate_right(cx->torender);
 }
 

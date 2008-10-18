@@ -24,7 +24,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <cucul.h>
+#include <caca.h>
 
 #include "toilet.h"
 #include "export.h"
@@ -35,7 +35,7 @@ int export_list(void)
 
     printf("Available export formats:\n");
 
-    exports = cucul_get_export_list();
+    exports = caca_get_export_list();
     for(p = exports; *p; p += 2)
         printf("\"%s\": %s\n", *p, *(p + 1));
 
@@ -48,7 +48,7 @@ int export_set(context_t *cx, char const *format)
 
     cx->export = format;
 
-    exports = cucul_get_export_list();
+    exports = caca_get_export_list();
     for(p = exports; *p; p += 2)
         if(!strcmp(*p, format))
             return 0;

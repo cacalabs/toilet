@@ -122,7 +122,7 @@ Specify the output format. By default,
 will output UTF-8 text using ANSI colour codes suitable for most terminals
 such as XTerm or rxvt.
 .I <format>
-is the name of the export format as recognised by libcucul. The special
+is the name of the export format as recognised by libcaca. The special
 argument
 .I list
 outputs a list of available export formats.

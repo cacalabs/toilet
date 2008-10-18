@@ -30,7 +30,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <cucul.h>
+#include <caca.h>
 
 #include "toilet.h"
 #include "render.h"

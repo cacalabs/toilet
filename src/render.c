@@ -24,7 +24,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
-#include <cucul.h>
+#include <caca.h>
 
 #include "toilet.h"
 #include "render.h"
@@ -37,7 +37,7 @@ int render_init(context_t *cx)
     cx->x = cx->y = 0;
     cx->w = cx->h = 0;
     cx->lines = 0;
-    cx->cv = cucul_create_canvas(0, 0);
+    cx->cv = caca_create_canvas(0, 0);
 
     if(!strcasecmp(cx->font, "term"))
         return init_tiny(cx);
@@ -47,14 +47,14 @@ int render_init(context_t *cx)
 
 int render_stdin(context_t *cx)
 {
-    cucul_canvas_t *cv;
+    caca_canvas_t *cv;
     char *line;
     int i, len;
 
     /* FIXME: we can't read longer lines */
     len = 1024;
     line = malloc(len);
-    cv = cucul_create_canvas(0, 0);
+    cv = caca_create_canvas(0, 0);
 
     /* Read from stdin */
     while(!feof(stdin))
@@ -62,14 +62,14 @@ int render_stdin(context_t *cx)
         if(!fgets(line, len, stdin))
             break;
 
-        cucul_set_canvas_size(cv, 0, 0);
-        cucul_import_memory(cv, line, strlen(line), "utf8");
-        for(i = 0; i < cucul_get_canvas_width(cv); i++)
+        caca_set_canvas_size(cv, 0, 0);
+        caca_import_memory(cv, line, strlen(line), "utf8");
+        for(i = 0; i < caca_get_canvas_width(cv); i++)
         {
-            uint32_t ch = cucul_get_char(cv, i, 0);
-            uint32_t at = cucul_get_attr(cv, i, 0);
+            uint32_t ch = caca_get_char(cv, i, 0);
+            uint32_t at = caca_get_attr(cv, i, 0);
             cx->feed(cx, ch, at);
-            if(cucul_utf32_is_fullwidth(ch)) i++;
+            if(caca_utf32_is_fullwidth(ch)) i++;
         }
 
         render_flush(cx);
@@ -82,11 +82,11 @@ int render_stdin(context_t *cx)
 
 int render_list(context_t *cx, int argc, char *argv[])
 {
-    cucul_canvas_t *cv;
+    caca_canvas_t *cv;
     int i, j, len;
     char *parser = NULL;
 
-    cv = cucul_create_canvas(0, 0);
+    cv = caca_create_canvas(0, 0);
 
     for(j = 0; j < argc; )
     {
@@ -105,14 +105,14 @@ int render_list(context_t *cx, int argc, char *argv[])
         else
             len = strlen(parser);
 
-        cucul_set_canvas_size(cv, 0, 0);
-        cucul_import_memory(cv, parser, len, "utf8");
-        for(i = 0; i < cucul_get_canvas_width(cv); i++)
+        caca_set_canvas_size(cv, 0, 0);
+        caca_import_memory(cv, parser, len, "utf8");
+        for(i = 0; i < caca_get_canvas_width(cv); i++)
         {
-            uint32_t ch = cucul_get_char(cv, i, 0);
-            uint32_t at = cucul_get_attr(cv, i, 0);
+            uint32_t ch = caca_get_char(cv, i, 0);
+            uint32_t at = caca_get_attr(cv, i, 0);
             cx->feed(cx, ch, at);
-            if(cucul_utf32_is_fullwidth(ch)) i++;
+            if(caca_utf32_is_fullwidth(ch)) i++;
         }
 
         if(cr)
@@ -129,7 +129,7 @@ int render_list(context_t *cx, int argc, char *argv[])
 
     render_flush(cx);
 
-    cucul_free_canvas(cv);
+    caca_free_canvas(cv);
 
     return 0;
 }
@@ -137,7 +137,7 @@ int render_list(context_t *cx, int argc, char *argv[])
 int render_end(context_t *cx)
 {
     cx->end(cx);
-    cucul_free_canvas(cx->cv);
+    caca_free_canvas(cx->cv);
 
     return 0;
 }
@@ -156,12 +156,12 @@ static int render_flush(context_t *cx)
     filter_do(cx);
 
     /* Output line */
-    buffer = cucul_export_memory(cx->torender, cx->export, &len);
+    buffer = caca_export_memory(cx->torender, cx->export, &len);
     if(!buffer)
         return -1;
     fwrite(buffer, len, 1, stdout);
     free(buffer);
-    cucul_free_canvas(cx->torender);
+    caca_free_canvas(cx->torender);
 
     return 0;
 }

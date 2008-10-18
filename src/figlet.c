@@ -24,7 +24,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <cucul.h>
+#include <caca.h>
 
 #include "toilet.h"
 #include "render.h"
@@ -41,7 +41,7 @@ int init_figlet(context_t *cx)
     char path[2048];
 
     snprintf(path, 2047, "%s/%s", cx->dir, cx->font);
-    if(cucul_canvas_set_figfont(cx->cv, path))
+    if(caca_canvas_set_figfont(cx->cv, path))
         return -1;
 
     cx->feed = feed_figlet;
@@ -53,19 +53,19 @@ int init_figlet(context_t *cx)
 
 static int feed_figlet(context_t *cx, uint32_t ch, uint32_t attr)
 {
-    return cucul_put_figchar(cx->cv, ch);
+    return caca_put_figchar(cx->cv, ch);
 }
 
 static int flush_figlet(context_t *cx)
 {
-    int ret = cucul_flush_figlet(cx->cv);
+    int ret = caca_flush_figlet(cx->cv);
     cx->torender = cx->cv;
-    cx->cv = cucul_create_canvas(0, 0);
+    cx->cv = caca_create_canvas(0, 0);
     return ret;
 }
 
 static int end_figlet(context_t *cx)
 {
-    return cucul_canvas_set_figfont(cx->cv, NULL);
+    return caca_canvas_set_figfont(cx->cv, NULL);
 }
 

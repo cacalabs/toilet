@@ -22,7 +22,7 @@
 #   include <inttypes.h>
 #endif
 #include <stdlib.h>
-#include <cucul.h>
+#include <caca.h>
 
 #include "toilet.h"
 #include "render.h"
@@ -80,10 +80,10 @@ static int feed_tiny(context_t *cx, uint32_t ch, uint32_t attr)
             cx->eh = cx->eh + cx->eh / 2;
     }
 
-    cucul_set_attr(cx->cv, attr);
-    cucul_set_canvas_size(cx->cv, cx->ew, cx->eh);
+    caca_set_attr(cx->cv, attr);
+    caca_set_canvas_size(cx->cv, cx->ew, cx->eh);
 
-    cucul_put_char(cx->cv, cx->x, cx->y, ch);
+    caca_put_char(cx->cv, cx->x, cx->y, ch);
     cx->x++;
 
     return 0;
@@ -92,13 +92,13 @@ static int feed_tiny(context_t *cx, uint32_t ch, uint32_t attr)
 static int flush_tiny(context_t *cx)
 {
     cx->torender = cx->cv;
-    cucul_set_canvas_size(cx->torender, cx->w, cx->h);
+    caca_set_canvas_size(cx->torender, cx->w, cx->h);
 
     cx->ew = 16;
     cx->eh = 2;
     cx->x = cx->y = 0;
     cx->w = cx->h = 0;
-    cx->cv = cucul_create_canvas(cx->ew, cx->eh);
+    cx->cv = caca_create_canvas(cx->ew, cx->eh);
 
     return 0;
 }

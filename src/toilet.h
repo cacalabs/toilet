@@ -24,8 +24,8 @@ struct toilet_context
 
     unsigned int term_width;
 
-    cucul_canvas_t *cv;
-    cucul_canvas_t *torender;
+    caca_canvas_t *cv;
+    caca_canvas_t *torender;
     unsigned int w, h, ew, eh, x, y, lines;
 
     /* Render methods */
@@ -41,7 +41,7 @@ struct toilet_context
     int old_layout;
     unsigned int print_direction, full_layout, codetag_count;
     unsigned int glyphs;
-    cucul_canvas_t *fontcv, *charcv;
+    caca_canvas_t *fontcv, *charcv;
     int *left, *right; /* Unused yet */
     unsigned int *lookup;
 
