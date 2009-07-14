@@ -2,7 +2,7 @@
 allfonts = wideterm.tlf circle.tlf emboss.tlf emboss2.tlf future.tlf \
            mono9.tlf smmono9.tlf bigmono9.tlf \
            mono12.tlf smmono12.tlf bigmono12.tlf \
-           smblock.tlf smbraille.tlf
+           letter.tlf smblock.tlf smbraille.tlf
 
 EXTRA_DIST = $(allfonts)
 
