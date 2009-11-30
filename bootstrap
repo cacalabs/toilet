@@ -1,7 +1,9 @@
 #! /bin/sh
+# $Id$
 
-# bootstrap: the ultimate bootstrap/autogen.sh script for autotools projects
-# Copyright (c) 2002-2007 Sam Hocevar <sam@zoy.org>
+# bootstrap: generic bootstrap/autogen.sh script for autotools projects
+#
+# Copyright (c) 2002-2009 Sam Hocevar <sam@hocevar.net>
 #
 #    This program is free software. It comes without any warranty, to
 #    the extent permitted by applicable law. You can redistribute it
@@ -10,7 +12,7 @@
 #    http://sam.zoy.org/wtfpl/COPYING for more details.
 #
 # The latest version of this script can be found at the following place:
-#   http://sam.zoy.org/autotools/
+#   http://caca.zoy.org/wiki/build
 
 # Die if an error occurs
 set -e
@@ -27,19 +29,22 @@ fi
 
 # Check for needed features
 auxdir="`sed -ne 's/^[ \t]*A._CONFIG_AUX_DIR *([[ ]*\([^] )]*\).*/\1/p' $conffile`"
-libtool="`grep -q '^[ \t]*A._PROG_LIBTOOL' $conffile && echo yes || echo no`"
-header="`grep -q '^[ \t]*A._CONFIG_HEADER' $conffile && echo yes || echo no`"
-aclocalflags="`sed -ne 's/^[ \t]*ACLOCAL_AMFLAGS[ \t]*=//p' Makefile.am`"
+pkgconfig="`grep '^[ \t]*PKG_PROG_PKG_CONFIG' $conffile >/dev/null 2>&1 && echo yes || echo no`"
+libtool="`grep '^[ \t]*A._PROG_LIBTOOL' $conffile >/dev/null 2>&1 && echo yes || echo no`"
+header="`grep '^[ \t]*A._CONFIG_HEADER' $conffile >/dev/null 2>&1 && echo yes || echo no`"
+makefile="`[ -f Makefile.am ] && echo yes || echo no`"
+aclocalflags="`sed -ne 's/^[ \t]*ACLOCAL_AMFLAGS[ \t]*=//p' Makefile.am 2>/dev/null || :`"
 
 # Check for automake
 amvers="no"
-for n in 10 9 8 7 6 5; do
-  for v in "-1.${n}" "1${n}"; do
-    if automake${v} --version >/dev/null 2>&1; then
-      amvers="${v}"
-      break
-    fi
-  done
+for v in 11 10 9 8 7 6 5; do
+  if automake-1.${v} --version >/dev/null 2>&1; then
+    amvers="-1.${v}"
+    break
+  elif automake1.${v} --version >/dev/null 2>&1; then
+    amvers="1.${v}"
+    break
+  fi
 done
 
 if test "${amvers}" = "no" && automake --version > /dev/null 2>&1; then
@@ -90,6 +95,14 @@ if test "$libtool" = "yes"; then
   fi
 fi
 
+# Check for pkg-config
+if test "$pkgconfig" = "yes"; then
+  if ! pkg-config --version >/dev/null 2>&1; then
+    echo "$0: you need pkg-config"
+    exit 1
+  fi
+fi
+
 # Remove old cruft
 for x in aclocal.m4 configure config.guess config.log config.sub config.cache config.h.in config.h compile libtool.m4 ltoptions.m4 ltsugar.m4 ltversion.m4 ltmain.sh libtool ltconfig missing mkinstalldirs depcomp install-sh; do rm -f $x autotools/$x; if test -n "$auxdir"; then rm -f "$auxdir/$x"; fi; done
 rm -Rf autom4te.cache
@@ -117,9 +130,11 @@ autoconf${acvers}
 if test "$header" = "yes"; then
   autoheader${acvers}
 fi
-#add --include-deps if you want to bootstrap with any other compiler than gcc
-#automake${amvers} --add-missing --copy --include-deps
-automake${amvers} --foreign --add-missing --copy
+if test "$makefile" = "yes"; then
+  #add --include-deps if you want to bootstrap with any other compiler than gcc
+  #automake${amvers} --add-missing --copy --include-deps
+  automake${amvers} --foreign --add-missing --copy
+fi
 
 # Remove cruft that we no longer want
 rm -Rf autom4te.cache
