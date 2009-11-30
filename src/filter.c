@@ -37,6 +37,7 @@ static void filter_flop(context_t *);
 static void filter_180(context_t *);
 static void filter_left(context_t *);
 static void filter_right(context_t *);
+static void filter_border(context_t *);
 
 struct
 {
@@ -55,6 +56,7 @@ const lookup[] =
     { "180", filter_180, "rotate 180 degrees" },
     { "left", filter_left, "rotate 90 degrees counterclockwise" },
     { "right", filter_right, "rotate 90 degrees clockwise" },
+    { "border", filter_border, "surround text with a border" },
 };
 
 int filter_list(void)
@@ -234,5 +236,17 @@ static void filter_left(context_t *cx)
 static void filter_right(context_t *cx)
 {
     caca_rotate_right(cx->torender);
+}
+
+static void filter_border(context_t *cx)
+{
+    int w, h;
+
+    w = caca_get_canvas_width(cx->torender);
+    h = caca_get_canvas_height(cx->torender);
+
+    caca_set_canvas_boundaries(cx->torender, -1, -1, w + 2, h + 2);
+
+    caca_draw_cp437_box(cx->torender, 0, 0, w + 2, h + 2);
 }
 
