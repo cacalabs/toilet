@@ -10,3 +10,5 @@ toilet_CPPFLAGS = -DFONTDIR=\"$(datadir)/figlet\"
 toilet_CFLAGS = @CACA_CFLAGS@
 toilet_LDADD = @CACA_LIBS@ @GETOPT_LIBS@ @ZLIB_LIBS@
 
+echo-sources: ; echo $(SOURCES)
+
