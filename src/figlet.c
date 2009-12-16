@@ -58,9 +58,14 @@ static int feed_figlet(context_t *cx, uint32_t ch, uint32_t attr)
 
 static int flush_figlet(context_t *cx)
 {
+    /* We copy cx->cv into cx->torender instead of swapping pointers
+     * because that would lose the figfont information. */
+    /* FIXME: use caca_copy_canvas() or whatever when it's implemented. */
     int ret = caca_flush_figlet(cx->cv);
-    cx->torender = cx->cv;
-    cx->cv = caca_create_canvas(0, 0);
+    cx->torender = caca_create_canvas(caca_get_canvas_width(cx->cv),
+                                      caca_get_canvas_height(cx->cv));
+    caca_blit(cx->torender, 0, 0, cx->cv, NULL);
+    caca_set_canvas_size(cx->cv, 0, 0);
     return ret;
 }
 
