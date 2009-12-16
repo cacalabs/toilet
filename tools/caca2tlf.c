@@ -170,7 +170,7 @@ static void list_fonts(void)
 static void add_char(unsigned long int ch)
 {
     void *buf;
-    unsigned long int len;
+    size_t len;
     unsigned int x, y, myw, mygw;
     int full = caca_utf32_is_fullwidth(ch);
 

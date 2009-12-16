@@ -63,7 +63,7 @@ int render_stdin(context_t *cx)
             break;
 
         caca_set_canvas_size(cv, 0, 0);
-        caca_import_canvas_from_memory(cv, line, strlen(line), "utf8");
+        caca_import_memory(cv, line, strlen(line), "utf8");
         for(i = 0; i < caca_get_canvas_width(cv); i++)
         {
             uint32_t ch = caca_get_char(cv, i, 0);
@@ -106,7 +106,7 @@ int render_list(context_t *cx, int argc, char *argv[])
             len = strlen(parser);
 
         caca_set_canvas_size(cv, 0, 0);
-        caca_import_canvas_from_memory(cv, parser, len, "utf8");
+        caca_import_memory(cv, parser, len, "utf8");
         for(i = 0; i < caca_get_canvas_width(cv); i++)
         {
             uint32_t ch = caca_get_char(cv, i, 0);
@@ -156,7 +156,7 @@ static int render_flush(context_t *cx)
     filter_do(cx);
 
     /* Output line */
-    buffer = caca_export_canvas_to_memory(cx->torender, cx->export, &len);
+    buffer = caca_export_memory(cx->torender, cx->export, &len);
     if(!buffer)
         return -1;
     fwrite(buffer, len, 1, stdout);
