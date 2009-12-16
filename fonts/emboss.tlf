@@ -1,6 +1,6 @@
 tlf2a 3 3 8 -1 18 0 0 0
 ===============================================================================
-  This is emboss.tlf, or “Emboss”, by Sam Hocevar <sam@zoy.org>. It was
+  This is emboss.tlf, or “Emboss”, by Sam Hocevar <sam@hocevar.net>. It was
 created on September 30th, 2006.
 
   This font is free software. It comes without any warranty, to the extent
@@ -15,7 +15,7 @@ details.
   $ sed '/@@/,$y/━┃┏┓┗┛/═║╔╗╚╝/' < emboss.tlf > emboss2.tlf
 
   This font is part of TOIlet’s official distribution. More information
-on the TOIlet website at http://libcaca.zoy.org/toilet.html
+on the TOIlet website at http://caca.zoy.org/wiki/toilet
 ===============================================================================
  @
  @

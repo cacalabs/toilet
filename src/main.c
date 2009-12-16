@@ -1,6 +1,6 @@
 /*
  *  TOIlet        The Other Implementation’s letters
- *  Copyright (c) 2006 Sam Hocevar <sam@zoy.org>
+ *  Copyright (c) 2006 Sam Hocevar <sam@hocevar.net>
  *                All Rights Reserved
  *
  *  $Id$
@@ -265,12 +265,12 @@ static void version(void)
 {
     printf(
     "TOIlet Copyright 2006 Sam Hocevar\n"
-    "Internet: <sam@zoy.org> Version: %s, date: %s\n"
+    "Internet: <sam@hocevar.net> Version: %s, date: %s\n"
     "\n"
     "TOIlet, along with the various TOIlet fonts and documentation, may be\n"
     "freely copied and distributed.\n"
     "\n"
-    "If you use TOIlet, please send an e-mail message to <sam@zoy.org>.\n"
+    "If you use TOIlet, please send an e-mail message to <sam@hocevar.net>.\n"
     "\n"
     "The latest version of TOIlet is available from the web site,\n"
     "        http://libcaca.zoy.org/toilet.html\n"

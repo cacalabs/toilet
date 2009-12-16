@@ -2,10 +2,10 @@ tlf2a 3 3 8 -1 22 0 0 0
 ===============================================================================
   This is future.tlf, or “Future”, by Sam Hocevar.
 
-  2006/10/01 -- Sam Hocevar <sam@zoy.org>
+  2006/10/01 -- Sam Hocevar <sam@hocevar.net>
                 font creation
                 still missing: # % ( ) * / < > \ ^ ~
-  2006/10/02 -- Sam Hocevar <sam@zoy.org>
+  2006/10/02 -- Sam Hocevar <sam@hocevar.net>
                 added Unicode block and line glyphs
                 added: % ( ) * / \ ~
                 fixed: & 2 5 X
@@ -19,7 +19,7 @@ details.
   Missing characters: # < > ^
 
   This font is part of TOIlet’s official distribution. More information
-on the TOIlet website at http://libcaca.zoy.org/toilet.html
+on the TOIlet website at http://caca.zoy.org/wiki/toilet
 ===============================================================================
   @
   @

@@ -1,7 +1,7 @@
 tlf2a 2 3 6 -1 15 0 0 0
 ===============================================================================
-  This is smbraille.tlf", or “Small Braille”, by Sam Hocevar <sam@zoy.org>. It
-was created on September 30th, 2006.
+  This is smbraille.tlf", or “Small Braille”, by Sam Hocevar <sam@hocevar.net>.
+It was created on September 30th, 2006.
 
   This font is free software. It comes without any warranty, to the extent
 permitted by applicable law. You can redistribute it and/or modify it under
@@ -12,7 +12,7 @@ details.
   Missing characters: # $ % & * + , : ; < > ?
 
   This font is part of TOIlet’s official distribution. More information
-on the TOIlet website at http://libcaca.zoy.org/toilet.html
+on the TOIlet website at http://caca.zoy.org/wiki/toilet
 ===============================================================================
  @
  @@

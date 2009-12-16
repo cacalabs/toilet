@@ -160,7 +160,7 @@ compatibility is not complete yet.
 .RI
 .SH AUTHOR
 .B TOIlet
-and this manual page were written by Sam Hocevar <sam@zoy.org>. There is a
-webpage available at http://libcaca.zoy.org/toilet.html
+and this manual page were written by Sam Hocevar <sam@hocevar.net>. There is a
+webpage available at http://caca.zoy.org/wiki/toilet .
 .SH SEE ALSO
 figlet(6)
