@@ -5,19 +5,22 @@ DIST_SUBDIRS = $(SUBDIRS)
 EXTRA_DIST = bootstrap
 AUTOMAKE_OPTIONS = dist-bzip2
 
+CACA2TLF = $(top_builddir)/tools/caca2tlf
+FONTDIR = $(top_builddir)/fonts
+
 fonts: tools/caca2tlf FORCE
-	$(top_builddir)/tools/caca2tlf "Monospace 9" | zip \
-	    > $(top_builddir)/fonts/bigmono9.tlf
-	$(top_builddir)/tools/caca2tlf "Monospace Bold 12" | zip \
-	    > $(top_builddir)/fonts/bigmono12.tlf
-	$(top_builddir)/tools/caca2tlf --half "Monospace 9" | zip \
-	    > $(top_builddir)/fonts/mono9.tlf
-	$(top_builddir)/tools/caca2tlf --half "Monospace Bold 12" | zip \
-	    > $(top_builddir)/fonts/mono12.tlf
-	$(top_builddir)/tools/caca2tlf --quarter "Monospace 9" | zip \
-	    > $(top_builddir)/fonts/smmono9.tlf
-	$(top_builddir)/tools/caca2tlf --quarter "Monospace Bold 12" | zip \
-	    > $(top_builddir)/fonts/smmono12.tlf
+	$(CACA2TLF) -u "Monospace 9" | zip > $(FONTDIR)/bigmono9.tlf
+	$(CACA2TLF) -u "Monospace Bold 12" | zip > $(FONTDIR)/bigmono12.tlf
+	$(CACA2TLF) -h -u "Monospace 9" | zip > $(FONTDIR)/mono9.tlf
+	$(CACA2TLF) -h -u "Monospace Bold 12" | zip > $(FONTDIR)/mono12.tlf
+	$(CACA2TLF) -q -u "Monospace 9" | zip > $(FONTDIR)/smmono9.tlf
+	$(CACA2TLF) -q -u "Monospace Bold 12" | zip > $(FONTDIR)/smmono12.tlf
+	$(CACA2TLF) -a "Monospace 9" | zip > $(FONTDIR)/bigascii9.tlf
+	$(CACA2TLF) -a "Monospace Bold 12" | zip > $(FONTDIR)/bigascii12.tlf
+	$(CACA2TLF) -h -a "Monospace 9" | zip > $(FONTDIR)/ascii9.tlf
+	$(CACA2TLF) -h -a "Monospace Bold 12" | zip > $(FONTDIR)/ascii12.tlf
+	$(CACA2TLF) -q -a "Monospace 9" | zip > $(FONTDIR)/smascii9.tlf
+	$(CACA2TLF) -q -a "Monospace Bold 12" | zip > $(FONTDIR)/smascii12.tlf
 
 webhost = poulet.zoy.org
 webdir = /srv/libcaca.zoy.org/var/www/

@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
     int infocode = -1;
 
     cx->export = "utf8";
-    cx->font = "smblock";
+    cx->font = "ascii9";
     cx->dir = FONTDIR;
 
     cx->term_width = 80;

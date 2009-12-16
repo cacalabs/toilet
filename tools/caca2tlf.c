@@ -27,6 +27,7 @@
 #include <caca.h>
 
 enum mode { GRAY, HALFBLOCKS, QUARTERBLOCKS } mode;
+enum charset { ASCII, UTF8 } charset;
 
 static void list_fonts(void);
 static void add_char(unsigned long int);
@@ -39,37 +40,55 @@ unsigned int w, h, gw, fgw, gh, iw, ih;
 
 int main(int argc, char *argv[])
 {
-    char *fontname, *extraflag;
+    char *flag1, *flag2;
     unsigned int b, i;
 
     if(argc < 2)
     {
-        fprintf(stderr, "Usage: %s [--half|--quarter] <font>\n", argv[0]);
+        fprintf(stderr,
+                "Usage: %s [--half|--quarter] [--ascii|--utf8] <font>\n",
+                argv[0]);
         list_fonts();
         return -1;
     }
 
-    if(!strcmp(argv[1], "--half") && argc >= 3)
+    if((!strcmp(argv[1], "--half") || !strcmp(argv[1], "-h")) && argc > 2)
     {
-        extraflag = "--half ";
+        flag1 = "--half ";
         mode = HALFBLOCKS;
-        fontname = argv[2];
+        argv++; argc--;
     }
-    else if(!strcmp(argv[1], "--quarter") && argc >= 3)
+    else if((!strcmp(argv[1], "--quarter") || !strcmp(argv[1], "-q")) && argc > 2)
     {
-        extraflag = "--quarter ";
+        flag1 = "--quarter ";
         mode = QUARTERBLOCKS;
-        fontname = argv[2];
+        argv++; argc--;
     }
     else
     {
-        extraflag = "";
+        flag1 = "";
         mode = GRAY;
-        fontname = argv[1];
     }
 
-    f = caca_load_font(fontname, 0);
+    if((!strcmp(argv[1], "--ascii") || !strcmp(argv[1], "-a")) && argc > 2)
+    {
+        flag2 = "--ascii ";
+        charset = ASCII;
+        argv++; argc--;
+    }
+    else if((!strcmp(argv[1], "--utf8") || !strcmp(argv[1], "-u")) && argc > 2)
+    {
+        flag2 = "--utf8 ";
+        charset = UTF8;
+        argv++; argc--;
+    }
+    else
+    {
+        flag2 = "";
+        charset = ASCII;
+    }
 
+    f = caca_load_font(argv[1], 0);
     if(!f)
     {
         fprintf(stderr, "Font \"%s\" not found.\n", argv[1]);
@@ -111,7 +130,7 @@ int main(int argc, char *argv[])
     printf("=============================================="
                                        "==================================\n");
     printf("  This font was automatically generated using:\n");
-    printf("   %% caca2tlf %s\"%s\"\n", extraflag, fontname);
+    printf("   %% caca2tlf %s%s\"%s\"\n", flag1, flag2, argv[1]);
     printf("=============================================="
                                        "==================================\n");
 
@@ -169,9 +188,23 @@ static void list_fonts(void)
 
 static void add_char(unsigned long int ch)
 {
+    static char const * chars[][16] =
+    {
+        { "#", "$", ":", ".", " " },
+        { " ", "\"", "m", "#" },
+        { " ", "`", "'", "\"", ",", "[", "/", "P",
+          ".", "\\", "]", "T", "m", "b", "d", "W" },
+        { "█", "▓", "▒", "░", " " },
+        { " ", "▀", "▄", "█" },
+        { " ", "▘", "▝", "▀", "▖", "▌", "▞", "▛",
+          "▗", "▚", "▐", "▜", "▄", "▙", "▟", "█" }
+    };
+
+    char const **str;
     void *buf;
     size_t len;
     unsigned int x, y, myw, mygw;
+    int off = 0;
     int full = caca_utf32_is_fullwidth(ch);
 
     caca_set_canvas_size(onechar, full ? 2 : 1, 1);
@@ -182,33 +215,44 @@ static void add_char(unsigned long int ch)
     mygw = full ? fgw : gw;
 
     caca_set_canvas_size(out, (full ? fgw : gw) + 2, gh);
+    caca_clear_canvas(out);
+
+    switch(charset)
+    {
+    case ASCII:
+        off = 0;
+        break;
+    case UTF8:
+        off = 3;
+        break;
+    }
 
     switch(mode)
     {
     case GRAY:
+        str = chars[off];
         for(y = 0; y < h; y++)
             for(x = 0; x < myw; x++)
         {
             uint8_t c = image[4 * (x + y * iw) + 2];
 
             if(c >= 0xa0)
-                caca_put_str(out, x, y, "█");
+                caca_put_str(out, x, y, str[0]);
             else if(c >= 0x80)
-                caca_put_str(out, x, y, "▓");
+                caca_put_str(out, x, y, str[1]);
             else if(c >= 0x40)
-                caca_put_str(out, x, y, "▒");
+                caca_put_str(out, x, y, str[2]);
             else if(c >= 0x20)
-                caca_put_str(out, x, y, "░");
+                caca_put_str(out, x, y, str[3]);
             else
-                caca_put_char(out, x, y, ' ');
+                caca_put_str(out, x, y, str[4]);
         }
         break;
     case HALFBLOCKS:
+        str = chars[off + 1];
         for(y = 0; y < gh; y++)
             for(x = 0; x < mygw; x++)
         {
-            static char const *str[] = { " ", "▀", "▄", "█" };
-
             uint8_t p1 = image[4 * (x + y * 2 * iw) + 2];
             uint8_t p2 = image[4 * (x + (y * 2 + 1) * iw) + 2];
 
@@ -216,15 +260,10 @@ static void add_char(unsigned long int ch)
         }
         break;
     case QUARTERBLOCKS:
+        str = chars[off + 2];
         for(y = 0; y < gh; y++)
             for(x = 0; x < mygw; x++)
         {
-            static char const *str[] =
-            {
-                " ", "▘", "▝", "▀", "▖", "▌", "▞", "▛",
-                "▗", "▚", "▐", "▜", "▄", "▙", "▟", "█"
-            };
-
             uint8_t p1 = image[4 * (x * 2 + y * 2 * iw) + 2];
             uint8_t p2 = image[4 * (x * 2 + 1 + y * 2 * iw) + 2];
             uint8_t p3 = image[4 * (x * 2 + (y * 2 + 1) * iw) + 2];
