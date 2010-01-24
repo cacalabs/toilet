@@ -11,3 +11,5 @@ EXTRA_DIST = $(allfonts)
 font_DATA = $(allfonts)
 fontdir = $(datadir)/figlet
 
+echo-fonts: ; echo $(allfonts)
+

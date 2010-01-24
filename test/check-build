@@ -8,7 +8,11 @@ ret=0
 failure=0
 for dir in src tools; do
   pushd ../$dir >/dev/null
-  for x in $(make echo-sources); do
+  for x in $(make -s echo-sources); do
+    case "$x" in
+     *.c|*.cpp|*.h|*.m) ;;
+     *) continue ;;
+    esac
     if grep '[[:space:]]$' "$x" >/dev/null 2>&1; then
       echo "error: $dir/$x contains trailing spaces"
       failure=1

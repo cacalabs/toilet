@@ -1,6 +1,6 @@
 # $Id$
 
-EXTRA_DIST = check-build
+EXTRA_DIST = check-build check-fonts
 
-TESTS = check-build
+TESTS = check-build check-fonts
 
