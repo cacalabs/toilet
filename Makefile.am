@@ -21,6 +21,8 @@ fonts: tools/caca2tlf FORCE
 	$(CACA2TLF) -h -a "Monospace Bold 12" | zip > $(FONTDIR)/ascii12.tlf
 	$(CACA2TLF) -q -a "Monospace 9" | zip > $(FONTDIR)/smascii9.tlf
 	$(CACA2TLF) -q -a "Monospace Bold 12" | zip > $(FONTDIR)/smascii12.tlf
+	$(CACA2TLF) -s "Monospace 9" | zip > $(FONTDIR)/biggray9.tlf
+	$(CACA2TLF) -s "Monospace Bold 12" | zip > $(FONTDIR)/biggray12.tlf
 
 webhost = poulet.zoy.org
 webdir = /srv/libcaca.zoy.org/var/www/
