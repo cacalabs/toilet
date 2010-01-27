@@ -27,7 +27,7 @@
 #include <caca.h>
 
 enum mode { GRAY, HALFBLOCKS, QUARTERBLOCKS } mode;
-enum charset { ASCII, UTF8 } charset;
+enum charset { SPACES, ASCII, UTF8 } charset;
 
 static void list_fonts(void);
 static void add_char(unsigned long int);
@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
     if(argc < 2)
     {
         fprintf(stderr,
-                "Usage: %s [--half|--quarter] [--ascii|--utf8] <font>\n",
+                "Usage: %s [--half|--quarter] [--spaces|--ascii|--utf8] <font>\n",
                 argv[0]);
         list_fonts();
         return -1;
@@ -70,7 +70,13 @@ int main(int argc, char *argv[])
         mode = GRAY;
     }
 
-    if((!strcmp(argv[1], "--ascii") || !strcmp(argv[1], "-a")) && argc > 2)
+    if((!strcmp(argv[1], "--spaces") || !strcmp(argv[1], "-s")) && argc > 2)
+    {
+        flag2 = "--spaces ";
+        charset = SPACES;
+        argv++; argc--;
+    }
+    else if((!strcmp(argv[1], "--ascii") || !strcmp(argv[1], "-a")) && argc > 2)
     {
         flag2 = "--ascii ";
         charset = ASCII;
@@ -190,6 +196,10 @@ static void add_char(unsigned long int ch)
 {
     static char const * chars[][16] =
     {
+        { "_", "_", "_", "_", " " },
+        { " ", "_", "_", "_" },
+        { " ", "_", "_", "_", "_", "_", "_", "_",
+          "_", "_", "_", "_", "_", "_", "_", "_" },
         { "#", "$", ":", ".", " " },
         { " ", "\"", "m", "#" },
         { " ", "`", "'", "\"", ",", "[", "/", "P",
@@ -200,11 +210,23 @@ static void add_char(unsigned long int ch)
           "▗", "▚", "▐", "▜", "▄", "▙", "▟", "█" }
     };
 
+    static uint8_t fgs[][4] =
+    {
+        { CACA_DEFAULT, CACA_DARKGRAY, CACA_LIGHTGRAY, CACA_WHITE },
+        { CACA_DEFAULT, CACA_DEFAULT, CACA_DEFAULT, CACA_DEFAULT },
+    };
+
+    static uint8_t bgs[][4] =
+    {
+        { CACA_DEFAULT, CACA_DARKGRAY, CACA_LIGHTGRAY, CACA_WHITE },
+        { CACA_DEFAULT, CACA_DEFAULT, CACA_DEFAULT, CACA_DEFAULT },
+    };
+
     char const **str;
     void *buf;
     size_t len;
     unsigned int x, y, myw, mygw;
-    int off = 0;
+    int coff = 0, aoff = 0;
     int full = caca_utf32_is_fullwidth(ch);
 
     caca_set_canvas_size(onechar, full ? 2 : 1, 1);
@@ -219,37 +241,60 @@ static void add_char(unsigned long int ch)
 
     switch(charset)
     {
+    case SPACES:
+        coff = 0; aoff = 0;
+        break;
     case ASCII:
-        off = 0;
+        coff = 3; aoff = 1;
         break;
     case UTF8:
-        off = 3;
+        coff = 6; aoff = 1;
         break;
     }
 
     switch(mode)
     {
     case GRAY:
-        str = chars[off];
+        str = chars[coff];
         for(y = 0; y < h; y++)
             for(x = 0; x < myw; x++)
         {
             uint8_t c = image[4 * (x + y * iw) + 2];
 
-            if(c >= 0xa0)
+            if(c >= 0xc0)
+            {
+                caca_set_color_ansi(out, fgs[aoff][3], bgs[aoff][3]);
                 caca_put_str(out, x, y, str[0]);
+            }
+            else if(c >= 0x90)
+            {
+                caca_set_color_ansi(out, fgs[aoff][2], bgs[aoff][2]);
+                caca_put_str(out, x, y, str[0]);
+            }
             else if(c >= 0x80)
+            {
+                caca_set_color_ansi(out, fgs[aoff][2], bgs[aoff][2]);
                 caca_put_str(out, x, y, str[1]);
+            }
             else if(c >= 0x40)
+            {
+                caca_set_color_ansi(out, fgs[aoff][1], bgs[aoff][1]);
                 caca_put_str(out, x, y, str[2]);
+            }
             else if(c >= 0x20)
+            {
+                caca_set_color_ansi(out, fgs[aoff][1], bgs[aoff][1]);
                 caca_put_str(out, x, y, str[3]);
+            }
             else
+            {
+                caca_set_color_ansi(out, fgs[aoff][0], bgs[aoff][0]);
                 caca_put_str(out, x, y, str[4]);
+            }
         }
         break;
     case HALFBLOCKS:
-        str = chars[off + 1];
+        str = chars[coff + 1];
         for(y = 0; y < gh; y++)
             for(x = 0; x < mygw; x++)
         {
@@ -260,7 +305,7 @@ static void add_char(unsigned long int ch)
         }
         break;
     case QUARTERBLOCKS:
-        str = chars[off + 2];
+        str = chars[coff + 2];
         for(y = 0; y < gh; y++)
             for(x = 0; x < mygw; x++)
         {
@@ -274,6 +319,8 @@ static void add_char(unsigned long int ch)
         }
         break;
     }
+
+    caca_set_color_ansi(out, CACA_DEFAULT, CACA_DEFAULT);
 
     if(ch == ' ' || ch == 0xa0)
     {
