@@ -56,6 +56,7 @@ or
 .B .tlf
 files stored in the
 .B @datarootdir@/figlet
+directory. Fonts are looked first in the font directory, then in the current
 directory. There is also a special built-in font called
 .I term
 that serves as a fallback if no font is available.

@@ -42,7 +42,14 @@ int init_figlet(context_t *cx)
 
     snprintf(path, 2047, "%s/%s", cx->dir, cx->font);
     if(caca_canvas_set_figfont(cx->cv, path))
-        return -1;
+    {
+        snprintf(path, 2047, "./%s", cx->font);
+        if(caca_canvas_set_figfont(cx->cv, path))
+        {
+            fprintf(stderr, "error: could not load font %s\n", cx->font);
+            return -1;
+        }
+    }
 
     cx->feed = feed_figlet;
     cx->flush = flush_figlet;
