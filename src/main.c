@@ -21,7 +21,9 @@
 #if defined HAVE_INTTYPES_H
 #   include <inttypes.h>
 #endif
-#if defined HAVE_GETOPT_H
+#if !defined HAVE_GETOPT_LONG
+#   include "mygetopt.h"
+#elif defined HAVE_GETOPT_H
 #   include <getopt.h>
 #endif
 #if defined HAVE_SYS_IOCTL_H && defined HAVE_TIOCGWINSZ
@@ -37,10 +39,15 @@
 #include "filter.h"
 #include "export.h"
 
-static void version(void);
-#if defined HAVE_GETOPT_H
-static void usage(void);
+#if defined HAVE_GETOPT_LONG
+#   define mygetopt getopt_long
+#   define myoptind optind
+#   define myoptarg optarg
+#   define myoption option
 #endif
+
+static void version(void);
+static void usage(void);
 
 int main(int argc, char *argv[])
 {
@@ -60,13 +67,11 @@ int main(int argc, char *argv[])
     cx->filters = NULL;
     cx->nfilters = 0;
 
-#if defined HAVE_GETOPT_H
     for(;;)
     {
-#   ifdef HAVE_GETOPT_LONG
-#       define MOREINFO "Try `%s --help' for more information.\n"
+#define MOREINFO "Try `%s --help' for more information.\n"
         int option_index = 0;
-        static struct option long_options[] =
+        static struct myoption long_options[] =
         {
             /* Long option, needs arg, flag, short option */
             { "font", 1, NULL, 'f' },
@@ -85,12 +90,8 @@ int main(int argc, char *argv[])
             { NULL, 0, NULL, 0 }
         };
 
-        int c = getopt_long(argc, argv, "f:d:w:tsSkWoF:E:hI:v",
-                            long_options, &option_index);
-#   else
-#       define MOREINFO "Try `%s -h' for more information.\n"
-        int c = getopt(argc, argv, "f:d:w:tsSkWoF:E:hI:v");
-#   endif
+        int c = mygetopt(argc, argv, "f:d:w:tsSkWoF:E:hI:v",
+                         long_options, &option_index);
         if(c == -1)
             break;
 
@@ -100,21 +101,21 @@ int main(int argc, char *argv[])
             usage();
             return 0;
         case 'I': /* --infocode */
-            infocode = atoi(optarg);
+            infocode = atoi(myoptarg);
             break;
         case 'v': /* --version */
             version();
             return 0;
         case 'f': /* --font */
-            cx->font = optarg;
+            cx->font = myoptarg;
             break;
         case 'd': /* --directory */
-            cx->dir = optarg;
+            cx->dir = myoptarg;
             break;
         case 'F': /* --filter */
-            if(!strcmp(optarg, "list"))
+            if(!strcmp(myoptarg, "list"))
                 return filter_list();
-            if(filter_add(cx, optarg) < 0)
+            if(filter_add(cx, myoptarg) < 0)
                 return -1;
             break;
         case 130: /* --gay */
@@ -124,7 +125,7 @@ int main(int argc, char *argv[])
             filter_add(cx, "metal");
             break;
         case 'w': /* --width */
-            cx->term_width = atoi(optarg);
+            cx->term_width = atoi(myoptarg);
             break;
         case 't': /* --termwidth */
         {
@@ -154,9 +155,9 @@ int main(int argc, char *argv[])
             cx->hmode = H_OVERLAP;
             break;
         case 'E': /* --export */
-            if(!strcmp(optarg, "list"))
+            if(!strcmp(myoptarg, "list"))
                 return export_list();
-            if(export_set(cx, optarg) < 0)
+            if(export_set(cx, myoptarg) < 0)
                 return -1;
             break;
         case 140: /* --irc */
@@ -174,10 +175,6 @@ int main(int argc, char *argv[])
             return 1;
         }
     }
-#else
-#   define MOREINFO "Usage: %s message...\n"
-    int optind = 1;
-#endif
 
     switch(infocode)
     {
@@ -205,10 +202,10 @@ int main(int argc, char *argv[])
     if(render_init(cx) < 0)
         return -1;
 
-    if(optind >= argc)
+    if(myoptind >= argc)
         render_stdin(cx);
     else
-        render_list(cx, argc - optind, argv + optind);
+        render_list(cx, argc - myoptind, argv + myoptind);
 
     render_end(cx);
     filter_end(cx);
@@ -216,17 +213,12 @@ int main(int argc, char *argv[])
     return 0;
 }
 
-#if defined HAVE_GETOPT_H
-#   define USAGE \
+#define USAGE \
     "Usage: toilet [ -hkostvSW ] [ -d fontdirectory ]\n" \
     "              [ -f fontfile ] [ -F filter ] [ -w outputwidth ]\n" \
     "              [ -I infocode ] [ -E format ] [ message ]\n"
-#else
-#   define USAGE ""
-#endif
 
-#if defined HAVE_GETOPT_LONG
-#   define HELP \
+#define HELP \
     "  -f, --font <name>        select the font\n" \
     "  -d, --directory <dir>    specify font directory\n" \
     "  -s, -S, -k, -W, -o       render mode (default, force smushing,\n" \
@@ -244,22 +236,6 @@ int main(int argc, char *argv[])
     "  -h, --help               display this help and exit\n" \
     "  -I, --infocode <code>    print FIGlet-compatible infocode\n" \
     "  -v, --version            output version information and exit\n"
-#else
-#   define HELP \
-    "  -f <name>           select the font\n" \
-    "  -d <dir>            specify font directory\n" \
-    "  -s, -S, -k, -W, -o  render mode (default, force smushing,\n" \
-    "                      kerning, full width, overlap)\n" \
-    "  -w <width>          set output width\n" \
-    "  -t                  adapt to terminal's width\n" \
-    "  -F <filters>        apply one or several filters to the text\n" \
-    "  -F list             list available filters\n" \
-    "  -E <format>         select export format\n" \
-    "  -E list             list available export formats\n" \
-    "  -h                  display this help and exit\n" \
-    "  -I <code>           print FIGlet-compatible infocode\n" \
-    "  -v                  output version information and exit\n"
-#endif
 
 static void version(void)
 {
@@ -278,10 +254,8 @@ static void version(void)
     "%s", VERSION, DATE, USAGE);
 }
 
-#if defined HAVE_GETOPT_H
 static void usage(void)
 {
     printf("%s%s", HELP, USAGE);
 }
-#endif
 
