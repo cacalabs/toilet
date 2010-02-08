@@ -30,4 +30,9 @@ webdir = /srv/libcaca.zoy.org/var/www/
 upload: FORCE
 	scp $(distdir).tar.gz $(webhost):$(webdir)/files/
 
+update-changelog: FORCE
+	git --help >/dev/null 2>&1 \
+	  && test -d .git \
+	  && git log --stat | awk 'function flush() { if (m != "") { print "Commit: " v "\nAuthor: " a m } m=""; v="UNSUBMITTED" } { if ($$1 == "commit") flush(); else if ($$1 == "Author:") { a = $$2 } else if ($$1 == "git-svn-id:") { split($$2,tmp,"@"); v=tmp[2] } else if ($$_ != "    ") { m=m "\n" $$_ } } END { flush() }' > ChangeLog
+
 FORCE:

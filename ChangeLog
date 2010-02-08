@@ -1,489 +1,1479 @@
-------------------------------------------------------------------------
-r89 | sam | 2006-11-16 01:12:06 +0100 (Thu, 16 Nov 2006) | 2 lines
+Commit: 4306
+Author: sam
+Date:   Wed Jan 27 00:48:05 2010 +0000
+
+    Two new automatic fonts: biggray9 and biggray12.
+
+ Makefile.am         |    2 ++
+ fonts/biggray12.tlf |  Bin 0 -> 116661 bytes
+ fonts/biggray9.tlf  |  Bin 0 -> 84507 bytes
+ 3 files changed, 2 insertions(+), 0 deletions(-)
+
+Commit: 4305
+Author: sam
+Date:   Wed Jan 27 00:47:58 2010 +0000
+
+    Generate colour fonts with caca2tlf.
+
+ tools/caca2tlf.c |   67 +++++++++++++++++++++++++++++++++++++++++++++--------
+ 1 files changed, 57 insertions(+), 10 deletions(-)
+
+Commit: 4295
+Author: sam
+Date:   Sun Jan 24 01:47:14 2010 +0000
+
+    Add a test to check that all fonts can be loaded.
+
+ fonts/Makefile.am |    2 ++
+ test/Makefile.am  |    4 ++--
+ test/check-build  |    6 +++++-
+ test/check-fonts  |   34 ++++++++++++++++++++++++++++++++++
+ 4 files changed, 43 insertions(+), 3 deletions(-)
+
+Commit: 4293
+Author: sam
+Date:   Thu Jan 21 15:55:56 2010 +0000
+
+    Remove spaces from the pagga font, to make it look nicer with proportional
+    fonts.
+
+ fonts/pagga.tlf |   40 ++++++++++++++++++++--------------------
+ 1 files changed, 20 insertions(+), 20 deletions(-)
+
+Commit: 4276
+Author: sam
+Date:   Mon Jan 18 02:01:44 2010 +0000
+
+    Add a new CP437 font: pagga.tlf
+
+ fonts/Makefile.am |    2 +-
+ fonts/pagga.tlf   |  534 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 535 insertions(+), 1 deletions(-)
+
+Commit: 4138
+Author: sam
+Date:   Wed Dec 16 19:20:26 2009 +0000
+
+    Fix a crash with multiline input caused by losing the figfont information.
+
+ src/figlet.c |    9 +++++++--
+ 1 files changed, 7 insertions(+), 2 deletions(-)
+
+Commit: 4136
+Author: sam
+Date:   Wed Dec 16 15:54:17 2009 +0000
+
+    Add a source code sanity check.
+
+ Makefile.am       |    2 +-
+ configure.ac      |    1 +
+ src/Makefile.am   |    2 ++
+ test/Makefile.am  |    6 ++++++
+ test/check-build  |   34 ++++++++++++++++++++++++++++++++++
+ tools/Makefile.am |    2 ++
+ 6 files changed, 46 insertions(+), 1 deletions(-)
+
+Commit: 4135
+Author: sam
+Date:   Wed Dec 16 00:37:44 2009 +0000
+
+    New ASCII fonts based on a simple translation of the Monospace ones.
+
+ Makefile.am          |   27 ++++++++-------
+ fonts/Makefile.am    |    2 +
+ fonts/ascii12.tlf    |  Bin 0 -> 57675 bytes
+ fonts/ascii9.tlf     |  Bin 0 -> 43154 bytes
+ fonts/bigascii12.tlf |  Bin 0 -> 85164 bytes
+ fonts/bigascii9.tlf  |  Bin 0 -> 63228 bytes
+ fonts/bigmono12.tlf  |  Bin 96310 -> 96319 bytes
+ fonts/bigmono9.tlf   |  Bin 71379 -> 71389 bytes
+ fonts/letter.tlf     |    8 +++-
+ fonts/mono12.tlf     |  Bin 64756 -> 64764 bytes
+ fonts/mono9.tlf      |  Bin 47390 -> 47399 bytes
+ fonts/smascii12.tlf  |  Bin 0 -> 50934 bytes
+ fonts/smascii9.tlf   |  Bin 0 -> 39922 bytes
+ fonts/smmono12.tlf   |  Bin 57408 -> 57416 bytes
+ fonts/smmono9.tlf    |  Bin 43288 -> 43296 bytes
+ src/main.c           |    2 +-
+ tools/caca2tlf.c     |   89 ++++++++++++++++++++++++++++++++++++--------------
+ 17 files changed, 88 insertions(+), 40 deletions(-)
+
+Commit: 4134
+Author: sam
+Date:   Wed Dec 16 00:37:31 2009 +0000
+
+    Routine cleanup: update links and e-mail addresses in source and
+    documentation, and update fonts using the latest libcaca version.
+
+ doc/toilet.1.in     |    4 ++--
+ fonts/bigmono12.tlf |  Bin 86088 -> 96310 bytes
+ fonts/bigmono9.tlf  |  Bin 63466 -> 71379 bytes
+ fonts/circle.tlf    |    4 ++--
+ fonts/emboss.tlf    |    4 ++--
+ fonts/emboss2.tlf   |    4 ++--
+ fonts/future.tlf    |    6 +++---
+ fonts/mono12.tlf    |  Bin 55455 -> 64756 bytes
+ fonts/mono9.tlf     |  Bin 40250 -> 47390 bytes
+ fonts/smblock.tlf   |    4 ++--
+ fonts/smbraille.tlf |    6 +++---
+ fonts/smmono12.tlf  |  Bin 48946 -> 57408 bytes
+ fonts/smmono9.tlf   |  Bin 36832 -> 43288 bytes
+ fonts/wideterm.tlf  |    4 ++--
+ src/export.c        |    2 +-
+ src/export.h        |    2 +-
+ src/figlet.c        |    2 +-
+ src/filter.c        |    2 +-
+ src/filter.h        |    2 +-
+ src/main.c          |    6 +++---
+ src/render.c        |    2 +-
+ src/render.h        |    2 +-
+ src/term.c          |    2 +-
+ src/toilet.h        |    2 +-
+ tools/caca2tlf.c    |    2 +-
+ 25 files changed, 31 insertions(+), 31 deletions(-)
+
+Commit: 4133
+Author: sam
+Date:   Wed Dec 16 00:37:20 2009 +0000
+
+    Revert previous fix for deprecated libcaca versions. It's possible we have
+    a TOIlet release before a libcaca one.
+
+ src/render.c     |    6 +++---
+ tools/caca2tlf.c |    2 +-
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+Commit: 4068
+Author: sam
+Date:   Mon Nov 30 00:47:24 2009 +0000
+
+    Add a "border" filter to add a border around text.
+
+ src/filter.c |   14 ++++++++++++++
+ 1 files changed, 14 insertions(+), 0 deletions(-)
+
+Commit: 4067
+Author: sam
+Date:   Mon Nov 30 00:47:18 2009 +0000
+
+    Update bootstrap script.
+
+ bootstrap |   47 +++++++++++++++++++++++++++++++----------------
+ 1 files changed, 31 insertions(+), 16 deletions(-)
+
+Commit: 4066
+Author: sam
+Date:   Mon Nov 30 00:47:13 2009 +0000
+
+    Fix deprecated libcaca calls.
+
+ src/render.c |    8 ++++----
+ 1 files changed, 4 insertions(+), 4 deletions(-)
+
+Commit: 3552
+Author: sam
+Date:   Tue Jul 14 10:00:03 2009 +0000
+
+    Added "letter.tlf", a font designed by Francesco Poli.
+
+ fonts/Makefile.am |    2 +-
+ fonts/letter.tlf  |  836 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 837 insertions(+), 1 deletions(-)
+
+Commit: 2988
+Author: sam
+Date:   Sat Oct 18 21:36:17 2008 +0000
+
+    Port toilet to the unified libcaca 0.99.beta15 API.
+
+ configure.ac      |    4 +-
+ doc/toilet.1.in   |    2 +-
+ src/Makefile.am   |    4 +-
+ src/export.c      |    6 ++--
+ src/figlet.c      |   12 +++++-----
+ src/filter.c      |   48 +++++++++++++++++++-------------------
+ src/main.c        |    2 +-
+ src/render.c      |   44 ++++++++++++++++++------------------
+ src/term.c        |   12 +++++-----
+ src/toilet.h      |    6 ++--
+ tools/Makefile.am |    4 +-
+ tools/caca2tlf.c  |   64 ++++++++++++++++++++++++++--------------------------
+ 12 files changed, 104 insertions(+), 104 deletions(-)
+
+Commit: 2537
+Author: sam
+Date:   Wed Jul 16 13:30:02 2008 +0000
+
+      * configure.ac: fix libcucul-dev dependency value.
+
+ configure.ac |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
 
-  * Fix layout information of shipped fonts.
+Commit: 2420
+Author: sam
+Date:   Sun Jun 15 15:02:23 2008 +0000
 
-------------------------------------------------------------------------
-r88 | sam | 2006-11-16 01:05:22 +0100 (Thu, 16 Nov 2006) | 2 lines
+      * Get rid of io.c/io.h: IO functions are now in libcucul.
 
-  * Define default layout as fullwidth for generated fonts.
+ src/Makefile.am |    1 -
+ src/figlet.c    |    1 -
+ src/io.c        |  213 -------------------------------------------------------
+ src/io.h        |   24 ------
+ 4 files changed, 0 insertions(+), 239 deletions(-)
 
-------------------------------------------------------------------------
-r87 | sam | 2006-11-16 01:04:39 +0100 (Thu, 16 Nov 2006) | 2 lines
+Commit: 2419
+Author: sam
+Date:   Sun Jun 15 14:59:25 2008 +0000
 
-  * Completed support for -s, -S, -k, -W, -o.
+      * Re-add the cx->torender trick to avoid crashing on filters. This really
+        needs some architecture thinking.
 
-------------------------------------------------------------------------
-r86 | sam | 2006-11-16 00:12:58 +0100 (Thu, 16 Nov 2006) | 2 lines
+ src/figlet.c |    5 ++++-
+ src/render.c |    3 ++-
+ 2 files changed, 6 insertions(+), 2 deletions(-)
 
-  * Updated help and manpage.
+Commit: 2418
+Author: sam
+Date:   Sun Jun 15 14:47:12 2008 +0000
+
+      * Require cucul >= 0.99.beta15. Not released yet, but at least we won't
+        get any complaints about crashes or compilation issues.
+
+ configure.ac |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+Commit: 2417
+Author: sam
+Date:   Sun Jun 15 14:47:08 2008 +0000
+
+      * Add a .gitignore files for git-svn users.
+
+ .gitignore |   22 ++++++++++++++++++++++
+ 1 files changed, 22 insertions(+), 0 deletions(-)
+
+Commit: 2416
+Author: sam
+Date:   Sun Jun 15 14:47:04 2008 +0000
+
+      * Put autotools files in ./.auto instead of ./autotools.
+
+ configure.ac |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+Commit: 2415
+Author: sam
+Date:   Sun Jun 15 14:46:59 2008 +0000
+
+      * Fix a compilation warning due to libcucul API changes.
 
-------------------------------------------------------------------------
-r85 | sam | 2006-11-15 13:07:00 +0100 (Wed, 15 Nov 2006) | 2 lines
+ tools/caca2tlf.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
 
-  * Fix universal smushing.
+Commit: 2414
+Author: sam
+Date:   Sun Jun 15 14:46:54 2008 +0000
 
-------------------------------------------------------------------------
-r84 | sam | 2006-11-15 04:29:34 +0100 (Wed, 15 Nov 2006) | 2 lines
+      * Get rid of all the FIGlet font handling: everything is moving into
+        libcucul.
 
-  * Smushing support. Yeah baby.
+ src/figlet.c |  422 +---------------------------------------------------------
+ src/render.c |   13 +-
+ src/render.h |    2 +-
+ 3 files changed, 14 insertions(+), 423 deletions(-)
 
-------------------------------------------------------------------------
-r83 | sam | 2006-11-15 00:42:11 +0100 (Wed, 15 Nov 2006) | 17 lines
+Commit: 2214
+Author: sam
+Date:   Thu Jan 24 19:47:49 2008 +0000
+
+      * Fix a bashism in the configure script that the FreeBSD guys apparently
+        never bothered to tell me about.
+
+ configure.ac |    3 ++-
+ 1 files changed, 2 insertions(+), 1 deletions(-)
+
+Commit: 1831
+Author: sam
+Date:   Sun Sep 30 15:45:42 2007 +0000
+
+      * Added left and right filters for 90-degree rotations.
+      * Bumped libcucul versioned dependency accordingly.
+
+ configure.ac |    4 ++--
+ src/filter.c |   26 +++++++++++++++++++++-----
+ 2 files changed, 23 insertions(+), 7 deletions(-)
+
+Commit: 1830
+Author: sam
+Date:   Sun Sep 30 15:44:21 2007 +0000
+
+      * New version of the bootstrap script.
+
+ bootstrap |   25 ++++++++++++++-----------
+ 1 files changed, 14 insertions(+), 11 deletions(-)
+
+Commit: 1811
+Author: sam
+Date:   Thu Aug 2 15:41:12 2007 +0000
+
+      ＊  Ｗｉｄｅ  ｔｅｒｍｉｎａｌ  ｆｏｎｔ  （ＡＳＣＩＩ  ｏｎｌｙ）
+
+ fonts/Makefile.am  |    2 +-
+ fonts/wideterm.tlf |  132 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 133 insertions(+), 1 deletions(-)
+
+Commit: 1810
+Author: sam
+Date:   Tue Jul 17 21:09:58 2007 +0000
+
+      * Oops, I forgot to add an additional line of comments when I added the
+        no warranty clause to the fonts.
+
+ fonts/bigmono12.tlf |  Bin 75353 -> 86088 bytes
+ fonts/bigmono9.tlf  |  Bin 56049 -> 63466 bytes
+ fonts/circle.tlf    |    2 +-
+ fonts/emboss.tlf    |    2 +-
+ fonts/emboss2.tlf   |    2 +-
+ fonts/future.tlf    |    2 +-
+ fonts/mono12.tlf    |  Bin 49122 -> 55455 bytes
+ fonts/mono9.tlf     |  Bin 35751 -> 40250 bytes
+ fonts/smblock.tlf   |    6 +++---
+ fonts/smbraille.tlf |    2 +-
+ fonts/smmono12.tlf  |  Bin 43402 -> 48946 bytes
+ fonts/smmono9.tlf   |  Bin 32653 -> 36832 bytes
+ 12 files changed, 8 insertions(+), 8 deletions(-)
+
+Commit: 1765
+Author: sam
+Date:   Tue Jun 12 16:45:21 2007 +0000
+
+      * 0x0153 œ LATIN SMALL LIGATURE OE
+
+ fonts/smblock.tlf |    5 +++++
+ 1 files changed, 5 insertions(+), 0 deletions(-)
+
+Commit: 1469
+Author: sam
+Date:   Thu Dec 14 21:38:06 2006 +0000
+
+      * Fix build for systems with no zlib-devel.
+
+ src/io.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+Commit: 1468
+Author: sam
+Date:   Thu Dec 14 21:18:54 2006 +0000
+
+      * Fix --as-needed issue, thanks to Pavlov Konstantin.
+
+ tools/Makefile.am |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+Commit: 1461
+Author: sam
+Date:   Tue Dec 12 01:50:48 2006 +0000
+
+      * Bwarf, typo in the no warranty clause.
+
+ fonts/circle.tlf    |    2 +-
+ fonts/emboss.tlf    |    2 +-
+ fonts/emboss2.tlf   |    2 +-
+ fonts/future.tlf    |    2 +-
+ fonts/smblock.tlf   |    2 +-
+ fonts/smbraille.tlf |    2 +-
+ src/export.c        |    2 +-
+ src/export.h        |    2 +-
+ src/figlet.c        |    2 +-
+ src/filter.c        |    2 +-
+ src/filter.h        |    2 +-
+ src/io.c            |    2 +-
+ src/io.h            |    2 +-
+ src/main.c          |    2 +-
+ src/render.c        |    2 +-
+ src/render.h        |    2 +-
+ src/term.c          |    2 +-
+ src/toilet.h        |    2 +-
+ tools/caca2tlf.c    |    2 +-
+ 19 files changed, 19 insertions(+), 19 deletions(-)
+
+Commit: 1451
+Author: sam
+Date:   Mon Dec 11 15:10:28 2006 +0000
+
+      * Add a no warranty clause to the code.
+
+ fonts/circle.tlf    |    3 ++-
+ fonts/emboss.tlf    |    3 ++-
+ fonts/emboss2.tlf   |    3 ++-
+ fonts/future.tlf    |    3 ++-
+ fonts/smblock.tlf   |    3 ++-
+ fonts/smbraille.tlf |    3 ++-
+ src/export.c        |    7 ++++---
+ src/export.h        |    7 ++++---
+ src/figlet.c        |    7 ++++---
+ src/filter.c        |    7 ++++---
+ src/filter.h        |    7 ++++---
+ src/io.c            |    7 ++++---
+ src/io.h            |    7 ++++---
+ src/main.c          |    7 ++++---
+ src/render.c        |    7 ++++---
+ src/render.h        |    7 ++++---
+ src/term.c          |    7 ++++---
+ src/toilet.h        |    7 ++++---
+ tools/caca2tlf.c    |    7 ++++---
+ 19 files changed, 64 insertions(+), 45 deletions(-)
+
+Commit: 1442
+Author: sam
+Date:   Thu Nov 30 16:58:39 2006 +0000
+
+      * Use PKG_CHECK_MODULES the right way. Fixes build on Alt Linux.
+
+ configure.ac      |    2 +-
+ src/Makefile.am   |    4 ++--
+ tools/Makefile.am |    4 ++--
+ 3 files changed, 5 insertions(+), 5 deletions(-)
+
+Commit: 1441
+Author: sam
+Date:   Thu Nov 30 16:51:38 2006 +0000
+
+      * Cosmetic.
+
+ src/main.c |   90 ++++++++++++++++++++++++++++++-----------------------------
+ 1 files changed, 46 insertions(+), 44 deletions(-)
+
+Commit: 1418
+Author: sam
+Date:   Thu Nov 16 15:31:51 2006 +0000
+
+      * Added Hangul and CJK shit to the Circle font.
+
+ fonts/circle.tlf |   70 +++++++++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 files changed, 69 insertions(+), 1 deletions(-)
+
+Commit: 1410
+Author: sam
+Date:   Thu Nov 16 00:34:48 2006 +0000
+
+      * I hate SVN keywords. Here, fixed at last.
+
+ configure.ac |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+Commit: 1409
+Author: sam
+Date:   Thu Nov 16 00:33:32 2006 +0000
+
+      * Added a "make upload" rule for releases.
+
+ Makefile.am  |    6 ++++++
+ configure.ac |    2 +-
+ 2 files changed, 7 insertions(+), 1 deletions(-)
+
+Commit: 1408
+Author: sam
+Date:   Thu Nov 16 00:25:17 2006 +0000
+
+      * Grmbl, set $Id on configure.ac.
+
+Commit: 1407
+Author: sam
+Date:   Thu Nov 16 00:24:33 2006 +0000
+
+      * Set version to 0.1.
+      * Added ChangeLog, updated TODO/NEWS/README.
+
+ ChangeLog    |  489 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ Makefile.am  |    2 +-
+ NEWS         |    6 +
+ README       |    6 +
+ TODO         |   14 ++
+ configure.ac |    4 +-
+ 6 files changed, 518 insertions(+), 3 deletions(-)
+
+Commit: 1406
+Author: sam
+Date:   Thu Nov 16 00:12:06 2006 +0000
+
+      * Fix layout information of shipped fonts.
+
+ fonts/emboss.tlf    |    2 +-
+ fonts/emboss2.tlf   |    2 +-
+ fonts/future.tlf    |    2 +-
+ fonts/smblock.tlf   |    2 +-
+ fonts/smbraille.tlf |    2 +-
+ 5 files changed, 5 insertions(+), 5 deletions(-)
+
+Commit: 1405
+Author: sam
+Date:   Thu Nov 16 00:05:22 2006 +0000
+
+      * Define default layout as fullwidth for generated fonts.
+
+ fonts/bigmono12.tlf |  Bin 75318 -> 75353 bytes
+ fonts/bigmono9.tlf  |  Bin 56026 -> 56049 bytes
+ fonts/mono12.tlf    |  Bin 49089 -> 49122 bytes
+ fonts/mono9.tlf     |  Bin 35733 -> 35751 bytes
+ fonts/smblock.tlf   |  106 +++++++++++++++++++++++++-------------------------
+ fonts/smmono12.tlf  |  Bin 43378 -> 43402 bytes
+ fonts/smmono9.tlf   |  Bin 32628 -> 32653 bytes
+ tools/caca2tlf.c    |    8 +++-
+ 8 files changed, 60 insertions(+), 54 deletions(-)
+
+Commit: 1404
+Author: sam
+Date:   Thu Nov 16 00:04:39 2006 +0000
+
+      * Completed support for -s, -S, -k, -W, -o.
+
+ src/figlet.c |  116 ++++++++++++++++++++++++++++++++++++++++------------------
+ src/main.c   |   16 ++++----
+ src/toilet.h |    3 +-
+ 3 files changed, 90 insertions(+), 45 deletions(-)
+
+Commit: 1403
+Author: sam
+Date:   Wed Nov 15 23:12:58 2006 +0000
+
+      * Updated help and manpage.
+
+ doc/toilet.1.in |   16 +++++++++++++++-
+ src/main.c      |   28 ++++++++++++++++------------
+ 2 files changed, 31 insertions(+), 13 deletions(-)
+
+Commit: 1402
+Author: sam
+Date:   Wed Nov 15 12:07:00 2006 +0000
+
+      * Fix universal smushing.
+
+ src/figlet.c |    8 +++++---
+ 1 files changed, 5 insertions(+), 3 deletions(-)
+
+Commit: 1401
+Author: sam
+Date:   Wed Nov 15 03:29:34 2006 +0000
+
+      * Smushing support. Yeah baby.
+
+ src/figlet.c |  151 ++++++++++++++++++++++++++++++++++++++++++++++++----------
+ src/main.c   |   21 +++++++-
+ src/toilet.h |    3 +-
+ 3 files changed, 146 insertions(+), 29 deletions(-)
+
+Commit: 1400
+Author: sam
+Date:   Tue Nov 14 23:42:11 2006 +0000
+
+      * Kerning support. We used to have:
+     __   __  _
+     \ \ / / (_)  ___   _  _  __ __    _ __   ___   _ _   __
+      \ V /  | | / -_) | || | \ \ /   | '_ \ / _ \ | '_| / _|
+       \_/   |_| \___|  \_,_| /_\_\   | .__/ \___/ |_|   \__|
+                                      |_|
+       Now we have:
+    __   __ _
+    \ \ / /(_) ___  _  _ __ __  _ __  ___  _ _  __
+     \ V / | |/ -_)| || |\ \ / | '_ \/ _ \| '_|/ _|
+      \_/  |_|\___| \_,_|/_\_\ | .__/\___/|_|  \__|
+                               |_|
+       Now we just need smushing.
+
+ src/figlet.c |   53 +++++++++++++++++++++++++++++++++++++++++++++--------
+ src/toilet.h |    6 +-----
+ 2 files changed, 46 insertions(+), 13 deletions(-)
+
+Commit: 1385
+Author: sam
+Date:   Mon Nov 13 01:02:05 2006 +0000
+
+      * Support for ANSI escape codes in the input:
+          http://zoy.org/~sam/toilet-ansi.png
+          http://zoy.org/~sam/toilet-ansi2.png
+      * Empty lines are currently broken.
+
+ src/figlet.c |   15 ++++++++---
+ src/render.c |   82 +++++++++++++++++++++++++++++++++++++++++----------------
+ src/term.c   |    5 ++-
+ src/toilet.h |    2 +-
+ 4 files changed, 74 insertions(+), 30 deletions(-)
+
+Commit: 1382
+Author: sam
+Date:   Sun Nov 12 22:52:05 2006 +0000
+
+      * Fix max width in smblock.tlf.
+
+ fonts/smblock.tlf |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+Commit: 1376
+Author: sam
+Date:   Sun Nov 12 20:37:58 2006 +0000
+
+      * Now that libcaca 0.99.beta10 is out, we can switch to the new API.
+
+ configure.ac     |    4 ++--
+ doc/Makefile.am  |    2 +-
+ src/figlet.c     |   27 +++++++++------------------
+ src/filter.c     |   10 +++++-----
+ src/render.c     |   10 +++++-----
+ src/term.c       |    2 +-
+ tools/caca2tlf.c |   29 +++++++++++++++--------------
+ 7 files changed, 38 insertions(+), 46 deletions(-)
+
+Commit: 1368
+Author: sam
+Date:   Sun Nov 12 18:09:54 2006 +0000
+
+      * Double width support in caca2tlf.
+
+ fonts/bigmono12.tlf |  Bin 63251 -> 75318 bytes
+ fonts/bigmono9.tlf  |  Bin 46988 -> 56026 bytes
+ fonts/mono12.tlf    |  Bin 41823 -> 49089 bytes
+ fonts/mono9.tlf     |  Bin 30477 -> 35733 bytes
+ fonts/smmono12.tlf  |  Bin 36946 -> 43378 bytes
+ fonts/smmono9.tlf   |  Bin 27838 -> 32628 bytes
+ tools/caca2tlf.c    |   44 ++++++++++++++++++++++++++------------------
+ 7 files changed, 26 insertions(+), 18 deletions(-)
+
+Commit: 1367
+Author: sam
+Date:   Sun Nov 12 18:02:15 2006 +0000
+
+      * Add a "make fonts" rule to rebuild all generated fonts.
+
+ Makefile.am |   15 +++++++++++++++
+ 1 files changed, 15 insertions(+), 0 deletions(-)
+
+Commit: 1327
+Author: sam
+Date:   Fri Nov 10 14:58:12 2006 +0000
+
+      * Generate the manpage in the make rule, not the configure rule, because
+        at configure time ${datarootdir} depends on ${prefix} which is defined
+        a bit too late in the script.
+
+ configure.ac    |    1 -
+ doc/Makefile.am |    4 ++++
+ 2 files changed, 4 insertions(+), 1 deletions(-)
+
+Commit: 1326
+Author: sam
+Date:   Fri Nov 10 14:30:22 2006 +0000
+
+      * Allow setting the font directory using --datadir / --datarootdir.
+
+ configure.ac    |    1 +
+ doc/Makefile.am |    2 +-
+ doc/toilet.1    |  152 -------------------------------------------------------
+ doc/toilet.1.in |  152 +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ src/Makefile.am |    1 +
+ src/main.c      |    2 +-
+ 6 files changed, 156 insertions(+), 154 deletions(-)
+
+Commit: 1325
+Author: sam
+Date:   Fri Nov 10 14:19:13 2006 +0000
+
+      * Do not cache ac_build_date.
+
+ configure.ac |   16 ++++++++--------
+ 1 files changed, 8 insertions(+), 8 deletions(-)
+
+Commit: 1323
+Author: sam
+Date:   Fri Nov 10 08:54:04 2006 +0000
+
+      * Add a manual page.
+
+ Makefile.am     |    2 +-
+ configure.ac    |    1 +
+ doc/Makefile.am |    6 ++
+ doc/toilet.1    |  152 +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 160 insertions(+), 1 deletions(-)
+
+Commit: 1322
+Author: sam
+Date:   Fri Nov 10 08:29:10 2006 +0000
+
+      * Output filter list to stdout, not stderr.
+
+ src/filter.c |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+Commit: 1321
+Author: sam
+Date:   Fri Nov 10 07:56:55 2006 +0000
+
+      * Moved export stuff in export.c.
+      * Bail out with an error if the requested export format is unsupported.
+
+ src/Makefile.am |    1 +
+ src/export.c    |   58 +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ src/export.h    |   20 +++++++++++++++++++
+ src/main.c      |   22 ++++----------------
+ 4 files changed, 84 insertions(+), 17 deletions(-)
+
+Commit: 1320
+Author: sam
+Date:   Fri Nov 10 07:51:21 2006 +0000
+
+      * Fix signed/unsigned warning.
+
+ src/filter.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+Commit: 1319
+Author: sam
+Date:   Fri Nov 10 07:47:17 2006 +0000
+
+      * Use "-F list" to list available filters.
+      * Use "-E" to specify export format, "-E list" to list them.
+
+ src/filter.c |   24 ++++++++++++++++++------
+ src/filter.h |    1 +
+ src/main.c   |   50 +++++++++++++++++++++++++++++++++++++-------------
+ 3 files changed, 56 insertions(+), 19 deletions(-)
+
+Commit: 1318
+Author: sam
+Date:   Fri Nov 10 07:38:52 2006 +0000
+
+      * Don't crash if an export error occurs.
+
+ src/render.c |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
+
+Commit: 1317
+Author: sam
+Date:   Thu Nov 9 21:58:43 2006 +0000
+
+      * Updated code to the beta9 API.
+
+ src/filter.c |   20 +++++++-------------
+ 1 files changed, 7 insertions(+), 13 deletions(-)
+
+Commit: 1316
+Author: sam
+Date:   Thu Nov 9 21:58:21 2006 +0000
+
+      * Minor cosmetic change in the configure output.
+
+ configure.ac |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+Commit: 1299
+Author: sam
+Date:   Mon Nov 6 17:39:42 2006 +0000
+
+      * Ignore negative indices in font data.
 
-  * Kerning support. We used to have:
- __   __  _
- \ \ / / (_)  ___   _  _  __ __    _ __   ___   _ _   __
-  \ V /  | | / -_) | || | \ \ /   | '_ \ / _ \ | '_| / _|
-   \_/   |_| \___|  \_,_| /_\_\   | .__/ \___/ |_|   \__|
-                                  |_|
+ src/figlet.c |    8 ++++++++
+ 1 files changed, 8 insertions(+), 0 deletions(-)
 
-   Now we have:
+Commit: 1298
+Author: sam
+Date:   Mon Nov 6 17:33:31 2006 +0000
 
-__   __ _
-\ \ / /(_) ___  _  _ __ __  _ __  ___  _ _  __
- \ V / | |/ -_)| || |\ \ / | '_ \/ _ \| '_|/ _|
-  \_/  |_|\___| \_,_|/_\_\ | .__/\___/|_|  \__|
-                           |_|
+      * Make figlet font importer more tolerant with empty lines.
 
-   Now we just need smushing.
+ src/figlet.c |    4 ++++
+ 1 files changed, 4 insertions(+), 0 deletions(-)
 
-------------------------------------------------------------------------
-r82 | sam | 2006-11-13 02:02:05 +0100 (Mon, 13 Nov 2006) | 5 lines
+Commit: 1297
+Author: sam
+Date:   Mon Nov 6 17:24:40 2006 +0000
 
-  * Support for ANSI escape codes in the input:
-      http://zoy.org/~sam/toilet-ansi.png
-      http://zoy.org/~sam/toilet-ansi2.png
-  * Empty lines are currently broken.
+      * Updated mono9 and mono12 fonts and added small and big variants.
 
-------------------------------------------------------------------------
-r81 | sam | 2006-11-12 23:52:05 +0100 (Sun, 12 Nov 2006) | 2 lines
+ fonts/Makefile.am   |    5 ++++-
+ fonts/bigmono12.tlf |  Bin 0 -> 63251 bytes
+ fonts/bigmono9.tlf  |  Bin 0 -> 46988 bytes
+ fonts/mono12.tlf    |  Bin 63363 -> 41823 bytes
+ fonts/mono9.tlf     |  Bin 47020 -> 30477 bytes
+ fonts/smmono12.tlf  |  Bin 0 -> 36946 bytes
+ fonts/smmono9.tlf   |  Bin 0 -> 27838 bytes
+ 7 files changed, 4 insertions(+), 1 deletions(-)
 
-  * Fix max width in smblock.tlf.
+Commit: 1296
+Author: sam
+Date:   Mon Nov 6 17:24:02 2006 +0000
 
-------------------------------------------------------------------------
-r80 | sam | 2006-11-12 21:37:58 +0100 (Sun, 12 Nov 2006) | 2 lines
+      * Add --half and --quarter options to caca2tlf.
 
-  * Now that libcaca 0.99.beta10 is out, we can switch to the new API.
+ tools/caca2tlf.c |  144 ++++++++++++++++++++++++++++++++++++++++++-----------
+ 1 files changed, 114 insertions(+), 30 deletions(-)
 
-------------------------------------------------------------------------
-r79 | sam | 2006-11-12 19:09:54 +0100 (Sun, 12 Nov 2006) | 2 lines
+Commit: 1293
+Author: sam
+Date:   Mon Nov 6 01:13:38 2006 +0000
 
-  * Double width support in caca2tlf.
+      * Got rid of the mono9.c renderer. We now have a .tlf font instead.
 
-------------------------------------------------------------------------
-r78 | sam | 2006-11-12 19:02:15 +0100 (Sun, 12 Nov 2006) | 2 lines
+ src/Makefile.am |    2 +-
+ src/main.c      |    2 +-
+ src/mono9.c     |  131 -------------------------------------------------------
+ src/render.c    |    3 -
+ src/render.h    |    1 -
+ 5 files changed, 2 insertions(+), 137 deletions(-)
 
-  * Add a "make fonts" rule to rebuild all generated fonts.
+Commit: 1292
+Author: sam
+Date:   Mon Nov 6 01:11:27 2006 +0000
+
+      * Added two new fonts created with caca2tlf:
+          caca2tlf "Monospace 9" | zip >| fonts/mono9.tlf
+          caca2tlf "Monospace Bold 12" | zip >| fonts/mono12.tlf
+
+ fonts/Makefile.am |    2 +-
+ fonts/mono12.tlf  |  Bin 0 -> 63363 bytes
+ fonts/mono9.tlf   |  Bin 0 -> 47020 bytes
+ 3 files changed, 1 insertions(+), 1 deletions(-)
+
+Commit: 1291
+Author: sam
+Date:   Mon Nov 6 01:09:44 2006 +0000
+
+      * Added the caca2tlf tool, which converts a libcaca font into a TOIlet font
+        using a naive pixel-to-glyphs algorithm. I will improve it later.
+
+ Makefile.am       |    2 +-
+ configure.ac      |    5 +-
+ tools/Makefile.am |    8 +++
+ tools/caca2tlf.c  |  152 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 164 insertions(+), 3 deletions(-)
+
+Commit: 1290
+Author: sam
+Date:   Mon Nov 6 00:55:49 2006 +0000
+
+      * Distribute fonts with the tarball.
+
+ fonts/Makefile.am |    7 +++++--
+ 1 files changed, 5 insertions(+), 2 deletions(-)
+
+Commit: 1289
+Author: sam
+Date:   Mon Nov 6 00:45:34 2006 +0000
+
+      * Add a sanity check to the FIGlet font loader.
+
+ src/figlet.c |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+Commit: 1288
+Author: sam
+Date:   Mon Nov 6 00:45:14 2006 +0000
+
+      * Add missing toilet.h to the toilet sources.
+
+ src/Makefile.am |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+Commit: 1272
+Author: sam
+Date:   Sat Nov 4 17:43:13 2006 +0000
+
+      * Fix uninitialised variable in the filter handler.
+
+ src/filter.c |    5 +++--
+ 1 files changed, 3 insertions(+), 2 deletions(-)
+
+Commit: 1243
+Author: sam
+Date:   Thu Oct 26 13:30:14 2006 +0000
+
+      * Make filters line-feed aware.
+
+ src/filter.c |   64 +++++++++++++++++++++++++++++-----------------------------
+ src/render.c |   28 +++++++++++++++----------
+ src/render.h |    1 -
+ src/toilet.h |    2 +-
+ 4 files changed, 50 insertions(+), 45 deletions(-)
+
+Commit: 1242
+Author: sam
+Date:   Thu Oct 26 13:14:37 2006 +0000
+
+      * Factor code from renderers to main render.c functions.
+
+ src/figlet.c |    5 -----
+ src/mono9.c  |    5 -----
+ src/render.c |    6 ++++++
+ src/term.c   |    5 -----
+ src/toilet.h |    2 +-
+ 5 files changed, 7 insertions(+), 16 deletions(-)
+
+Commit: 1241
+Author: sam
+Date:   Thu Oct 26 13:07:58 2006 +0000
+
+      * Make stdin input line-aware so that we don't have to wait until EOF to
+        display stuff.
+      * Reorganise stuff and fix memory leaks.
 
-------------------------------------------------------------------------
-r77 | sam | 2006-11-10 15:58:12 +0100 (Fri, 10 Nov 2006) | 4 lines
+ src/Makefile.am |    2 +-
+ src/figlet.c    |   17 +++++-
+ src/figlet.h    |   18 ------
+ src/filter.c    |    9 +++-
+ src/filter.h    |    1 +
+ src/main.c      |   68 ++-------------------
+ src/mono9.c     |  136 ++++++++++++++++++++++++++++++++++++++++++
+ src/render.c    |  178 +++++++++++++++++--------------------------------------
+ src/render.h    |    7 ++
+ src/term.c      |  113 +++++++++++++++++++++++++++++++++++
+ src/toilet.h    |    2 +
+ 11 files changed, 344 insertions(+), 207 deletions(-)
 
-  * Generate the manpage in the make rule, not the configure rule, because
-    at configure time ${datarootdir} depends on ${prefix} which is defined
-    a bit too late in the script.
+Commit: 1240
+Author: sam
+Date:   Thu Oct 26 12:12:44 2006 +0000
 
-------------------------------------------------------------------------
-r76 | sam | 2006-11-10 15:30:22 +0100 (Fri, 10 Nov 2006) | 2 lines
+      * Get rid of -g -i -m short options, only keep --gay --irc --metal.
+      * Add --html and --tga flags.
 
-  * Allow setting the font directory using --datadir / --datarootdir.
+ src/main.c |   51 +++++++++++++++++++++++++++++----------------------
+ 1 files changed, 29 insertions(+), 22 deletions(-)
 
-------------------------------------------------------------------------
-r75 | sam | 2006-11-10 15:19:13 +0100 (Fri, 10 Nov 2006) | 2 lines
+Commit: 1228
+Author: sam
+Date:   Wed Oct 25 16:06:19 2006 +0000
 
-  * Do not cache ac_build_date.
+      * Added filter_flip, filter_flop and filter_rotate.
+      * Add a -F flag to specify filters to apply. Can be specified more than
+        once, and filters can be chained using ":", eg. "-F flip:gay".
 
-------------------------------------------------------------------------
-r74 | sam | 2006-11-10 09:54:04 +0100 (Fri, 10 Nov 2006) | 2 lines
+ src/filter.c |   94 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++--
+ src/filter.h |    5 +--
+ src/io.c     |    2 +-
+ src/main.c   |   29 ++++++++++--------
+ src/toilet.h |    6 +++-
+ 5 files changed, 115 insertions(+), 21 deletions(-)
 
-  * Add a manual page.
+Commit: 1227
+Author: sam
+Date:   Tue Oct 24 12:39:57 2006 +0000
 
-------------------------------------------------------------------------
-r73 | sam | 2006-11-10 09:29:10 +0100 (Fri, 10 Nov 2006) | 2 lines
+      * Renamed filters.* to filter.*.
 
-  * Output filter list to stdout, not stderr.
+ src/Makefile.am |    2 +-
+ src/filter.c    |  119 +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ src/filter.h    |   21 ++++++++++
+ src/filters.c   |  119 -------------------------------------------------------
+ src/filters.h   |   21 ----------
+ src/main.c      |    2 +-
+ 6 files changed, 142 insertions(+), 142 deletions(-)
 
-------------------------------------------------------------------------
-r72 | sam | 2006-11-10 08:56:55 +0100 (Fri, 10 Nov 2006) | 3 lines
+Commit: 1206
+Author: sam
+Date:   Thu Oct 19 20:55:44 2006 +0000
 
-  * Moved export stuff in export.c.
-  * Bail out with an error if the requested export format is unsupported.
+      * Support for PKZIP-compressed fonts using zlib.
 
-------------------------------------------------------------------------
-r71 | sam | 2006-11-10 08:51:21 +0100 (Fri, 10 Nov 2006) | 2 lines
+ src/Makefile.am |    2 +-
+ src/io.c        |  167 +++++++++++++++++++++++++++++++++++++++++++++++++++++--
+ src/io.h        |    6 +--
+ 3 files changed, 164 insertions(+), 11 deletions(-)
 
-  * Fix signed/unsigned warning.
+Commit: 1205
+Author: sam
+Date:   Thu Oct 19 20:53:36 2006 +0000
 
-------------------------------------------------------------------------
-r70 | sam | 2006-11-10 08:47:17 +0100 (Fri, 10 Nov 2006) | 3 lines
+      * Check for zlib if available.
 
-  * Use "-F list" to list available filters.
-  * Use "-E" to specify export format, "-E list" to list them.
+ configure.ac |    6 +++++-
+ 1 files changed, 5 insertions(+), 1 deletions(-)
 
-------------------------------------------------------------------------
-r69 | sam | 2006-11-10 08:38:52 +0100 (Fri, 10 Nov 2006) | 2 lines
+Commit: 1204
+Author: sam
+Date:   Thu Oct 19 20:53:07 2006 +0000
 
-  * Don't crash if an export error occurs.
+      * Minor debugging information in the FIGlet font parser.
 
-------------------------------------------------------------------------
-r68 | sam | 2006-11-09 22:58:43 +0100 (Thu, 09 Nov 2006) | 2 lines
+ src/figlet.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
 
-  * Updated code to the beta9 API.
+Commit: 1202
+Author: sam
+Date:   Fri Oct 13 13:38:50 2006 +0000
 
-------------------------------------------------------------------------
-r67 | sam | 2006-11-09 22:58:21 +0100 (Thu, 09 Nov 2006) | 2 lines
+      * Add feof() to the list of I/O functions.
 
-  * Minor cosmetic change in the configure output.
+ src/figlet.c |    2 +-
+ src/io.c     |    5 +++++
+ src/io.h     |    1 +
+ 3 files changed, 7 insertions(+), 1 deletions(-)
 
-------------------------------------------------------------------------
-r66 | sam | 2006-11-06 18:39:42 +0100 (Mon, 06 Nov 2006) | 2 lines
+Commit: 1201
+Author: sam
+Date:   Fri Oct 13 13:36:23 2006 +0000
 
-  * Ignore negative indices in font data.
+      * Moved I/O functions into a separate module.
 
-------------------------------------------------------------------------
-r65 | sam | 2006-11-06 18:33:31 +0100 (Mon, 06 Nov 2006) | 2 lines
+ src/Makefile.am |    1 +
+ src/figlet.c    |   19 ++++++++++---------
+ src/io.c        |   50 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ src/io.h        |   26 ++++++++++++++++++++++++++
+ 4 files changed, 87 insertions(+), 9 deletions(-)
 
-  * Make figlet font importer more tolerant with empty lines.
+Commit: 1200
+Author: sam
+Date:   Fri Oct 13 13:19:45 2006 +0000
 
-------------------------------------------------------------------------
-r64 | sam | 2006-11-06 18:24:40 +0100 (Mon, 06 Nov 2006) | 2 lines
+      * Use fgets() instead of fscanf(). Uses an additional memory buffer, but
+        paves the way for custom IO functions.
 
-  * Updated mono9 and mono12 fonts and added small and big variants.
+ src/figlet.c |   24 +++++++++---------------
+ 1 files changed, 9 insertions(+), 15 deletions(-)
 
-------------------------------------------------------------------------
-r63 | sam | 2006-11-06 18:24:02 +0100 (Mon, 06 Nov 2006) | 2 lines
+Commit: 1199
+Author: sam
+Date:   Fri Oct 13 13:11:20 2006 +0000
 
-  * Add --half and --quarter options to caca2tlf.
+      * Fix a crash when font opening fails.
 
-------------------------------------------------------------------------
-r62 | sam | 2006-11-06 02:13:38 +0100 (Mon, 06 Nov 2006) | 2 lines
+ src/main.c |   11 +++++++----
+ 1 files changed, 7 insertions(+), 4 deletions(-)
 
-  * Got rid of the mono9.c renderer. We now have a .tlf font instead.
+Commit: 1197
+Author: sam
+Date:   Tue Oct 10 07:24:41 2006 +0000
 
-------------------------------------------------------------------------
-r61 | sam | 2006-11-06 02:11:27 +0100 (Mon, 06 Nov 2006) | 4 lines
+      * Fixed an ifdef error that caused -t to be ignored.
 
-  * Added two new fonts created with caca2tlf:
-      caca2tlf "Monospace 9" | zip >| fonts/mono9.tlf
-      caca2tlf "Monospace Bold 12" | zip >| fonts/mono12.tlf
+ src/main.c |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
 
-------------------------------------------------------------------------
-r60 | sam | 2006-11-06 02:09:44 +0100 (Mon, 06 Nov 2006) | 3 lines
+Commit: 1196
+Author: sam
+Date:   Tue Oct 10 07:20:15 2006 +0000
 
-  * Added the caca2tlf tool, which converts a libcaca font into a TOIlet font
-    using a naive pixel-to-glyphs algorithm. I will improve it later.
+      * Fixed the FIGlet renderer. It now has char wrapping and stdin input.
 
-------------------------------------------------------------------------
-r59 | sam | 2006-11-06 01:55:49 +0100 (Mon, 06 Nov 2006) | 2 lines
+ src/figlet.c |  211 +++++++++++++++++++++++++++++++--------------------------
+ src/figlet.h |    3 +-
+ src/main.c   |    4 +-
+ src/toilet.h |    9 +++
+ 4 files changed, 128 insertions(+), 99 deletions(-)
 
-  * Distribute fonts with the tarball.
+Commit: 1195
+Author: sam
+Date:   Tue Oct 10 07:15:28 2006 +0000
 
-------------------------------------------------------------------------
-r58 | sam | 2006-11-06 01:45:34 +0100 (Mon, 06 Nov 2006) | 2 lines
+      * Properly handle \r \n \t in the big and tiny renderers.
 
-  * Add a sanity check to the FIGlet font loader.
+ src/render.c |   44 ++++++++++++++++++++++++++++----------------
+ 1 files changed, 28 insertions(+), 16 deletions(-)
 
-------------------------------------------------------------------------
-r57 | sam | 2006-11-06 01:45:14 +0100 (Mon, 06 Nov 2006) | 2 lines
+Commit: 1194
+Author: sam
+Date:   Mon Oct 9 23:54:40 2006 +0000
 
-  * Add missing toilet.h to the toilet sources.
+      * The mono9 driver works again. With wrapping and stdin reading.
 
-------------------------------------------------------------------------
-r56 | sam | 2006-11-04 18:43:13 +0100 (Sat, 04 Nov 2006) | 2 lines
+ src/main.c   |   22 ++--------
+ src/render.c |  129 +++++++++++++++++++++++++++++++++++-----------------------
+ src/render.h |    1 +
+ src/toilet.h |    6 +++
+ 4 files changed, 90 insertions(+), 68 deletions(-)
 
-  * Fix uninitialised variable in the filter handler.
+Commit: 1193
+Author: sam
+Date:   Sun Oct 8 12:14:13 2006 +0000
 
-------------------------------------------------------------------------
-r55 | sam | 2006-10-26 15:30:14 +0200 (Thu, 26 Oct 2006) | 2 lines
+      * Break everything. Temporarily. Only the term output works.
+      * Allow to read from stdin.
+      * Wrap at terminal width (currently letter-wrap, not word-wrap).
 
-  * Make filters line-feed aware.
+ src/figlet.c |   15 ++++--
+ src/figlet.h |    3 +-
+ src/main.c   |  149 ++++++++++++++++++++++++++++++++++-----------------------
+ src/render.c |   80 +++++++++++++++++++++++++++----
+ src/render.h |    3 +-
+ src/toilet.h |   19 ++++++-
+ 6 files changed, 186 insertions(+), 83 deletions(-)
 
-------------------------------------------------------------------------
-r54 | sam | 2006-10-26 15:14:37 +0200 (Thu, 26 Oct 2006) | 2 lines
+Commit: 1192
+Author: sam
+Date:   Sun Oct 8 12:04:04 2006 +0000
 
-  * Factor code from renderers to main render.c functions.
+      * Retrieve the configure.ac timestamp at configure time and store it in
+        a C macro for better FIGlet emulation.
 
-------------------------------------------------------------------------
-r53 | sam | 2006-10-26 15:07:58 +0200 (Thu, 26 Oct 2006) | 4 lines
+ configure.ac |   10 ++++++++++
+ 1 files changed, 10 insertions(+), 0 deletions(-)
 
-  * Make stdin input line-aware so that we don't have to wait until EOF to
-    display stuff.
-  * Reorganise stuff and fix memory leaks.
+Commit: 1190
+Author: sam
+Date:   Thu Oct 5 21:43:53 2006 +0000
 
-------------------------------------------------------------------------
-r52 | sam | 2006-10-26 14:12:44 +0200 (Thu, 26 Oct 2006) | 3 lines
+      * Fully reworked the katakana part of Small Block.
 
-  * Get rid of -g -i -m short options, only keep --gay --irc --metal.
-  * Add --html and --tga flags.
+ fonts/smblock.tlf |  666 ++++++++++++++++++++++++++--------------------------
+ 1 files changed, 333 insertions(+), 333 deletions(-)
 
-------------------------------------------------------------------------
-r51 | sam | 2006-10-25 18:06:19 +0200 (Wed, 25 Oct 2006) | 4 lines
+Commit: 1189
+Author: sam
+Date:   Wed Oct 4 22:15:23 2006 +0000
 
-  * Added filter_flip, filter_flop and filter_rotate.
-  * Add a -F flag to specify filters to apply. Can be specified more than
-    once, and filters can be chained using ":", eg. "-F flip:gay".
+      * Added Unicode drawing blocks to Small Block.
 
-------------------------------------------------------------------------
-r50 | sam | 2006-10-24 14:39:57 +0200 (Tue, 24 Oct 2006) | 2 lines
+ fonts/smblock.tlf |   90 ++++++++++++++++++++++++++++++++++++++++++++++++++---
+ 1 files changed, 85 insertions(+), 5 deletions(-)
 
-  * Renamed filters.* to filter.*.
+Commit: 1188
+Author: sam
+Date:   Wed Oct 4 21:58:52 2006 +0000
 
-------------------------------------------------------------------------
-r49 | sam | 2006-10-19 22:55:44 +0200 (Thu, 19 Oct 2006) | 2 lines
+      * Added most of latin1 additional characters.
 
-  * Support for PKZIP-compressed fonts using zlib.
+ fonts/smblock.tlf |  265 ++++++++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 files changed, 263 insertions(+), 2 deletions(-)
 
-------------------------------------------------------------------------
-r48 | sam | 2006-10-19 22:53:36 +0200 (Thu, 19 Oct 2006) | 2 lines
+Commit: 1184
+Author: sam
+Date:   Wed Oct 4 02:21:24 2006 +0000
 
-  * Check for zlib if available.
+      * Added a new font: "Small Block".
 
-------------------------------------------------------------------------
-r47 | sam | 2006-10-19 22:53:07 +0200 (Thu, 19 Oct 2006) | 2 lines
+ fonts/Makefile.am |    2 +-
+ fonts/smblock.tlf |  853 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 854 insertions(+), 1 deletions(-)
 
-  * Minor debugging information in the FIGlet font parser.
+Commit: 1183
+Author: sam
+Date:   Mon Oct 2 19:17:00 2006 +0000
 
-------------------------------------------------------------------------
-r46 | sam | 2006-10-13 15:38:50 +0200 (Fri, 13 Oct 2006) | 2 lines
+      * Use ${datadir} for fonts instead of ${datarootdir}.
 
-  * Add feof() to the list of I/O functions.
+ fonts/Makefile.am |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
 
-------------------------------------------------------------------------
-r45 | sam | 2006-10-13 15:36:23 +0200 (Fri, 13 Oct 2006) | 2 lines
+Commit: 1182
+Author: sam
+Date:   Mon Oct 2 19:09:58 2006 +0000
 
-  * Moved I/O functions into a separate module.
+      * Oops, fixed the lowercase "x" in Future.
 
-------------------------------------------------------------------------
-r44 | sam | 2006-10-13 15:19:45 +0200 (Fri, 13 Oct 2006) | 3 lines
+ fonts/future.tlf |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
 
-  * Use fgets() instead of fscanf(). Uses an additional memory buffer, but
-    paves the way for custom IO functions.
+Commit: 1181
+Author: sam
+Date:   Mon Oct 2 19:08:14 2006 +0000
 
-------------------------------------------------------------------------
-r43 | sam | 2006-10-13 15:11:20 +0200 (Fri, 13 Oct 2006) | 2 lines
+      * Big update to the Future font.
 
-  * Fix a crash when font opening fails.
+ fonts/future.tlf |  147 +++++++++++++++++++++++++++++++++++++++++++++++++-----
+ 1 files changed, 134 insertions(+), 13 deletions(-)
 
-------------------------------------------------------------------------
-r42 | sam | 2006-10-10 09:24:41 +0200 (Tue, 10 Oct 2006) | 2 lines
+Commit: 1180
+Author: sam
+Date:   Mon Oct 2 12:17:39 2006 +0000
 
-  * Fixed an ifdef error that caused -t to be ignored.
+      * Updated "Future" font.
 
-------------------------------------------------------------------------
-r41 | sam | 2006-10-10 09:20:15 +0200 (Tue, 10 Oct 2006) | 2 lines
+ fonts/future.tlf |   86 +++++++++++++++++++++++++++++-------------------------
+ 1 files changed, 46 insertions(+), 40 deletions(-)
 
-  * Fixed the FIGlet renderer. It now has char wrapping and stdin input.
+Commit: 1178
+Author: sam
+Date:   Sun Oct 1 15:10:27 2006 +0000
 
-------------------------------------------------------------------------
-r40 | sam | 2006-10-10 09:15:28 +0200 (Tue, 10 Oct 2006) | 2 lines
+      * Oops, fixed typo in fonts/Makefile.am.
 
-  * Properly handle \r \n \t in the big and tiny renderers.
+ fonts/Makefile.am |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
 
-------------------------------------------------------------------------
-r39 | sam | 2006-10-10 01:54:40 +0200 (Tue, 10 Oct 2006) | 2 lines
+Commit: 1177
+Author: sam
+Date:   Sun Oct 1 15:09:29 2006 +0000
 
-  * The mono9 driver works again. With wrapping and stdin reading.
+      * Added "Future" font.
 
-------------------------------------------------------------------------
-r38 | sam | 2006-10-08 14:14:13 +0200 (Sun, 08 Oct 2006) | 4 lines
+ fonts/Makefile.am |    2 +-
+ fonts/future.tlf  |  329 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 330 insertions(+), 1 deletions(-)
 
-  * Break everything. Temporarily. Only the term output works.
-  * Allow to read from stdin.
-  * Wrap at terminal width (currently letter-wrap, not word-wrap).
+Commit: 1176
+Author: sam
+Date:   Sun Oct 1 14:21:25 2006 +0000
 
-------------------------------------------------------------------------
-r37 | sam | 2006-10-08 14:04:04 +0200 (Sun, 08 Oct 2006) | 3 lines
+      * Added simple "Circle" font.
 
-  * Retrieve the configure.ac timestamp at configure time and store it in
-    a C macro for better FIGlet emulation.
+ fonts/Makefile.am |    2 +-
+ fonts/circle.tlf  |  117 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 118 insertions(+), 1 deletions(-)
 
-------------------------------------------------------------------------
-r36 | sam | 2006-10-05 23:43:53 +0200 (Thu, 05 Oct 2006) | 2 lines
+Commit: 1170
+Author: sam
+Date:   Sun Oct 1 07:55:45 2006 +0000
 
-  * Fully reworked the katakana part of Small Block.
+      * Allow the hardblank character to be UTF-8.
 
-------------------------------------------------------------------------
-r35 | sam | 2006-10-05 00:15:23 +0200 (Thu, 05 Oct 2006) | 2 lines
+ src/figlet.c |    7 +++++--
+ 1 files changed, 5 insertions(+), 2 deletions(-)
 
-  * Added Unicode drawing blocks to Small Block.
+Commit: 1162
+Author: sam
+Date:   Sat Sep 30 20:18:32 2006 +0000
 
-------------------------------------------------------------------------
-r34 | sam | 2006-10-04 23:58:52 +0200 (Wed, 04 Oct 2006) | 2 lines
+      * There is no way emboss.tlf can have proper lowercase characters. Filled
+        them with the uppercase ones.
 
-  * Added most of latin1 additional characters.
+ fonts/emboss.tlf  |  184 ++++++++++++++++++++++++++--------------------------
+ fonts/emboss2.tlf |  184 ++++++++++++++++++++++++++--------------------------
+ 2 files changed, 184 insertions(+), 184 deletions(-)
 
-------------------------------------------------------------------------
-r33 | sam | 2006-10-04 04:21:24 +0200 (Wed, 04 Oct 2006) | 2 lines
+Commit: 1158
+Author: sam
+Date:   Sat Sep 30 19:05:41 2006 +0000
 
-  * Added a new font: "Small Block".
+      * Require libcucul 0.99.beta6 (utf8 import).
 
-------------------------------------------------------------------------
-r32 | sam | 2006-10-02 21:17:00 +0200 (Mon, 02 Oct 2006) | 2 lines
+ configure.ac |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
 
-  * Use ${datadir} for fonts instead of ${datarootdir}.
+Commit: 1151
+Author: sam
+Date:   Sat Sep 30 18:06:47 2006 +0000
 
-------------------------------------------------------------------------
-r31 | sam | 2006-10-02 21:09:58 +0200 (Mon, 02 Oct 2006) | 2 lines
+      * Fixed a few unimportant memory leaks upon error.
 
-  * Oops, fixed the lowercase "x" in Future.
+ src/figlet.c |    4 +++-
+ 1 files changed, 3 insertions(+), 1 deletions(-)
 
-------------------------------------------------------------------------
-r30 | sam | 2006-10-02 21:08:14 +0200 (Mon, 02 Oct 2006) | 2 lines
+Commit: 1150
+Author: sam
+Date:   Sat Sep 30 17:53:59 2006 +0000
 
-  * Big update to the Future font.
+      * Fixed a lot of memory leaks and added a few error checks.
 
-------------------------------------------------------------------------
-r29 | sam | 2006-10-02 14:17:39 +0200 (Mon, 02 Oct 2006) | 2 lines
+ src/figlet.c |   40 ++++++++++++++++++++++++++++++++++++----
+ src/main.c   |    4 +++-
+ 2 files changed, 39 insertions(+), 5 deletions(-)
 
-  * Updated "Future" font.
+Commit: 1147
+Author: sam
+Date:   Sat Sep 30 16:24:27 2006 +0000
 
-------------------------------------------------------------------------
-r28 | sam | 2006-10-01 17:10:27 +0200 (Sun, 01 Oct 2006) | 2 lines
+      * Updated font data.
 
-  * Oops, fixed typo in fonts/Makefile.am.
+ fonts/emboss.tlf    |   27 +++++++++++++++------------
+ fonts/emboss2.tlf   |   27 +++++++++++++++------------
+ fonts/smbraille.tlf |    5 ++++-
+ 3 files changed, 34 insertions(+), 25 deletions(-)
 
-------------------------------------------------------------------------
-r27 | sam | 2006-10-01 17:09:29 +0200 (Sun, 01 Oct 2006) | 2 lines
+Commit: 1146
+Author: sam
+Date:   Sat Sep 30 16:19:42 2006 +0000
 
-  * Added "Future" font.
+      * New font: Small Braille.
 
-------------------------------------------------------------------------
-r26 | sam | 2006-10-01 16:21:25 +0200 (Sun, 01 Oct 2006) | 2 lines
+ fonts/Makefile.am   |    2 +-
+ fonts/smbraille.tlf |  216 +++++++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 217 insertions(+), 1 deletions(-)
 
-  * Added simple "Circle" font.
+Commit: 1145
+Author: sam
+Date:   Sat Sep 30 11:47:22 2006 +0000
 
-------------------------------------------------------------------------
-r25 | sam | 2006-10-01 09:55:45 +0200 (Sun, 01 Oct 2006) | 2 lines
+      * Created emboss2.tlf with a simple sed rule.
 
-  * Allow the hardblank character to be UTF-8.
+ fonts/Makefile.am |    2 +-
+ fonts/emboss.tlf  |    5 +-
+ fonts/emboss2.tlf |  321 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 326 insertions(+), 2 deletions(-)
 
-------------------------------------------------------------------------
-r24 | sam | 2006-09-30 22:18:32 +0200 (Sat, 30 Sep 2006) | 3 lines
+Commit: 1144
+Author: sam
+Date:   Sat Sep 30 11:34:37 2006 +0000
 
-  * There is no way emboss.tlf can have proper lowercase characters. Filled
-    them with the uppercase ones.
+      * Created emboss.tlf, a Unicode font for the official TOIlet distribution.
 
-------------------------------------------------------------------------
-r23 | sam | 2006-09-30 21:05:41 +0200 (Sat, 30 Sep 2006) | 2 lines
+ Makefile.am       |    4 +-
+ configure.ac      |    2 +-
+ data/Makefile.am  |    1 -
+ fonts/Makefile.am |    5 +
+ fonts/emboss.tlf  |  318 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 5 files changed, 326 insertions(+), 4 deletions(-)
 
-  * Require libcucul 0.99.beta6 (utf8 import).
+Commit: 1143
+Author: sam
+Date:   Sat Sep 30 11:06:20 2006 +0000
 
-------------------------------------------------------------------------
-r22 | sam | 2006-09-30 20:06:47 +0200 (Sat, 30 Sep 2006) | 2 lines
+      * Better error checking in the figlet renderer.
+      * Allow to open fonts that have Unicode data (requires libcucul 0.99.beta6
+        which is not yet released).
 
-  * Fixed a few unimportant memory leaks upon error.
+ src/figlet.c |   31 ++++++++++++++++++++-----------
+ src/figlet.h |    3 +--
+ src/main.c   |   29 +++++++++++++++++------------
+ src/toilet.h |   21 +++++++++++++++++++++
+ 4 files changed, 59 insertions(+), 25 deletions(-)
 
-------------------------------------------------------------------------
-r21 | sam | 2006-09-30 19:53:59 +0200 (Sat, 30 Sep 2006) | 2 lines
+Commit: 1142
+Author: sam
+Date:   Sat Sep 30 10:48:32 2006 +0000
 
-  * Fixed a lot of memory leaks and added a few error checks.
+      * Make the --metal filter only change the colour, not the characters.
 
-------------------------------------------------------------------------
-r20 | sam | 2006-09-30 18:24:27 +0200 (Sat, 30 Sep 2006) | 2 lines
+ src/filters.c |   30 ++++++++++--------------------
+ 1 files changed, 10 insertions(+), 20 deletions(-)
 
-  * Updated font data.
+Commit: 1116
+Author: sam
+Date:   Wed Sep 27 07:18:20 2006 +0000
 
-------------------------------------------------------------------------
-r19 | sam | 2006-09-30 18:19:42 +0200 (Sat, 30 Sep 2006) | 2 lines
+      * Implemented figlet's -t (adapt to terminal's width).
 
-  * New font: Small Braille.
+ configure.ac |   15 ++++++++++++++-
+ src/main.c   |   24 +++++++++++++++++++++---
+ 2 files changed, 35 insertions(+), 4 deletions(-)
 
-------------------------------------------------------------------------
-r18 | sam | 2006-09-30 13:47:22 +0200 (Sat, 30 Sep 2006) | 2 lines
+Commit: 1115
+Author: sam
+Date:   Tue Sep 26 23:13:01 2006 +0000
 
-  * Created emboss2.tlf with a simple sed rule.
+      * Added -d and completed -I options.
 
-------------------------------------------------------------------------
-r17 | sam | 2006-09-30 13:34:37 +0200 (Sat, 30 Sep 2006) | 2 lines
+ src/main.c |   19 +++++++++++++------
+ 1 files changed, 13 insertions(+), 6 deletions(-)
 
-  * Created emboss.tlf, a Unicode font for the official TOIlet distribution.
+Commit: 1114
+Author: sam
+Date:   Tue Sep 26 22:54:15 2006 +0000
 
-------------------------------------------------------------------------
-r16 | sam | 2006-09-30 13:06:20 +0200 (Sat, 30 Sep 2006) | 4 lines
+      * Implemented figlet's -I (infocode) option.
+      * Added -w flag. Ignored for now.
 
-  * Better error checking in the figlet renderer.
-  * Allow to open fonts that have Unicode data (requires libcucul 0.99.beta6
-    which is not yet released).
+ src/main.c |  105 +++++++++++++++++++++++++++++++++++++++++++++--------------
+ 1 files changed, 80 insertions(+), 25 deletions(-)
 
-------------------------------------------------------------------------
-r15 | sam | 2006-09-30 12:48:32 +0200 (Sat, 30 Sep 2006) | 2 lines
+Commit: 1113
+Author: sam
+Date:   Tue Sep 26 21:58:26 2006 +0000
 
-  * Make the --metal filter only change the colour, not the characters.
+      * Crop the final canvas to the effective width.
+      * Fixed a bug that prevented loading characters after 127.
+      * Allow to load fonts that hex-encode their Unicode values.
 
-------------------------------------------------------------------------
-r14 | sam | 2006-09-27 09:18:20 +0200 (Wed, 27 Sep 2006) | 2 lines
+ src/figlet.c |   19 +++++++++++++++----
+ 1 files changed, 15 insertions(+), 4 deletions(-)
 
-  * Implemented figlet's -t (adapt to terminal's width).
+Commit: 1112
+Author: sam
+Date:   Tue Sep 26 21:51:13 2006 +0000
 
-------------------------------------------------------------------------
-r13 | sam | 2006-09-27 01:13:01 +0200 (Wed, 27 Sep 2006) | 2 lines
+      * Fix libcucul font rendering. Now that the default canvas has a
+        transparent background, we need to explicitely draw our temporary string
+        in white on black.
 
-  * Added -d and completed -I options.
+ src/render.c |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
 
-------------------------------------------------------------------------
-r12 | sam | 2006-09-27 00:54:15 +0200 (Wed, 27 Sep 2006) | 3 lines
+Commit: 1110
+Author: sam
+Date:   Tue Sep 26 21:40:35 2006 +0000
 
-  * Implemented figlet's -I (infocode) option.
-  * Added -w flag. Ignored for now.
+      * Don't autocrop final canvas if it was rendered with the figlet engine.
 
-------------------------------------------------------------------------
-r11 | sam | 2006-09-26 23:58:26 +0200 (Tue, 26 Sep 2006) | 4 lines
+ src/main.c |    6 +++---
+ 1 files changed, 3 insertions(+), 3 deletions(-)
 
-  * Crop the final canvas to the effective width.
-  * Fixed a bug that prevented loading characters after 127.
-  * Allow to load fonts that hex-encode their Unicode values.
+Commit: 1109
+Author: sam
+Date:   Tue Sep 26 21:39:07 2006 +0000
 
-------------------------------------------------------------------------
-r10 | sam | 2006-09-26 23:51:13 +0200 (Tue, 26 Sep 2006) | 4 lines
+      * Do not try to autocrop a canvas that has only spaces.
 
-  * Fix libcucul font rendering. Now that the default canvas has a
-    transparent background, we need to explicitely draw our temporary string
-    in white on black.
+ src/filters.c |    3 +++
+ 1 files changed, 3 insertions(+), 0 deletions(-)
 
-------------------------------------------------------------------------
-r9 | sam | 2006-09-26 23:40:35 +0200 (Tue, 26 Sep 2006) | 2 lines
+Commit: 1106
+Author: sam
+Date:   Tue Sep 26 13:57:01 2006 +0000
 
-  * Don't autocrop final canvas if it was rendered with the figlet engine.
+      * Improved support for figlet fonts. We can now load them and print text.
+        Still no smushing, no hard blanks, no line wrapping...
 
-------------------------------------------------------------------------
-r8 | sam | 2006-09-26 23:39:07 +0200 (Tue, 26 Sep 2006) | 2 lines
+ src/figlet.c |  166 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 files changed, 164 insertions(+), 2 deletions(-)
 
-  * Do not try to autocrop a canvas that has only spaces.
+Commit: 1102
+Author: sam
+Date:   Sat Sep 23 22:58:02 2006 +0000
 
-------------------------------------------------------------------------
-r7 | sam | 2006-09-26 15:57:01 +0200 (Tue, 26 Sep 2006) | 3 lines
+      * Added content description to all source files.
 
-  * Improved support for figlet fonts. We can now load them and print text.
-    Still no smushing, no hard blanks, no line wrapping...
+ src/figlet.c  |    4 ++++
+ src/figlet.h  |    3 +++
+ src/filters.c |    4 ++++
+ src/filters.h |    4 ++++
+ src/main.c    |    4 ++++
+ src/render.c  |    4 ++++
+ src/render.h  |    4 ++++
+ 7 files changed, 27 insertions(+), 0 deletions(-)
 
-------------------------------------------------------------------------
-r6 | sam | 2006-09-24 00:58:02 +0200 (Sun, 24 Sep 2006) | 2 lines
+Commit: 1101
+Author: sam
+Date:   Sat Sep 23 22:53:17 2006 +0000
 
-  * Added content description to all source files.
+      * Created skeleton for future FIGlet font handling. Nothing here yet.
 
-------------------------------------------------------------------------
-r5 | sam | 2006-09-24 00:53:17 +0200 (Sun, 24 Sep 2006) | 2 lines
+ src/Makefile.am |    5 ++++-
+ src/figlet.c    |   34 ++++++++++++++++++++++++++++++++++
+ src/figlet.h    |   16 ++++++++++++++++
+ src/main.c      |   45 ++++++++++++++++++++++++++++++++-------------
+ 4 files changed, 86 insertions(+), 14 deletions(-)
 
-  * Created skeleton for future FIGlet font handling. Nothing here yet.
+Commit: 1100
+Author: sam
+Date:   Sat Sep 23 19:54:20 2006 +0000
 
-------------------------------------------------------------------------
-r4 | sam | 2006-09-23 21:54:20 +0200 (Sat, 23 Sep 2006) | 2 lines
+      * Split main.c into main.c/render.c/filters.c.
 
-  * Split main.c into main.c/render.c/filters.c.
+ src/Makefile.am |    2 +-
+ src/filters.c   |  122 ++++++++++++++++++++++++++++++++++++
+ src/filters.h   |   17 +++++
+ src/main.c      |  183 +-----------------------------------------------------
+ src/render.c    |   88 ++++++++++++++++++++++++++
+ src/render.h    |   16 +++++
+ 6 files changed, 248 insertions(+), 180 deletions(-)
 
-------------------------------------------------------------------------
-r3 | sam | 2006-09-23 21:27:19 +0200 (Sat, 23 Sep 2006) | 2 lines
+Commit: 1099
+Author: sam
+Date:   Sat Sep 23 19:27:19 2006 +0000
 
-  * Added -m/--metal flag. Pretty ugly.
+      * Added -m/--metal flag. Pretty ugly.
 
-------------------------------------------------------------------------
-r2 | sam | 2006-09-23 01:36:35 +0200 (Sat, 23 Sep 2006) | 2 lines
+ src/main.c |   56 +++++++++++++++++++++++++++++++++++++++++++++++++++++---
+ 1 files changed, 53 insertions(+), 3 deletions(-)
 
-  * Import toilet source code from libcaca's repository.
+Commit: 1087
+Author: sam
+Date:   Fri Sep 22 23:36:35 2006 +0000
 
-------------------------------------------------------------------------
-r1 | sam | 2006-09-22 19:03:41 +0200 (Fri, 22 Sep 2006) | 2 lines
+      * Import toilet source code from libcaca's repository.
 
-  * Initial tree.
+ configure.ac    |   12 ++-
+ src/Makefile.am |    2 +-
+ src/main.c      |  293 ++++++++++++++++++++++++++++++++++++++++++++++++++++---
+ 3 files changed, 289 insertions(+), 18 deletions(-)
 
-------------------------------------------------------------------------
+Commit: 1084
+Author: sam
+Date:   Fri Sep 22 17:03:41 2006 +0000
+
+      * Initial tree.
+
+ COPYING          |   14 ++++++
+ Makefile.am      |    7 +++
+ bootstrap        |  123 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ configure.ac     |   44 +++++++++++++++++++
+ data/Makefile.am |    1 +
+ src/Makefile.am  |    7 +++
+ src/main.c       |   27 ++++++++++++
+ 7 files changed, 223 insertions(+), 0 deletions(-)
