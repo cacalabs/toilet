@@ -1,4 +1,4 @@
-.TH toilet 1 "2006-11-10" "libcaca"
+.TH toilet 1 "2006-11-10" "libcaca @PACKAGE_VERSION@"
 .SH NAME
 TOIlet \- display large colourful characters
 .SH SYNOPSIS
