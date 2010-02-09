@@ -10,7 +10,7 @@ toilet_SOURCES = main.c toilet.h \
 
 toilet_CPPFLAGS = -DFONTDIR=\"$(datadir)/figlet\"
 toilet_CFLAGS = @CACA_CFLAGS@
-toilet_LDADD = @CACA_LIBS@ @GETOPT_LIBS@ @ZLIB_LIBS@
+toilet_LDADD = @CACA_LIBS@ @GETOPT_LIBS@
 
 if NEED_GETOPT_LONG
 GETOPT = mygetopt.c mygetopt.h
