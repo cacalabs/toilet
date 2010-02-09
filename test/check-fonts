@@ -5,28 +5,25 @@ ret=0
 #
 # Check that we have no tabs or trailing spaces in the source code
 #
-failure=0
-(cd ../fonts
-  for x in $(make -s echo-fonts); do
-    case "$x" in
-     *.tlf|*.flf) ;;
-     *) continue ;;
-    esac
-    echo "Checking font $x..."
-    if ../src/toilet -d ../fonts -f "$x" Hello World >/dev/null; then
-      :
-    else
-      echo "Error loading font $x"
-      failure=1
-    fi
-  done)
-if test "$failure" != "0"; then
-  ret=1
-else
-  echo "0 errors in fonts"
-fi
+nfails=0
+nfonts=0
+for x in $(make -s echo-fonts -C ../fonts); do
+  case "$x" in
+   *.tlf|*.flf) ;;
+   *) continue ;;
+  esac
+  nfonts=$(($nfonts + 1))
+  if ../src/toilet -d ../fonts -f "$x" Hello World >/dev/null; then
+    :
+  else
+    echo "Error loading font $x"
+    nfails=$(($nfails + 1))
+  fi
+done
 
-if test "$ret" != "0"; then
+echo "$nfonts fonts, $nfails load errors"
+
+if test "$nfails" != "0"; then
   exit 1
 fi
 

@@ -1,5 +1,5 @@
 
-EXTRA_DIST = check-build check-fonts
+EXTRA_DIST = check-source check-fonts
 
-TESTS = check-build check-fonts
+TESTS = check-source check-fonts
 
