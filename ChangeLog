@@ -1,3 +1,28 @@
+Commit: 4355
+Author: sam
+Date:   Tue Feb 9 01:21:56 2010 +0000
+
+    No longer check for zlib, it's provided by libcaca.
+
+ configure.ac    |    6 +-----
+ src/Makefile.am |    2 +-
+ 2 files changed, 2 insertions(+), 6 deletions(-)
+
+Commit: 4354
+Author: sam
+Date:   Tue Feb 9 01:07:02 2010 +0000
+
+    Set version to 0.2 and update COPYING, NEWS, README, TODO...
+
+ COPYING      |    4 +-
+ ChangeLog    |  100 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ Makefile.am  |    2 +
+ NEWS         |   16 +++++++++
+ README       |    1 +
+ TODO         |    3 --
+ configure.ac |    4 +-
+ 7 files changed, 123 insertions(+), 7 deletions(-)
+
 Commit: 4353
 Author: sam
 Date:   Tue Feb 9 00:50:15 2010 +0000
