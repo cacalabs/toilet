@@ -1,4 +1,3 @@
-# $Id: Makefile.am 929 2006-10-20 16:19:41Z sam $
 
 noinst_PROGRAMS = caca2tlf
 

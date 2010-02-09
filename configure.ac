@@ -1,4 +1,3 @@
-# $Id$
 
 AC_INIT(toilet, 0.1)
 
@@ -62,13 +61,8 @@ PKG_CHECK_MODULES(CACA, caca >= 0.99.beta17,
   AC_MSG_ERROR([you need libcaca version 0.99.beta17 or later])])
 
 AC_MSG_CHECKING([for release date])
-stamp="$(sed -ne 's/# \$Id: .*\(....-..-..\).*/\1/p;q' configure.ac)"
- if date +"%e %B %Y" -d "$stamp" >/dev/null 2>&1; then
-   ac_build_date="$(LANG=C date +"%e %B %Y" -d "$stamp" | sed 's/^ //')"
- else
-   tmp="${stamp%-*}"
-   ac_build_date="${stamp##*-} ${tmp#*-} ${stamp%%-*}"
- fi
+tmp="${stamp%-*}"
+ac_build_date="${stamp##*-} ${tmp#*-} ${stamp%%-*}"
 AC_MSG_RESULT([$ac_build_date])
 AC_DEFINE_UNQUOTED(DATE, "$ac_build_date", [Define the version date])
 
