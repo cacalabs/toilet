@@ -1,5 +1,21 @@
 
+New in 0.2:
+ - support for 90-degree rotations
+ - new border filter
+ - look for fonts in the current directory
+ - new fonts:
+   + wideterm, a wide character terminal font
+   + letter, a font using only ASCII for ASCII glyphs
+   + ascii9, ascii12, smascii9, smascii12, bigascii9, bigascii12,
+     modifications of the standard fonts to use only ASCII subcharacters
+   + biggray9, biggray12, fonts using only coloured whitespace
+   + pagga, a CP437 font
+ - improved fonts:
+   + circle
+   + smblock
+
 New in 0.1:
  - initial release
  - opens all known FIGlet fonts
  - handles horizontal smushing
+

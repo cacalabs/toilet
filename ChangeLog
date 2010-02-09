@@ -1,3 +1,103 @@
+Commit: 4353
+Author: sam
+Date:   Tue Feb 9 00:50:15 2010 +0000
+
+    Improve testsuite.
+
+ test/Makefile.am  |    4 ++--
+ test/check-build  |   38 --------------------------------------
+ test/check-fonts  |   39 ++++++++++++++++++---------------------
+ test/check-source |   37 +++++++++++++++++++++++++++++++++++++
+ 4 files changed, 57 insertions(+), 61 deletions(-)
+
+Commit: 4350
+Author: sam
+Date:   Tue Feb 9 00:24:47 2010 +0000
+
+    Get rid of $Id$ keywords.
+
+ NEWS              |    1 -
+ README            |    1 -
+ TODO              |    1 -
+ bootstrap         |    1 -
+ configure.ac      |   10 ++--------
+ doc/Makefile.am   |    1 -
+ src/export.c      |    2 --
+ src/export.h      |    2 --
+ src/figlet.c      |    2 --
+ src/filter.c      |    2 --
+ src/filter.h      |    2 --
+ src/main.c        |    2 --
+ src/render.c      |    2 --
+ src/render.h      |    2 --
+ src/term.c        |    2 --
+ src/toilet.h      |    2 --
+ test/Makefile.am  |    1 -
+ tools/Makefile.am |    1 -
+ 18 files changed, 2 insertions(+), 35 deletions(-)
+
+Commit: 4349
+Author: sam
+Date:   Tue Feb 9 00:09:34 2010 +0000
+
+    Get rid of deprecated libcaca calls now that beta17 is out.
+
+ src/render.c     |    6 +++---
+ tools/caca2tlf.c |    2 +-
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+Commit: 4348
+Author: sam
+Date:   Tue Feb 9 00:09:29 2010 +0000
+
+    Put package version in manual page.
+
+ doc/toilet.1.in |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+Commit: 4347
+Author: sam
+Date:   Mon Feb 8 23:56:33 2010 +0000
+
+    Add mygetopt.c to the project. Fixes #42.
+
+ configure.ac    |    9 +++-
+ src/Makefile.am |   14 +++++--
+ src/main.c      |   78 ++++++++++++------------------------
+ src/mygetopt.c  |  120 +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ src/mygetopt.h  |   29 +++++++++++++
+ 5 files changed, 192 insertions(+), 58 deletions(-)
+
+Commit: 4345
+Author: sam
+Date:   Mon Feb 8 23:34:05 2010 +0000
+
+    Search for missing fonts in the current directory (Fixes #40) and display
+    an error message in case of failure.
+
+ doc/toilet.1.in |    1 +
+ src/figlet.c    |    9 ++++++++-
+ 2 files changed, 9 insertions(+), 1 deletions(-)
+
+Commit: 4344
+Author: sam
+Date:   Mon Feb 8 23:21:46 2010 +0000
+
+    Build-depend on libcaca 0.99.beta17, to get colour font support.
+
+ configure.ac |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+Commit: 4343
+Author: sam
+Date:   Mon Feb 8 23:21:40 2010 +0000
+
+    Better ChangeLog generation.
+
+ ChangeLog   | 1606 +++++++++++++++++++++++++++++++++++++++++++++++------------
+ Makefile.am |    5 +
+ 2 files changed, 1303 insertions(+), 308 deletions(-)
+
 Commit: 4306
 Author: sam
 Date:   Wed Jan 27 00:48:05 2010 +0000
