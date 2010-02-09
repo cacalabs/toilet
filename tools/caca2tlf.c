@@ -331,7 +331,7 @@ static void add_char(unsigned long int ch)
     caca_draw_line(out, mygw, 0, mygw, gh - 1, '@');
     caca_put_char(out, mygw + 1, gh - 1, '@');
 
-    buf = caca_export_memory(out, "utf8", &len);
+    buf = caca_export_canvas_to_memory(out, "utf8", &len);
     fwrite(buf, len, 1, stdout);
     free(buf);
 }
