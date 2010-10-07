@@ -19,11 +19,6 @@
 #if defined HAVE_INTTYPES_H
 #   include <inttypes.h>
 #endif
-#if !defined HAVE_GETOPT_LONG
-#   include "mygetopt.h"
-#elif defined HAVE_GETOPT_H
-#   include <getopt.h>
-#endif
 #if defined HAVE_SYS_IOCTL_H && defined HAVE_TIOCGWINSZ
 #   include <sys/ioctl.h>
 #endif
@@ -36,13 +31,6 @@
 #include "render.h"
 #include "filter.h"
 #include "export.h"
-
-#if defined HAVE_GETOPT_LONG
-#   define mygetopt getopt_long
-#   define myoptind optind
-#   define myoptarg optarg
-#   define myoption option
-#endif
 
 static void version(void);
 static void usage(void);
@@ -69,7 +57,7 @@ int main(int argc, char *argv[])
     {
 #define MOREINFO "Try `%s --help' for more information.\n"
         int option_index = 0;
-        static struct myoption long_options[] =
+        static struct caca_option long_options[] =
         {
             /* Long option, needs arg, flag, short option */
             { "font", 1, NULL, 'f' },
@@ -88,8 +76,8 @@ int main(int argc, char *argv[])
             { NULL, 0, NULL, 0 }
         };
 
-        int c = mygetopt(argc, argv, "f:d:w:tsSkWoF:E:hI:v",
-                         long_options, &option_index);
+        int c = caca_getopt(argc, argv, "f:d:w:tsSkWoF:E:hI:v",
+                            long_options, &option_index);
         if(c == -1)
             break;
 
@@ -99,21 +87,21 @@ int main(int argc, char *argv[])
             usage();
             return 0;
         case 'I': /* --infocode */
-            infocode = atoi(myoptarg);
+            infocode = atoi(caca_optarg);
             break;
         case 'v': /* --version */
             version();
             return 0;
         case 'f': /* --font */
-            cx->font = myoptarg;
+            cx->font = caca_optarg;
             break;
         case 'd': /* --directory */
-            cx->dir = myoptarg;
+            cx->dir = caca_optarg;
             break;
         case 'F': /* --filter */
-            if(!strcmp(myoptarg, "list"))
+            if(!strcmp(caca_optarg, "list"))
                 return filter_list();
-            if(filter_add(cx, myoptarg) < 0)
+            if(filter_add(cx, caca_optarg) < 0)
                 return -1;
             break;
         case 130: /* --gay */
@@ -123,7 +111,7 @@ int main(int argc, char *argv[])
             filter_add(cx, "metal");
             break;
         case 'w': /* --width */
-            cx->term_width = atoi(myoptarg);
+            cx->term_width = atoi(caca_optarg);
             break;
         case 't': /* --termwidth */
         {
@@ -153,9 +141,9 @@ int main(int argc, char *argv[])
             cx->hmode = H_OVERLAP;
             break;
         case 'E': /* --export */
-            if(!strcmp(myoptarg, "list"))
+            if(!strcmp(caca_optarg, "list"))
                 return export_list();
-            if(export_set(cx, myoptarg) < 0)
+            if(export_set(cx, caca_optarg) < 0)
                 return -1;
             break;
         case 140: /* --irc */
@@ -200,10 +188,10 @@ int main(int argc, char *argv[])
     if(render_init(cx) < 0)
         return -1;
 
-    if(myoptind >= argc)
+    if(caca_optind >= argc)
         render_stdin(cx);
     else
-        render_list(cx, argc - myoptind, argv + myoptind);
+        render_list(cx, argc - caca_optind, argv + caca_optind);
 
     render_end(cx);
     filter_end(cx);

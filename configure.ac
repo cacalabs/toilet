@@ -24,19 +24,7 @@ if test "$build" != "$host" -a "${PKG_CONFIG_LIBDIR}" = ""; then
   export PKG_CONFIG_LIBDIR=/dev/null
 fi
 
-AC_CHECK_HEADERS(getopt.h sys/ioctl.h)
-
-ac_cv_have_getopt_long="no"
-AC_CHECK_FUNCS(getopt_long,
- [ac_cv_have_getopt_long="yes"],
- [AC_CHECK_LIB(gnugetopt, getopt_long,
-   [ac_cv_have_getopt_long="yes"
-    GETOPT_LIBS="${GETOPT_LIBS} -lgnugetopt"])])
-if test "$ac_cv_have_getopt_long" != "no"; then
-  AC_DEFINE(HAVE_GETOPT_LONG, 1, Define to 1 if you have the ‘getopt_long’ function.)
-fi
-AM_CONDITIONAL(NEED_GETOPT_LONG, test "$ac_cv_have_getopt_long" = "no")
-AC_SUBST(GETOPT_LIBS)
+AC_CHECK_HEADERS(sys/ioctl.h)
 
 AC_CACHE_CHECK([for TIOCGWINSZ],
   [ac_cv_have_tiocgwinsz],
@@ -51,10 +39,10 @@ if test "${ac_cv_have_tiocgwinsz}" = "yes"; then
 fi
 
 CUCUL="no"
-PKG_CHECK_MODULES(CACA, caca >= 0.99.beta17,
+PKG_CHECK_MODULES(CACA, caca >= 0.99.beta18,
  [CUCUL="yes"],
  [AC_MSG_RESULT(no)
-  AC_MSG_ERROR([you need libcaca version 0.99.beta17 or later])])
+  AC_MSG_ERROR([you need libcaca version 0.99.beta18 or later])])
 
 AC_MSG_CHECKING([for release date])
 tmp="${stamp%-*}"
