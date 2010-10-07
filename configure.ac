@@ -38,9 +38,8 @@ if test "${ac_cv_have_tiocgwinsz}" = "yes"; then
   AC_DEFINE(HAVE_TIOCGWINSZ, 1, [Define if you have TIOCGWINSZ])
 fi
 
-CUCUL="no"
 PKG_CHECK_MODULES(CACA, caca >= 0.99.beta18,
- [CUCUL="yes"],
+ [:],
  [AC_MSG_RESULT(no)
   AC_MSG_ERROR([you need libcaca version 0.99.beta18 or later])])
 
