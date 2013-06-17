@@ -2,16 +2,16 @@
 
 # bootstrap: generic bootstrap/autogen.sh script for autotools projects
 #
-# Copyright (c) 2002-2009 Sam Hocevar <sam@hocevar.net>
+# Copyright (c) 2002-2010 Sam Hocevar <sam@hocevar.net>
 #
 #    This program is free software. It comes without any warranty, to
 #    the extent permitted by applicable law. You can redistribute it
 #    and/or modify it under the terms of the Do What The Fuck You Want
 #    To Public License, Version 2, as published by Sam Hocevar. See
-#    http://sam.zoy.org/wtfpl/COPYING for more details.
+#    http://www.wtfpl.net/ for more details.
 #
 # The latest version of this script can be found at the following place:
-#   http://caca.zoy.org/wiki/build
+#    http://caca.zoy.org/wiki/build
 
 # Die if an error occurs
 set -e
@@ -36,7 +36,7 @@ aclocalflags="`sed -ne 's/^[ \t]*ACLOCAL_AMFLAGS[ \t]*=//p' Makefile.am 2>/dev/n
 
 # Check for automake
 amvers="no"
-for v in 11 10 9 8 7 6 5; do
+for v in 13 12 11 10 9 8 7 6 5; do
   if automake-1.${v} --version >/dev/null 2>&1; then
     amvers="-1.${v}"
     break
@@ -109,8 +109,19 @@ if test -n "$auxdir"; then
   if test ! -d "$auxdir"; then
     mkdir "$auxdir"
   fi
-  aclocalflags="${aclocalflags} -I $auxdir -I ."
+  aclocalflags="-I $auxdir -I . ${aclocalflags}"
 fi
+
+# Honour M4PATH because sometimes M4 doesn't
+save_IFS=$IFS
+IFS=:
+tmp="$M4PATH"
+for x in $tmp; do
+  if test -n "$x"; then
+    aclocalflags="-I $x ${aclocalflags}"
+  fi
+done
+IFS=$save_IFS
 
 # Explain what we are doing from now
 set -x
