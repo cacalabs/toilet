@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
 
     cx->term_width = 80;
 
-    cx->hmode = H_DEFAULT;
+    cx->hmode = "default";
 
     cx->filters = NULL;
     cx->nfilters = 0;
@@ -126,19 +126,19 @@ int main(int argc, char *argv[])
             break;
         }
         case 's':
-            cx->hmode = H_DEFAULT;
+            cx->hmode = "default";
             break;
         case 'S':
-            cx->hmode = H_SMUSH;
+            cx->hmode = "smush";
             break;
         case 'k':
-            cx->hmode = H_KERN;
+            cx->hmode = "kern";
             break;
         case 'W':
-            cx->hmode = H_NONE;
+            cx->hmode = "none";
             break;
         case 'o':
-            cx->hmode = H_OVERLAP;
+            cx->hmode = "overlap";
             break;
         case 'E': /* --export */
             if(!strcmp(caca_optarg, "list"))

@@ -49,6 +49,9 @@ int init_figlet(context_t *cx)
         }
     }
 
+    caca_set_figfont_smush(cx->cv, cx->hmode);
+    caca_set_figfont_width(cx->cv, cx->term_width);
+
     cx->feed = feed_figlet;
     cx->flush = flush_figlet;
     cx->end = end_figlet;

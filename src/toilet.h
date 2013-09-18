@@ -32,15 +32,7 @@ struct toilet_context
     int (*end)(struct toilet_context *);
 
     /* Used by the FIGlet driver */
-    enum { H_DEFAULT, H_KERN, H_SMUSH, H_NONE, H_OVERLAP } hmode;
-    unsigned int hsmushrule;
-    unsigned long int hardblank;
-    unsigned int height, baseline, max_length;
-    int old_layout;
-    unsigned int print_direction, full_layout, codetag_count;
-    unsigned int glyphs;
-    caca_canvas_t *fontcv, *charcv;
-    int *left, *right; /* Unused yet */
+    char const *hmode;
     unsigned int *lookup;
 
     /* Render filters */
