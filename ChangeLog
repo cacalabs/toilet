@@ -1,3 +1,46 @@
+Commit: UNSUBMITTED
+Author: Sam
+Date:   Fri Apr 6 22:20:43 2012 +0200
+
+    fix: use the upcoming libcaca's canvas width and smushing mode features.
+
+ src/figlet.c |    3 +++
+ src/main.c   |   12 ++++++------
+ src/toilet.h |   10 +---------
+ 3 files changed, 10 insertions(+), 15 deletions(-)
+
+Commit: 4682
+Author: sam
+Date:   Thu Oct 7 21:43:58 2010 +0000
+
+    Remove useless reference to deprecated libcucul.
+
+ configure.ac |    3 +--
+ 1 files changed, 1 insertions(+), 2 deletions(-)
+
+Commit: 4681
+Author: sam
+Date:   Thu Oct 7 21:38:43 2010 +0000
+
+    Remove the build dependency on the getopt implementation and use libcaca
+    instead.
+
+ configure.ac    |   18 +-------
+ src/Makefile.am |    9 +---
+ src/main.c      |   38 ++++++-----------
+ src/mygetopt.c  |  120 -------------------------------------------------------
+ src/mygetopt.h  |   29 -------------
+ 5 files changed, 18 insertions(+), 196 deletions(-)
+
+Commit: 4356
+Author: sam
+Date:   Tue Feb 9 01:22:20 2010 +0000
+
+    Update ChangeLog.
+
+ ChangeLog |   25 +++++++++++++++++++++++++
+ 1 files changed, 25 insertions(+), 0 deletions(-)
+
 Commit: 4355
 Author: sam
 Date:   Tue Feb 9 01:21:56 2010 +0000

@@ -1,12 +1,12 @@
 
-AC_INIT(toilet, 0.2)
+AC_INIT(toilet, 0.3)
 
 AC_PREREQ(2.50)
 AC_CONFIG_SRCDIR(src/main.c)
 AC_CONFIG_AUX_DIR(.auto)
 AC_CANONICAL_SYSTEM
 
-AM_INIT_AUTOMAKE(toilet, 0.2)
+AM_INIT_AUTOMAKE(toilet, 0.3)
 AM_CONFIG_HEADER(config.h)
 
 AM_PROG_CC_C_O

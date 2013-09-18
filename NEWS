@@ -1,3 +1,6 @@
+New in 0.3:
+ - most of the code was moved to libcaca
+ - terminal width support was fixed
 
 New in 0.2:
  - support for 90-degree rotations
