@@ -46,9 +46,17 @@ for v in 13 12 11 10 9 8 7 6 5; do
   fi
 done
 
+verlte() {
+    [  "$1" = "`(echo "$1"; echo "$2") | sort -V | head -n1 | tr -d '\n'`" ]
+}
+
+verlt() {
+    [ "$1" = "$2" ] && return 1 || verlte $1 $2
+}
+
 if test "${amvers}" = "no" && automake --version > /dev/null 2>&1; then
   amvers="`automake --version | sed -e '1s/[^0-9]*//' -e q`"
-  if expr "$amvers" "<" "1.5" > /dev/null 2>&1; then
+  if verlt "$amvers" 1.5; then
     amvers="no"
   else
     amvers=""
