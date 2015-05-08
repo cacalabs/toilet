@@ -28,7 +28,7 @@
 #include "filter.h"
 
 static void filter_crop(context_t *);
-static void filter_gay(context_t *);
+static void filter_rainbow(context_t *);
 static void filter_metal(context_t *);
 static void filter_flip(context_t *);
 static void filter_flop(context_t *);
@@ -46,7 +46,7 @@ struct
 const lookup[] =
 {
     { "crop", filter_crop, "crop unused blanks" },
-    { "gay", filter_gay, "add a rainbow colour effect" },
+    { "rainbow", filter_rainbow, "add a rainbow colour effect" },
     { "metal", filter_metal, "add a metallic colour effect" },
     { "flip", filter_flip, "flip horizontally" },
     { "flop", filter_flop, "flip vertically" },
@@ -185,7 +185,7 @@ static void filter_metal(context_t *cx)
     }
 }
 
-static void filter_gay(context_t *cx)
+static void filter_rainbow(context_t *cx)
 {
     static unsigned char const rainbow[] =
     {

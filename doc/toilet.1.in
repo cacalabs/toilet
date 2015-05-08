@@ -93,17 +93,17 @@ Set the output width to the terminal width.
 .TP
 .B \-F, \-\-filter list
 .TP
-.B \-\-gay, \-\-metal
+.B \-\-rainbow, \-\-metal
 .PD
 Specify a list of filters to be applied to the output.
 .I <filters>
 is a colon-separated list of filters such as
-.I crop:rotate:gay
+.I crop:rotate:rainbow
 and the special argument
 .I list
 outputs a list of available filters.
 
-.B \-\-gay
+.B \-\-rainbow
 and
 .B \-\-metal
 are shortcuts to commonly used filters that are guaranteed to exist. Several
@@ -153,7 +153,7 @@ toilet Hello World
 
 toilet Hello | toilet
 
-tail -f /var/log/messages | toilet -f term --gay
+tail -f /var/log/messages | toilet -f term --rainbow
 .RI
 .SH BUGS
 .B FIGlet

@@ -67,6 +67,7 @@ int main(int argc, char *argv[])
             { "filter", 1, NULL, 'F' },
             { "gay", 0, NULL, 130 },
             { "metal", 0, NULL, 131 },
+            { "rainbow", 0, NULL, 132 },
             { "export", 1, NULL, 'E' },
             { "irc", 0, NULL, 140 },
             { "html", 0, NULL, 141 },
@@ -104,11 +105,14 @@ int main(int argc, char *argv[])
             if(filter_add(cx, caca_optarg) < 0)
                 return -1;
             break;
-        case 130: /* --gay */
-            filter_add(cx, "gay");
+        case 130: /* --gay (alias to rainbow)*/
+            filter_add(cx, "rainbow");
             break;
         case 131: /* --metal */
             filter_add(cx, "metal");
+            break;
+        case 132: /* --rainbow */
+            filter_add(cx, "rainbow");
             break;
         case 'w': /* --width */
             cx->term_width = atoi(caca_optarg);
@@ -213,7 +217,7 @@ int main(int argc, char *argv[])
     "  -t, --termwidth          adapt to terminal's width\n" \
     "  -F, --filter <filters>   apply one or several filters to the text\n" \
     "  -F, --filter list        list available filters\n" \
-    "      --gay                rainbow filter (same as -F gay)\n" \
+    "      --rainbow            rainbow filter (same as -F rainbow)\n" \
     "      --metal              metal filter (same as -F metal)\n" \
     "  -E, --export <format>    select export format\n" \
     "  -E, --export list        list available export formats\n" \
