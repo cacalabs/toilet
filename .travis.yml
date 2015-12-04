@@ -1,0 +1,24 @@
+sudo: false
+language: c
+env: VERBOSE=1
+
+addons:
+  apt:
+    packages:
+      - build-essential
+      - pkg-config
+      - libcaca-dev
+      - zlib1g-dev
+
+before_install:
+  - .travis/before_install.sh
+  - ./bootstrap
+
+os:
+  - linux
+  - osx
+
+compiler:
+  - gcc
+  - clang
+

@@ -19,4 +19,6 @@ stamp-*
 *-stamp
 doc/toilet.1
 src/toilet
+test/*.log
+test/*.trs
 tools/caca2tlf
