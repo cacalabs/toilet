@@ -3,7 +3,6 @@ SUBDIRS = src tools fonts doc test
 DIST_SUBDIRS = $(SUBDIRS)
 
 EXTRA_DIST = bootstrap
-AUTOMAKE_OPTIONS = dist-bzip2
 
 CACA2TLF = $(top_builddir)/tools/caca2tlf
 FONTDIR = $(top_builddir)/fonts
