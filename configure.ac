@@ -1,12 +1,12 @@
 
-AC_INIT(toilet, 0.3)
+AC_INIT([toilet],[0.3])
 
-AC_PREREQ(2.50)
+AC_PREREQ([2.69])
 AC_CONFIG_SRCDIR(src/main.c)
 AC_CONFIG_AUX_DIR(.auto)
-AC_CANONICAL_SYSTEM
+AC_CANONICAL_TARGET
 
-AM_INIT_AUTOMAKE(toilet, 0.3)
+AM_INIT_AUTOMAKE([dist-bzip2 foreign])
 AM_CONFIG_HEADER(config.h)
 
 AM_PROG_CC_C_O
@@ -28,12 +28,8 @@ AC_CHECK_HEADERS(sys/ioctl.h)
 
 AC_CACHE_CHECK([for TIOCGWINSZ],
   [ac_cv_have_tiocgwinsz],
-  [AC_TRY_COMPILE(
-    [#include <sys/ioctl.h>],
-    [struct winsize ws;
-     ioctl(1, TIOCGWINSZ, &ws);],
-    ac_cv_have_tiocgwinsz=yes,
-    ac_cv_have_tiocgwinsz=no)])
+  [AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <sys/ioctl.h>]], [[struct winsize ws;
+     ioctl(1, TIOCGWINSZ, &ws);]])],[ac_cv_have_tiocgwinsz=yes],[ac_cv_have_tiocgwinsz=no])])
 if test "${ac_cv_have_tiocgwinsz}" = "yes"; then
   AC_DEFINE(HAVE_TIOCGWINSZ, 1, [Define if you have TIOCGWINSZ])
 fi
@@ -54,7 +50,7 @@ CFLAGS="${CFLAGS} -g -O2 -fno-strength-reduce -fomit-frame-pointer"
 # Code qui fait des warnings == code de porc == deux baffes dans ta gueule
 CFLAGS="${CFLAGS} -Wall -Wpointer-arith -Wcast-align -Wcast-qual -Wstrict-prototypes -Wshadow -Waggregate-return -Wmissing-prototypes -Wnested-externs -Wsign-compare"
 
-AC_OUTPUT([
+AC_CONFIG_FILES([
   Makefile
   src/Makefile
   tools/Makefile
@@ -62,4 +58,5 @@ AC_OUTPUT([
   doc/Makefile
   test/Makefile
 ])
+AC_OUTPUT
 
