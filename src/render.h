@@ -14,6 +14,7 @@
  * This header defines text to canvas rendering functions.
  */
 
+extern void list_fonts(const char *);
 extern int init_tiny(context_t *);
 extern int init_figlet(context_t *);
 

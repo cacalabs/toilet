@@ -22,7 +22,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <dirent.h>
 #include <caca.h>
+
 
 #include "toilet.h"
 #include "render.h"
@@ -34,9 +36,36 @@ static int feed_figlet(context_t *, uint32_t, uint32_t);
 static int flush_figlet(context_t *);
 static int end_figlet(context_t *);
 
+void list_fonts(const char *directory)
+{
+    DIR *d;
+    struct dirent *dir;
+    int some = 0;
+    d = opendir(directory);
+    while(d && (dir = readdir(d)) != NULL)
+    {
+        size_t len = strlen(dir->d_name);
+        if(len<5) continue;
+        if(!strcmp(dir->d_name + len - 4, ".flf") || !strcmp(dir->d_name + len - 4, ".tlf"))
+        {
+            if(!some++) printf("- %s:", directory);
+            printf(" %s", dir->d_name);
+        }
+    }
+    if(some) printf("\n");
+    closedir(d);
+}
+
 int init_figlet(context_t *cx)
 {
     char path[2048];
+		if(cx->list)
+		{
+        list_fonts(cx->dir);
+        if(strcmp(cx->dir, getenv("PWD")))
+            list_fonts(getenv("PWD"));
+        exit(0);
+    }
 
     snprintf(path, 2047, "%s/%s", cx->dir, cx->font);
     if(caca_canvas_set_figfont(cx->cv, path))

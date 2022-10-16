@@ -49,6 +49,7 @@ int main(int argc, char *argv[])
     cx->term_width = 80;
 
     cx->hmode = "default";
+    cx->list = 0;
 
     cx->filters = NULL;
     cx->nfilters = 0;
@@ -63,6 +64,7 @@ int main(int argc, char *argv[])
             { "font", 1, NULL, 'f' },
             { "directory", 1, NULL, 'd' },
             { "width", 1, NULL, 'w' },
+            { "list", 0, NULL, 'l' },
             { "termwidth", 0, NULL, 't' },
             { "filter", 1, NULL, 'F' },
             { "gay", 0, NULL, 130 },
@@ -77,7 +79,7 @@ int main(int argc, char *argv[])
             { NULL, 0, NULL, 0 }
         };
 
-        int c = caca_getopt(argc, argv, "f:d:w:tsSkWoF:E:hI:v",
+        int c = caca_getopt(argc, argv, "f:d:w:tsSkWolF:E:hI:v",
                             long_options, &option_index);
         if(c == -1)
             break;
@@ -144,6 +146,9 @@ int main(int argc, char *argv[])
         case 'o':
             cx->hmode = "overlap";
             break;
+        case 'l':
+            cx->list = 1;
+            break;
         case 'E': /* --export */
             if(!strcmp(caca_optarg, "list"))
                 return export_list();
@@ -204,13 +209,14 @@ int main(int argc, char *argv[])
 }
 
 #define USAGE \
-    "Usage: toilet [ -hkostvSW ] [ -d fontdirectory ]\n" \
+    "Usage: toilet [ -hklostvSW ] [ -d fontdirectory ]\n" \
     "              [ -f fontfile ] [ -F filter ] [ -w outputwidth ]\n" \
     "              [ -I infocode ] [ -E format ] [ message ]\n"
 
 #define HELP \
     "  -f, --font <name>        select the font\n" \
     "  -d, --directory <dir>    specify font directory\n" \
+    "  -l, --list               list all available fonts in the active directories\n" \
     "  -s, -S, -k, -W, -o       render mode (default, force smushing,\n" \
     "                           kerning, full width, overlap)\n" \
     "  -w, --width <width>      set output width\n" \
