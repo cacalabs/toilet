@@ -19,6 +19,7 @@ struct toilet_context
     char const *export;
     char const *font;
     char const *dir;
+    char list;
 
     unsigned int term_width;
 
