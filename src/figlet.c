@@ -22,6 +22,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <dirent.h>
 #include <caca.h>
 
 #include "toilet.h"
@@ -33,6 +34,37 @@
 static int feed_figlet(context_t *, uint32_t, uint32_t);
 static int flush_figlet(context_t *);
 static int end_figlet(context_t *);
+
+void list_dir_fonts(char const *dir)
+{
+    DIR *d;
+    struct dirent *dr;
+    int n = 0;
+    d = opendir(dir);
+    while(d && (dr = readdir(d)) != NULL)
+    {
+        size_t len = strlen(dr->d_name);
+        if(len<5)
+            continue;
+        if(!strcmp(dr->d_name + len - 4, ".flf") || !strcmp(dr->d_name + len - 4, ".tlf"))
+        {
+            if(!n++)
+                printf("- %s:", dir);
+            printf(" %s", dr->d_name);
+        }
+    }
+    if(n)
+        printf("\n");
+    closedir(d);
+}
+
+int list_fonts(char const *dir)
+{
+    list_dir_fonts(dir);
+    if(strcmp(dir, getenv("PWD")))
+        list_dir_fonts(getenv("PWD"));
+    return 0;
+}
 
 int init_figlet(context_t *cx)
 {
